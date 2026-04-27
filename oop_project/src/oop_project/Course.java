@@ -1,10 +1,13 @@
-package test;
+package oop_project;
+
+import java.util.List;
 
 public class Course {
 	private String code;
 	private String name;
 	private String description;
 	private School school;
+	private List<Teacher> coordinators;
 	private int credits;
 	
 	public Course(String name, String description, School school, int credits) {
@@ -18,5 +21,9 @@ public class Course {
 	
 	public String getCode() {
 		return this.code;
+	}
+	
+	public void assignInstructor(Teacher teacher) {
+		
 	}
 }

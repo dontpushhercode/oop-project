@@ -1,4 +1,4 @@
-package test;
+package oop_project;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,14 +22,6 @@ public class Database {
 			db = new Database();
 		}
 		return db;
-	}
-	
-	public void addEnrollment(Enrollment e) {
-		enrollments.add(e);
-	}
-	
-	public void addStudent(Student st) {
-		users.add(st);
 	}
 	
 	public List<Enrollment> getFilteredEnrollments(Student st){
@@ -60,5 +52,25 @@ public class Database {
 			}
 		}
 		return filtered;
+	}
+	
+	void setOrCreateEnrollment(Enrollment e) {
+		for (int i = 0; i < enrollments.size(); i++) {
+	        if (enrollments.get(i).equals(e)) {
+	            enrollments.set(i, e);
+	            return;
+	        }
+	    }
+	    enrollments.add(e);
+	}
+	
+	void setOrCreateSection(Section sec) {
+		for (int i = 0; i < sections.size(); i++) {
+	        if (sections.get(i).equals(sec)) {
+	            sections.set(i, sec);
+	            return;
+	        }
+	    }
+	    sections.add(sec);
 	}
 }

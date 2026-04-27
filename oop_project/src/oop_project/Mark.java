@@ -1,10 +1,15 @@
-package test;
+package oop_project;
 
 public class Mark {
 	private double firstAttestation;
 	private double secondAttestation;
 	private double finalExam;
-	private double gpa;
+	
+	public Mark() {
+		this.firstAttestation = 0;
+		this.secondAttestation = 0;
+		this.finalExam = 0;
+	}
 	
 	public double getTotalPoints() {
 		return firstAttestation+secondAttestation+finalExam;

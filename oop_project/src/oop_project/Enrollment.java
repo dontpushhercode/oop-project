@@ -1,4 +1,4 @@
-package test;
+package oop_project;
 
 public class Enrollment {
 	private Student student;
@@ -9,6 +9,12 @@ public class Enrollment {
 		this.student = st;
 		this.section = sec;
 		this.mark = new Mark();
+	}
+	
+	public Enrollment(Student st, Section sec, Mark mark) {
+		this.student = student;
+		this.section = section;
+		this.mark = mark;
 	}
 
 	public Student getStudent() {

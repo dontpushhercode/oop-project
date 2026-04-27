@@ -1,4 +1,4 @@
-package test;
+package oop_project;
 
 public class MainClass {
 
