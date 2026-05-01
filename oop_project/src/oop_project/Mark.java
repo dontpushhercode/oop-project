@@ -1,11 +1,18 @@
 package oop_project;
 
 public class Mark {
+	private static int counter = 0;
+	
+	private int id;
 	private double firstAttestation;
 	private double secondAttestation;
 	private double finalExam;
 	
-	public Mark() {
+	{
+		this.id = ++counter;
+	}
+	
+	Mark() {
 		this.firstAttestation = 0;
 		this.secondAttestation = 0;
 		this.finalExam = 0;
