@@ -8,7 +8,11 @@ public class Employee extends User{
 		this.department = department;
 	}
 	
-	DepartmentType getDepartment() {
+	public DepartmentType getDepartment() {
 		return this.department;
+	}
+	
+	void setDepartment(DepartmentType department) {
+		this.department = department;
 	}
 }

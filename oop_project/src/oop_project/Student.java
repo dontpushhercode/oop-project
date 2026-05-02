@@ -18,48 +18,19 @@ public class Student extends User {
 		this.supervisor = supervisor;
 	}
 	
-	public List<RegistrationRequest> getRegisteredCourses(){
-		return OfficeRegister.getOfficeRegister().getStudentRegisteredCourses(this);
+	public int getYear() {
+		return year;
 	}
 	
-	public List<Enrollment> getEnrollments(){
-		return OfficeRegister.getOfficeRegister().getStudentEnrollments(this);
+	public School getSchool() {
+		return school;
 	}
 	
-	public Transcript getTranscript(){
-		return OfficeRegister.getOfficeRegister().getStudentTranscript(this);
+	public AcademicDegree getAcademicDegree() {
+		return degree;
 	}
 	
-	public double getGpa() {
-		return getTranscript().getGpa();
+	public User getSuperVisor() {
+		return supervisor;
 	}
-
-	public String viewTeachersInfo(Course course) {
-		return OfficeRegister.getOfficeRegister().getTeachers(course).toString();
-	}
-	
-	public String viewCourseInfo(Course course) {
-		return OfficeRegister.getOfficeRegister().getCourseInfo(course).toString();
-	}
-	
-	public String viewSectionInfo(Section sec) {
-		return OfficeRegister.getOfficeRegister().getSectionInfo(sec).toString();
-	}
-	
-	public void registerCourse(Course course) {
-		OfficeRegister.getOfficeRegister().createRegistrationRequest(this, course);
-	}
-	
-	public void enrollSection(Section sec) {
-		OfficeRegister.getOfficeRegister().assignStudentToSection(this, sec);
-	}
-	
-	public void withdrawCourse(Course course) {
-		OfficeRegister.getOfficeRegister().withdrawFromCourse(this, course);
-	}
-	
-	public void rateTeacher(double rate, Teacher teacher, Course course) {
-		OfficeRegister.getOfficeRegister().rateTeacher(this, teacher, course, rate);
-	}
-	
 }

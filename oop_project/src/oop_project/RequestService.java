@@ -10,7 +10,16 @@ public class RequestService {
 		this.db = db;
 	}
 	
-	RegistrationRequest createRegistrationRequest(Student st, Course course) {
+	private void checkPermission(Manager manager) {
+		if (manager == null || manager.getDepartment() != DepartmentType.MANAGEMENT) {
+	        throw new IllegalStateException("No permission");
+	    }
+	}
+	
+	RegistrationRequest createRegistrationRequest(Manager manager, Student st, Course course) {
+		
+		checkPermission(manager);
+		
 	    for (RegistrationRequest r : db.getFilteredRegistrationRequests(st)) {
 	        if (r.getCourse().equals(course) && r.getStatus() != RequestStatus.REJECTED) {
 	            throw new IllegalStateException("Already requested!");
@@ -28,31 +37,52 @@ public class RequestService {
 		return r;
 	}
 	
-	List<RegistrationRequest> getRegistrationRequests(RequestStatus status){
+	List<RegistrationRequest> getRegistrationRequests(Manager manager, RequestStatus status){
+		
+		checkPermission(manager);
+		
 		return this.db.getFilteredRegistrationRequests(status);
 	}
 	
-	List<RegistrationRequest> getRegistrationRequests(Student student, RequestStatus status){
+	List<RegistrationRequest> getRegistrationRequests(Manager manager, Student student, RequestStatus status){
+		
+		checkPermission(manager);
+		
 		return this.db.getFilteredRegistrationRequests(student, status);
 	}
 	
-	List<EmployeeRequest> getEmployeeRequests(RequestStatus status){
+	List<EmployeeRequest> getEmployeeRequests(Manager manager, RequestStatus status){
+		
+		checkPermission(manager);
+		
 		return this.db.getFilteredEmployeeRequests(status);
 	}
 	
-	List<EmployeeRequest> getEmployeeRequests(Employee employee, RequestStatus status){
+	List<EmployeeRequest> getEmployeeRequests(Manager manager, Employee employee, RequestStatus status){
+		
+		checkPermission(manager);
+		
 		return this.db.getFilteredEmployeeRequests(employee, status);
 	}
 	
-	List<Request> getRequests(RequestStatus status){
+	List<Request> getRequests(Manager manager, RequestStatus status){
+		
+		checkPermission(manager);
+		
 		return this.db.getFilteredRequests(status);
 	}
 	
-	Request getRequestInfo(Request request) {
+	Request getRequestInfo(Manager manager, Request request) {
+		
+		checkPermission(manager);
+		
 		return this.db.getRequest(request.getId());
 	}
 	
-	void setStatus(Request req, RequestStatus status) {
+	void setStatus(Manager manager, Request req, RequestStatus status) {
+		
+		checkPermission(manager);
+		
 		Request r = this.db.getRequest(req.getId());
 		if(r == null) {
 			throw new IllegalStateException("Request not found");
