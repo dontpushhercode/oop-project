@@ -1,5 +1,0 @@
-package oop_project;
-
-public enum School {
-	SITE, BS, ISE, SAM, KMA, SEPI, SG, SCE, SSS, SMCGT
-}

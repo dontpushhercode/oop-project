@@ -1,1 +1,10 @@
 /.metadata/
+.DS_Store
+.classpath
+.project
+.settings/
+bin/
+target/
+*.class
+.idea/
+*.iml
