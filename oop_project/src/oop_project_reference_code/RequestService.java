@@ -27,13 +27,13 @@ public class RequestService {
 	    }
 
 	    RegistrationRequest regReq = new RegistrationRequest(st, course);
-	    db.setOrCreateRegistration(regReq);
+	    db.createRegistration(regReq);
 	    return regReq;
 	}
 	
 	EmployeeRequest createEmployeeRequest(Employee empl, String content) {
 		EmployeeRequest r = new EmployeeRequest(empl, content);
-		db.setOrCreateEmployeeRequest(r);
+		db.createEmployeeRequest(r);
 		return r;
 	}
 	

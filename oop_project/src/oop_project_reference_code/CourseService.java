@@ -23,7 +23,7 @@ public class CourseService {
 		checkPermission(manager);
 		
 		Course course = new Course(code, name, description, school, credits);
-		this.db.setOrCreateCourse(course);
+		this.db.createCourse(course);
 		return course;
 	}
 	
@@ -36,7 +36,7 @@ public class CourseService {
 		checkPermission(manager);
 		
 		Section section = new Section(course, semester);
-		this.db.setOrCreateSection(section);
+		this.db.createSection(section);
 		return section;
 	}
 	

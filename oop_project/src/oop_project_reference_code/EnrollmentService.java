@@ -20,7 +20,7 @@ public class EnrollmentService {
         if (isAlreadyEnrolledInCourse(st, sec.getCourse())) {
             throw new IllegalStateException("Already enrolled in this course!");
         }
-        db.setOrCreateEnrollment(new Enrollment(st, sec));
+        db.createEnrollment(new Enrollment(st, sec));
     }
 
     void withdraw(Student st, Course course) {

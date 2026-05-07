@@ -266,7 +266,7 @@ public class Database {
 		return r;
 	}
 	
-	void setOrCreateEnrollment(Enrollment e) {
+	void createEnrollment(Enrollment e) {
 		for (int i = 0; i < enrollments.size(); i++) {
 	        if (enrollments.get(i).getId() == e.getId()) {
 	            enrollments.set(i, e);
@@ -276,7 +276,7 @@ public class Database {
 	    enrollments.add(e);
 	}
 	
-	void setOrCreateSection(Section sec) {
+	void createSection(Section sec) {
 		for (int i = 0; i < sections.size(); i++) {
 	        if (sections.get(i).getId() == sec.getId()) {
 	            sections.set(i, sec);
@@ -286,7 +286,7 @@ public class Database {
 	    sections.add(sec);
 	}
 	
-	void setOrCreateRegistration(RegistrationRequest r) {
+	void createRegistration(RegistrationRequest r) {
 		for(int i=0; i<regRequests.size(); i++) {
 			if(regRequests.get(i).getId() == r.getId()) {
 				regRequests.set(i, r);
@@ -296,7 +296,7 @@ public class Database {
 		regRequests.add(r);
 	}
 	
-	void setOrCreateEmployeeRequest(EmployeeRequest r) {
+	void createEmployeeRequest(EmployeeRequest r) {
 		for(int i=0; i<emplRequests.size(); i++) {
 			if(emplRequests.get(i).getId() == r.getId()) {
 				emplRequests.set(i, r);
@@ -306,7 +306,7 @@ public class Database {
 		emplRequests.add(r);
 	}
 	
-	void setOrCreateCourse(Course c) {
+	void createCourse(Course c) {
 		for(int i=0; i<courses.size(); i++) {
 			if(courses.get(i).getId() == c.getId()) {
 				courses.set(i, c);

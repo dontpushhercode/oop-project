@@ -10,7 +10,7 @@ public class Transcript {
     }
 
     List<Enrollment> getEnrollments() {
-        return OfficeRegister.getOfficeRegister().getStudentEnrollments(student);
+        return OfficeRegister.getOfficeRegister().getEnrollmentService().getStudentEnrollments(student);
     }
     
     double getGpa() {
