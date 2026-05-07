@@ -1,0 +1,103 @@
+package university_system;
+import java.io.*;
+import java.util.*;
+
+/**
+ * 
+ */
+public class Section extends Course {
+
+    /**
+     * Default constructor
+     */
+    public Section() {
+    }
+
+    /**
+     * 
+     */
+    private Course course;
+
+    /**
+     * 
+     */
+    private List<Lesson> lessons;
+
+    /**
+     * 
+     */
+    private Teacher teacher;
+
+    /**
+     * 
+     */
+    private Semester semester;
+
+
+
+
+
+    /**
+     * 
+     */
+    void setTeacher() {
+        // TODO implement here
+    }
+
+    /**
+     * 
+     */
+    void addLesson() {
+        // TODO implement here
+    }
+
+    /**
+     * 
+     */
+    void dropLesson() {
+        // TODO implement here
+    }
+
+    /**
+     * 
+     */
+    void setCourse() {
+        // TODO implement here
+    }
+
+    /**
+     * 
+     */
+    void setSemester() {
+        // TODO implement here
+    }
+
+    /**
+     * 
+     */
+    public void getCourse() {
+        // TODO implement here
+    }
+
+    /**
+     * 
+     */
+    public void getTeacher() {
+        // TODO implement here
+    }
+
+    /**
+     * 
+     */
+    public void getSemester() {
+        // TODO implement here
+    }
+
+    /**
+     * 
+     */
+    public void getLessons() {
+        // TODO implement here
+    }
+
+}
