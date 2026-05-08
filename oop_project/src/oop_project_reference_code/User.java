@@ -30,4 +30,22 @@ public abstract class User {
 		this.researchProfile = researchProfile;
 	}
 	
+	@Override
+	public String toString() {
+	    return this.firstname + " " + this.surname + ", id: " + this.id + "\n";
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+	    if (this == obj) return true;
+	    if (obj == null || getClass() != obj.getClass()) return false;
+	    User other = (User) obj;
+	    return this.id == other.id;
+	}
+
+	@Override
+	public int hashCode() {
+	    return Integer.hashCode(id);
+	}
+	
 }
