@@ -23,13 +23,13 @@ public class Course {
 	}
 	
 	
-    public Course() {
+    Course() {
     	this.instructors = new ArrayList<>();
         this.prerequisites = new ArrayList<>();
     }
     
 
-    public Course(String code, String name, int credits, String description, School school) {
+    Course(String code, String name, int credits, String description, School school) {
         this.code = code;
         this.name = name;
         this.credits = credits;
@@ -39,7 +39,7 @@ public class Course {
         this.prerequisites = new ArrayList<>();
     }
     
-    public Course(String code, String name, int credits, String description, School school,
+    Course(String code, String name, int credits, String description, School school,
             List<Teacher> instructors, List<Course> prerequisites) {
         this.code = code;
         this.name = name;
@@ -52,72 +52,72 @@ public class Course {
     
 
     
-    public int getId() {
+    int getId() {
         return this.id;
     }
 
-    public String getCourseCode() {
+    String getCourseCode() {
         return this.code;
     }
 
-    public String getCourseName() {
+    String getCourseName() {
         return this.name;
     }
 
-    public int getCourseCredits() {
+    int getCourseCredits() {
     	return this.credits
     }
 
-    public String getCourseDescription() {
+    String getCourseDescription() {
         return this.description;
     }
     
-    public School getSchool() {
+    School getSchool() {
         return this.school;
     }
 
-    public List<Teacher> getInstructors() {
+    List<Teacher> getInstructors() {
         return this.instructors;
     }
 
-    public List<Course> getPrerequisites() {
+    List<Course> getPrerequisites() {
         return this.prerequisites;
     }
     
 
-    public void setCode(String code) {
+    void setCode(String code) {
         this.code = code;
     }
     
-    public void setName(String name) {
+    void setName(String name) {
         this.name = name;
     }
 
-    public void setCredits(int credits) {
+    void setCredits(int credits) {
         this.credits = credits;
     }
 
-    public void setDescription(String description) {
+    void setDescription(String description) {
         this.description = description;
     }
     
-    public void setSchool(School school) {
+    void setSchool(School school) {
         this.school = school;
     }
 
-    public void addInstructor(Teacher teacher) {
+    void addInstructor(Teacher teacher) {
         this.instructors.add(teacher);
     }
 
-    public void dropInstructor(Teacher teacher) {
+    void dropInstructor(Teacher teacher) {
         this.instructors.remove(teacher);
     }
     
-    public void addPrerequisite(Course course) {
+    void addPrerequisite(Course course) {
         this.prerequisites.add(course);
     }
 
-    public void dropPrerequisite(Course course) {
+    void dropPrerequisite(Course course) {
         this.prerequisites.remove(course);
     }
     
@@ -139,12 +139,15 @@ public class Course {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
         Course course = (Course) obj;
-        return id == course.id;
+        return id == course.id &&
+                credits == course.credits &&
+                Objects.equals(code, course.code) &&
+                Objects.equals(name, course.name);
     }
 
     
     public int hashCode() {
-        return Objects.hash(id);
+    	 return Objects.hash(id, code, name, credits);
     }
 }
     
