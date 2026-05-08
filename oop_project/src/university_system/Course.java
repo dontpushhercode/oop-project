@@ -1,33 +1,19 @@
 package university_system;
+import java.io.*;
+import java.util.*;
 
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Objects;
-
-
+/**
+ * 
+ */
 public class Course {
-    
-	private static int counter=0;
-	
-	private int id;
-	private String code;
-	private String name;
-	private int credits;
-	private String description;
-	private School school;
-	private List<Teacher> instructors;
-	private List<Course> prerequisites;
-	
-	{
-		this.id = ++counter;
-	}
-	
-	
-    Course() {
+
+    /**
+     * Default constructors
+     */
+    public Course() {
     	this.instructors = new ArrayList<>();
         this.prerequisites = new ArrayList<>();
     }
-    
 
     Course(String code, String name, int credits, String description, School school) {
         this.code = code;
@@ -49,79 +35,161 @@ public class Course {
         this.instructors = instructors;
         this.prerequisites = prerequisites;
    }
-    
 
+    private int id;
+    /**
+     * 
+     */
+    private String code;
+
+    /**
+     * 
+     */
+    private String name;
+
+    /**
+     * 
+     */
+    private int credits;
+
+    /**
+     * 
+     */
+    private String description;
+
+    /**
+     * 
+     */
+    private School School;
+
+    /**
+     * 
+     */
+    private List<Teacher> instructors;
+
+    /**
+     * 
+     */
+    private List<Course> prerequisites;
+
+
+
+    /**
+     * 
+     */
     
     int getId() {
         return this.id;
     }
-
+    
     String getCourseCode() {
-        return this.code;
+    	return this.code;
     }
 
+    /**
+     * 
+     */
     String getCourseName() {
-        return this.name;
+    	return this.name;
     }
 
+    /**
+     * 
+     */
     int getCourseCredits() {
     	return this.credits
     }
 
+    /**
+     * 
+     */
     String getCourseDescription() {
-        return this.description;
+    	return this.description;
     }
-    
+
+    /**
+     * 
+     */
     School getSchool() {
-        return this.school;
+    	 return this.school;
     }
 
+    /**
+     * 
+     */
     List<Teacher> getInstructors() {
-        return this.instructors;
+    	return this.instructors;
     }
 
+    /**
+     * 
+     */
     List<Course> getPrerequisites() {
-        return this.prerequisites;
+    	return this.prerequisites;
     }
-    
 
+    /**
+     * 
+     */
     void setCode(String code) {
-        this.code = code;
+    	this.code = code;
     }
-    
+
+    /**
+     * 
+     */
     void setName(String name) {
-        this.name = name;
+    	this.name = name;
     }
 
+    /**
+     * 
+     */
     void setCredits(int credits) {
-        this.credits = credits;
+    	this.credits = credits;
     }
 
+    /**
+     * 
+     */
     void setDescription(String description) {
-        this.description = description;
+    	this.description = description;
     }
-    
+
+    /**
+     * 
+     */
     void setSchool(School school) {
-        this.school = school;
+    	this.school = school;
     }
 
+    /**
+     * 
+     */
     void addInstructor(Teacher teacher) {
-        this.instructors.add(teacher);
+    	 this.instructors.add(teacher);
     }
 
+    /**
+     * 
+     */
     void dropInstructor(Teacher teacher) {
-        this.instructors.remove(teacher);
-    }
-    
-    void addPrerequisite(Course course) {
-        this.prerequisites.add(course);
+    	 this.instructors.remove(teacher);
     }
 
-    void dropPrerequisite(Course course) {
-        this.prerequisites.remove(course);
+    /**
+     * 
+     */
+    void addPrerequisite(Course course) {
+    	 this.instructors.add(course);
     }
-    
-   
+
+    /**
+     * 
+     */
+    void dropPrerequisite(Course course) {
+    	 this.prerequisites.remove(course);
+    }
     
     public String toString() {
         return "Course{" +
@@ -133,7 +201,6 @@ public class Course {
                 ", school=" + school +
                 '}';
     }
-    
     
     public boolean equals(Object obj) {
         if (this == obj) return true;
@@ -150,6 +217,3 @@ public class Course {
     	 return Objects.hash(id, code, name, credits);
     }
 }
-    
- 
-
