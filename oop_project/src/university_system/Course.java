@@ -1,165 +1,152 @@
 package university_system;
-import java.io.*;
-import java.util.*;
 
-/**
- * 
- */
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Objects;
+
+
 public class Course {
-
-    /**
-     * Default constructor
-     */
+    
+	private static int counter=0;
+	
+	private int id;
+	private String code;
+	private String name;
+	private int credits;
+	private String description;
+	private School school;
+	private List<Teacher> instructors;
+	private List<Course> prerequisites;
+	
+	{
+		this.id = ++counter;
+	}
+	
+	
     public Course() {
+    	this.instructors = new ArrayList<>();
+        this.prerequisites = new ArrayList<>();
+    }
+    
+
+    public Course(String code, String name, int credits, String description, School school) {
+        this.code = code;
+        this.name = name;
+        this.credits = credits;
+        this.description = description;
+        this.school = school;
+        this.instructors = new ArrayList<>();
+        this.prerequisites = new ArrayList<>();
+    }
+    
+    public Course(String code, String name, int credits, String description, School school,
+            List<Teacher> instructors, List<Course> prerequisites) {
+        this.code = code;
+        this.name = name;
+        this.credits = credits;
+        this.description = description;
+        this.school = school;
+        this.instructors = instructors;
+        this.prerequisites = prerequisites;
+   }
+    
+
+    
+    public int getId() {
+        return this.id;
     }
 
-    /**
-     * 
-     */
-    private String code;
-
-    /**
-     * 
-     */
-    private String name;
-
-    /**
-     * 
-     */
-    private int credits;
-
-    /**
-     * 
-     */
-    private String description;
-
-    /**
-     * 
-     */
-    private School School;
-
-    /**
-     * 
-     */
-    private List<Teacher> instructors;
-
-    /**
-     * 
-     */
-    private List<Course> prerequisites;
-
-
-
-    /**
-     * 
-     */
-    public void getCourseCode() {
-        // TODO implement here
+    public String getCourseCode() {
+        return this.code;
     }
 
-    /**
-     * 
-     */
-    public void getCourseName() {
-        // TODO implement here
+    public String getCourseName() {
+        return this.name;
     }
 
-    /**
-     * 
-     */
-    public void getCourseCredits() {
-        // TODO implement here
+    public int getCourseCredits() {
+    	return this.credits
     }
 
-    /**
-     * 
-     */
-    public void getCourseDescription() {
-        // TODO implement here
+    public String getCourseDescription() {
+        return this.description;
+    }
+    
+    public School getSchool() {
+        return this.school;
     }
 
-    /**
-     * 
-     */
-    public void getSchool() {
-        // TODO implement here
+    public List<Teacher> getInstructors() {
+        return this.instructors;
     }
 
-    /**
-     * 
-     */
-    public void getInstructors() {
-        // TODO implement here
+    public List<Course> getPrerequisites() {
+        return this.prerequisites;
+    }
+    
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+    
+    public void setName(String name) {
+        this.name = name;
     }
 
-    /**
-     * 
-     */
-    public void getPrerequisites() {
-        // TODO implement here
+    public void setCredits(int credits) {
+        this.credits = credits;
     }
 
-    /**
-     * 
-     */
-    void setCode() {
-        // TODO implement here
+    public void setDescription(String description) {
+        this.description = description;
+    }
+    
+    public void setSchool(School school) {
+        this.school = school;
     }
 
-    /**
-     * 
-     */
-    void setName() {
-        // TODO implement here
+    public void addInstructor(Teacher teacher) {
+        this.instructors.add(teacher);
     }
 
-    /**
-     * 
-     */
-    void setCredits() {
-        // TODO implement here
+    public void dropInstructor(Teacher teacher) {
+        this.instructors.remove(teacher);
+    }
+    
+    public void addPrerequisite(Course course) {
+        this.prerequisites.add(course);
     }
 
-    /**
-     * 
-     */
-    void setDescription() {
-        // TODO implement here
+    public void dropPrerequisite(Course course) {
+        this.prerequisites.remove(course);
+    }
+    
+   
+    
+    public String toString() {
+        return "Course{" +
+                "id=" + id +
+                ", code='" + code + '\'' +
+                ", name='" + name + '\'' +
+                ", credits=" + credits +
+                ", description='" + description + '\'' +
+                ", school=" + school +
+                '}';
+    }
+    
+    
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Course course = (Course) obj;
+        return id == course.id;
     }
 
-    /**
-     * 
-     */
-    void setSchool() {
-        // TODO implement here
+    
+    public int hashCode() {
+        return Objects.hash(id);
     }
-
-    /**
-     * 
-     */
-    void addInstructor() {
-        // TODO implement here
-    }
-
-    /**
-     * 
-     */
-    void dropInstructor() {
-        // TODO implement here
-    }
-
-    /**
-     * 
-     */
-    void addPrerequisite() {
-        // TODO implement here
-    }
-
-    /**
-     * 
-     */
-    void dropPrerequisite() {
-        // TODO implement here
-    }
-
 }
+    
+ 
+
