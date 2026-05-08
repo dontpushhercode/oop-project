@@ -97,7 +97,7 @@ public class Course {
      * 
      */
     int getCourseCredits() {
-    	return this.credits
+    	return this.credits;
     }
 
     /**
