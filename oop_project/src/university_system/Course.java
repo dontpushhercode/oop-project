@@ -6,6 +6,12 @@ import java.util.*;
  * 
  */
 public class Course {
+	
+	private static int counter = 0;
+	
+	{
+		this.id = ++counter;
+	}
 
     /**
      * Default constructors
