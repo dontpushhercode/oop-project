@@ -16,7 +16,7 @@ public class Course {
     /**
      * Default constructors
      */
-    public Course() {
+    Course() {
     	this.instructors = new ArrayList<>();
         this.prerequisites = new ArrayList<>();
     }
@@ -187,7 +187,7 @@ public class Course {
      * 
      */
     void addPrerequisite(Course course) {
-    	 this.instructors.add(course);
+    	 this.prerequisites.add(course);
     }
 
     /**

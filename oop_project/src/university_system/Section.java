@@ -5,13 +5,38 @@ import java.util.*;
 /**
  * 
  */
-public class Section extends Course {
+public class Section{
+    private static int counter = 0;
+	
+	private int id;
+
+	{
+		this.id = ++counter;
+	}
 
     /**
-     * Default constructor
+     * Default constructors
      */
-    public Section() {
+    Section(Course course, List<Lesson> lessons, Teacher teacher, Semester semester) {
+    	this.course = course;
+    	this.lessons = lessons != null ? lessons : new ArrayList<>();
+		this.teacher = teacher;
+		this.semester = semester;
     }
+    
+    Section(Course course, List<Lesson> lessons, Semester semester) {
+		this.course = course;
+		this.lessons = lessons != null ? lessons : new ArrayList<>();
+		this.teacher = null;
+		this.semester = semester;
+	}
+    
+    Section(Course course, Semester semester){
+		this.course = course;
+		this.lessons = new ArrayList<>();
+		this.teacher = null;
+		this.semester = semester;
+	}
 
     /**
      * 
@@ -40,64 +65,88 @@ public class Section extends Course {
     /**
      * 
      */
-    void setTeacher() {
-        // TODO implement here
+    void setTeacher(Teacher teacher) {
+    	this.teacher = teacher;
     }
 
     /**
      * 
      */
-    void addLesson() {
-        // TODO implement here
+    void addLesson(Lesson lesson) {
+    	this.lessons.add(lesson);
     }
 
     /**
      * 
      */
-    void dropLesson() {
-        // TODO implement here
+    void dropLesson(Lesson lesson) {
+    	this.lessons.remove(lesson);
     }
 
     /**
      * 
      */
-    void setCourse() {
-        // TODO implement here
+    void setCourse(Course course) {
+    	this.course = course;
     }
 
     /**
      * 
      */
-    void setSemester() {
-        // TODO implement here
+    void setSemester(Semester semester) {
+    	this.semester = semester;
     }
 
     /**
      * 
      */
-    public void getCourse() {
-        // TODO implement here
+    Course getCourse() {
+    	return this.course;
     }
 
     /**
      * 
      */
-    public void getTeacher() {
-        // TODO implement here
+    Teacher getTeacher() {
+    	return this.teacher;
     }
 
     /**
      * 
      */
-    public void getSemester() {
-        // TODO implement here
+    Semester getSemester() {
+    	return this.semester;
     }
 
     /**
      * 
      */
-    public void getLessons() {
-        // TODO implement here
+    List<Lesson> getLessons() {
+    	return this.lessons;
     }
+    
+	int getId() {
+		return this.id;
+	}
+	
+	public String toString() {
+		 return "Section of " + this.course.getCourseName() + ", id: " + this.id + "\n";
+	}
+	
+	public boolean equals(Object obj) {
+	    if (this == obj) return true;
+	    if (obj == null || getClass() != obj.getClass()) return false;
+
+	    Section section = (Section) obj;
+
+	    return id == section.id &&
+	            Objects.equals(course, section.course) &&
+	            Objects.equals(teacher, section.teacher) &&
+	            semester == section.semester;
+	}
+
+	public int hashCode() {
+	    return Objects.hash(id, course, teacher, semester);
+	}
 
 }
