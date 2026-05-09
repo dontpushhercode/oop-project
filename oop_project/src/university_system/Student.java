@@ -1,101 +1,107 @@
 package university_system;
 import java.io.*;
 import java.util.*;
-
 /**
  * 
  */
 public class Student extends User {
-
     /**
      * Default constructor
      */
     public Student() {
+        super();
     }
-
+    
+    public Student(String firstName, String surName, String username,
+                   String password, int year, School school) {
+        super(firstName, surName, username, password);
+        this.year = year;
+        this.school = school;
+    }
     /**
      * 
      */
     private int year;
-
     /**
      * 
      */
     private School school;
-
     /**
      * 
      */
     private AcademicDegree degree;
-
     /**
      * 
      */
     private Researcher researchProfile;
-
     /**
      * 
      */
     private User researchSupervisor;
-
-
-
-
-
     /**
      * 
      */
-    public void getDegree() {
-        // TODO implement here
+    public AcademicDegree getDegree() {
+        return this.degree;
     }
-
     /**
      * 
      */
-    public void getYear() {
-        // TODO implement here
+    public int getYear() {
+        return this.year;
     }
-
     /**
      * 
      */
-    public void getSchool() {
-        // TODO implement here
+    public School getSchool() {
+        return this.school;
     }
-
     /**
      * 
      */
-    public void getResearchSupervisor() {
-        // TODO implement here
+    public User getResearchSupervisor() {
+        return this.researchSupervisor;
     }
-
     /**
      * 
      */
-    void setYear() {
-        // TODO implement here
+    void setYear(int year) {
+        this.year = year;
     }
-
     /**
      * 
      */
-    void setSchool() {
-        // TODO implement here
+    void setSchool(School school) {
+        this.school = school;
     }
-
     /**
      * 
      */
-    void setDegree() {
-        // TODO implement here
+    void setDegree(AcademicDegree degree) {
+        this.degree = degree;
     }
-
     /**
      * 
      */
-    void setResearchSupervisor() {
-        // TODO implement here
+    void setResearchSupervisor(User researchSupervisor) {
+        this.researchSupervisor = researchSupervisor;
     }
-
+    
+    @Override
+    public String toString() {
+        return super.toString() + "School: " + school + ", Year: " + year + "\n";
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Student other = (Student) obj;
+        return this.getId() == other.getId();
+    }
+    
+    @Override
+    public int hashCode() {
+        return Integer.hashCode(getId());
+    }
 }
