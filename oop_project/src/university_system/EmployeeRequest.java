@@ -10,7 +10,13 @@ public class EmployeeRequest extends Request {
     /**
      * Default constructor
      */
-    public EmployeeRequest() {
+    EmployeeRequest() {
+    }
+
+    EmployeeRequest(Employee fromEmployee, String content) {
+        super();
+        this.fromEmployee = fromEmployee;
+        this.content = content;
     }
 
     /**
@@ -31,22 +37,41 @@ public class EmployeeRequest extends Request {
     /**
      * 
      */
-    void isSigned() {
-        // TODO implement here
+    boolean isSigned() {
+        return this.signedBy != null;
     }
 
-    /**
-     * 
-     */
-    void getContent() {
-        // TODO implement here
+    Employee getEmployee() {
+        return this.fromEmployee;
     }
 
-    /**
-     * 
-     */
-    void getRequestor() {
-        // TODO implement here
+    String getContent() {
+        return this.content;
     }
 
+    Employee getSignedBy() {
+        return this.signedBy;
+    }
+
+    void setSign(Employee employee) {
+        this.signedBy = employee;
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() + "From: " + fromEmployee + ", signed: " + isSigned() + "\n";
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        EmployeeRequest other = (EmployeeRequest) obj;
+        return this.getId() == other.getId();
+    }
+
+    @Override
+    public int hashCode() {
+        return Integer.hashCode(getId());
+    }
 }
