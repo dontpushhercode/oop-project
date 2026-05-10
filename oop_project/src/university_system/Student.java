@@ -8,11 +8,11 @@ public class Student extends User {
     /**
      * Default constructor
      */
-    public Student() {
+    Student() {
         super();
     }
     
-    public Student(String firstName, String surName, String username,
+    Student(String firstName, String surName, String username,
                    String password, int year, School school) {
         super(firstName, surName, username, password);
         this.year = year;
@@ -41,25 +41,25 @@ public class Student extends User {
     /**
      * 
      */
-    public AcademicDegree getDegree() {
+    AcademicDegree getDegree() {
         return this.degree;
     }
     /**
      * 
      */
-    public int getYear() {
+    int getYear() {
         return this.year;
     }
     /**
      * 
      */
-    public School getSchool() {
+    School getSchool() {
         return this.school;
     }
     /**
      * 
      */
-    public User getResearchSupervisor() {
+    User getResearchSupervisor() {
         return this.researchSupervisor;
     }
     /**

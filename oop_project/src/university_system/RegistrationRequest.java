@@ -11,6 +11,7 @@ public class RegistrationRequest extends Request {
      * Default constructor
      */
     RegistrationRequest() {
+    	super();
     }
 
     RegistrationRequest(Student student, Course course) {

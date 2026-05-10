@@ -12,7 +12,7 @@ public abstract class User {
         this.id = ++counter;
     }
 
-    public User() {
+    User() {
     }
 
     User(String firstName, String surName, String username, String password) {

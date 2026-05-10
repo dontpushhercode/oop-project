@@ -8,11 +8,11 @@ public class Teacher extends Employee {
     /**
      * Default constructor
      */
-	public Teacher() {
+	Teacher() {
 	    super();
 	}
 
-	public Teacher(String firstName, String surName, String username,
+	Teacher(String firstName, String surName, String username,
 	               String password, TeacherType teacherType, School school) {
 	    super();
 	    this.teacherType = teacherType;
@@ -29,24 +29,27 @@ public class Teacher extends Employee {
     /**
      * 
      */
-    private Researcher researchProfile;
+    private double ratingSum;
     /**
      * 
      */
-    public double getRating() {
-        // TODO implement here
-        return 0;
+    private double ratingCount;
+    /**
+     * 
+     */
+    double getRating() {
+    	 return ratingCount == 0?0:ratingSum/ratingCount;
     }
     /**
      * 
      */
-    public School getSchool() {
+    School getSchool() {
         return this.school;
     }
     /**
      * 
      */
-    public TeacherType getTeacherType() {
+    TeacherType getTeacherType() {
         return this.teacherType;
     }
     /**

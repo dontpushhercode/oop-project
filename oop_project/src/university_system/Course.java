@@ -16,7 +16,7 @@ public class Course {
     /**
      * Default constructors
      */
-    public Course() {
+    Course() {
     	this.instructors = new ArrayList<>();
         this.prerequisites = new ArrayList<>();
     }
@@ -66,7 +66,7 @@ public class Course {
     /**
      * 
      */
-    private School School;
+    private School school;
 
     /**
      * 
@@ -187,7 +187,7 @@ public class Course {
      * 
      */
     void addPrerequisite(Course course) {
-    	 this.instructors.add(course);
+    	 this.prerequisites.add(course);
     }
 
     /**
@@ -197,6 +197,7 @@ public class Course {
     	 this.prerequisites.remove(course);
     }
     
+    @Override
     public String toString() {
         return "Course{" +
                 "id=" + id +
@@ -208,6 +209,7 @@ public class Course {
                 '}';
     }
     
+    @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
@@ -218,7 +220,7 @@ public class Course {
                 Objects.equals(name, course.name);
     }
 
-    
+    @Override
     public int hashCode() {
     	 return Objects.hash(id, code, name, credits);
     }

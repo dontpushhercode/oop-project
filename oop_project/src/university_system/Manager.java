@@ -10,13 +10,14 @@ public class Manager extends Employee {
     /**
      * Default constructor
      */
-    public Manager() {
+    Manager() {
+    	super();
     }
 
     /**
      * Constructor with all fields
      */
-    public Manager(String firstname, String surname, String password, String username, ManagerType type) {
+    Manager(String firstname, String surname, String password, String username, ManagerType type) {
         super(firstname, surname, password, username, DepartmentType.MANAGEMENT);
         this.type = type;
     }
@@ -29,7 +30,7 @@ public class Manager extends Employee {
     /**
      * returns the type of this manager
      */
-    public ManagerType getManagerType() {
+    ManagerType getManagerType() {
         return this.type;
     }
 

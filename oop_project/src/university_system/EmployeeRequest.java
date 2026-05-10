@@ -11,6 +11,7 @@ public class EmployeeRequest extends Request {
      * Default constructor
      */
     EmployeeRequest() {
+    	super();
     }
 
     EmployeeRequest(Employee fromEmployee, String content) {

@@ -3,18 +3,19 @@ import java.io.*;
 import java.util.*;
 
 /**
- * employee in uni system
+ * employee in university system
  */
 public class Employee extends User {
     /**
      * default constructor
      */
-    public Employee() {
+    Employee() {
+    	super();
     }
     /**
      * constructor with all fields
      */
-    public Employee(String firstname, String surname, String password, String username, DepartmentType department) {
+    Employee(String firstname, String surname, String password, String username, DepartmentType department) {
         super(firstname, surname, password, username);
         this.department = department;
     }
@@ -25,7 +26,7 @@ public class Employee extends User {
     /**
      * returns the department of this employee
      */
-    public DepartmentType getDepartment() {
+    DepartmentType getDepartment() {
         return this.department;
     }
     /**
