@@ -5250,7 +5250,7 @@
 											"top": 1756,
 											"width": 231,
 											"height": 13,
-											"text": "-setStatus()",
+											"text": "~setStatus()",
 											"horizontalAlignment": 0
 										},
 										{
@@ -5269,7 +5269,7 @@
 											"top": 1756,
 											"width": 231,
 											"height": 13,
-											"text": "-setStudent()",
+											"text": "~setStudent()",
 											"horizontalAlignment": 0
 										},
 										{
@@ -5288,7 +5288,7 @@
 											"top": 1756,
 											"width": 231,
 											"height": 13,
-											"text": "-setMark()",
+											"text": "~setMark()",
 											"horizontalAlignment": 0
 										},
 										{
@@ -5307,7 +5307,7 @@
 											"top": 1756,
 											"width": 231,
 											"height": 13,
-											"text": "-setSection()",
+											"text": "~setSection()",
 											"horizontalAlignment": 0
 										}
 									],
@@ -22760,7 +22760,8 @@
 								"$ref": "AAAAAAGduTNQzkWvBgc="
 							},
 							"name": "degree",
-							"visibility": "private"
+							"visibility": "private",
+							"type": ""
 						},
 						{
 							"_type": "UMLAttribute",
@@ -25145,7 +25146,7 @@
 								"$ref": "AAAAAAGduT1CU0k+cA4="
 							},
 							"name": "setStatus",
-							"visibility": "private"
+							"visibility": "package"
 						},
 						{
 							"_type": "UMLOperation",
@@ -25154,7 +25155,7 @@
 								"$ref": "AAAAAAGduT1CU0k+cA4="
 							},
 							"name": "setStudent",
-							"visibility": "private"
+							"visibility": "package"
 						},
 						{
 							"_type": "UMLOperation",
@@ -25163,7 +25164,7 @@
 								"$ref": "AAAAAAGduT1CU0k+cA4="
 							},
 							"name": "setMark",
-							"visibility": "private"
+							"visibility": "package"
 						},
 						{
 							"_type": "UMLOperation",
@@ -25172,7 +25173,7 @@
 								"$ref": "AAAAAAGduT1CU0k+cA4="
 							},
 							"name": "setSection",
-							"visibility": "private"
+							"visibility": "package"
 						}
 					]
 				},
@@ -25512,84 +25513,6 @@
 					},
 					"name": "Admin",
 					"ownedElements": [
-						{
-							"_type": "UMLGeneralization",
-							"_id": "AAAAAAGduTiy/EhQEm8=",
-							"_parent": {
-								"$ref": "AAAAAAGduTW3Ykd1Or8="
-							},
-							"source": {
-								"$ref": "AAAAAAGduTW3Ykd1Or8="
-							},
-							"target": {
-								"$ref": "AAAAAAGduTTQuEbGZkQ="
-							}
-						},
-						{
-							"_type": "UMLGeneralization",
-							"_id": "AAAAAAGduTlOTkh0g3M=",
-							"_parent": {
-								"$ref": "AAAAAAGduTW3Ykd1Or8="
-							},
-							"source": {
-								"$ref": "AAAAAAGduTW3Ykd1Or8="
-							},
-							"target": {
-								"$ref": "AAAAAAGduTTQuEbGZkQ="
-							}
-						},
-						{
-							"_type": "UMLGeneralization",
-							"_id": "AAAAAAGduTmgRUiXfsg=",
-							"_parent": {
-								"$ref": "AAAAAAGduTW3Ykd1Or8="
-							},
-							"source": {
-								"$ref": "AAAAAAGduTW3Ykd1Or8="
-							},
-							"target": {
-								"$ref": "AAAAAAGduTTQuEbGZkQ="
-							}
-						},
-						{
-							"_type": "UMLGeneralization",
-							"_id": "AAAAAAGduToZbkjDjSs=",
-							"_parent": {
-								"$ref": "AAAAAAGduTW3Ykd1Or8="
-							},
-							"source": {
-								"$ref": "AAAAAAGduTW3Ykd1Or8="
-							},
-							"target": {
-								"$ref": "AAAAAAGduTTQuEbGZkQ="
-							}
-						},
-						{
-							"_type": "UMLGeneralization",
-							"_id": "AAAAAAGdyOek4VHa6Yk=",
-							"_parent": {
-								"$ref": "AAAAAAGduTW3Ykd1Or8="
-							},
-							"source": {
-								"$ref": "AAAAAAGduTW3Ykd1Or8="
-							},
-							"target": {
-								"$ref": "AAAAAAGduTTQuEbGZkQ="
-							}
-						},
-						{
-							"_type": "UMLGeneralization",
-							"_id": "AAAAAAGdyYCCpVSPYbE=",
-							"_parent": {
-								"$ref": "AAAAAAGduTW3Ykd1Or8="
-							},
-							"source": {
-								"$ref": "AAAAAAGduTW3Ykd1Or8="
-							},
-							"target": {
-								"$ref": "AAAAAAGduTSN/EaS6NA="
-							}
-						},
 						{
 							"_type": "UMLAssociation",
 							"_id": "AAAAAAGdy9YxQ9xpsIo=",
@@ -25942,7 +25865,8 @@
 								"$ref": "AAAAAAGduTOsRkZdhpA="
 							},
 							"name": "semester",
-							"visibility": "private"
+							"visibility": "private",
+							"type": ""
 						}
 					],
 					"operations": [
