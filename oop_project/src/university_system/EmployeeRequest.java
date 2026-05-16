@@ -3,7 +3,9 @@ import java.io.*;
 import java.util.*;
 
 /**
- * 
+ *
+ * Represents a request submitted by an employee
+ * in the university system.
  */
 public class EmployeeRequest extends Request {
 
@@ -11,9 +13,11 @@ public class EmployeeRequest extends Request {
      * Default constructor
      */
     EmployeeRequest() {
-    	super();
     }
 
+    /**
+     * Constructor that initializes the request with employee and content.
+     */
     EmployeeRequest(Employee fromEmployee, String content) {
         super();
         this.fromEmployee = fromEmployee;
@@ -21,48 +25,67 @@ public class EmployeeRequest extends Request {
     }
 
     /**
-     * 
+     * Employee who submitted this request.
      */
     private Employee fromEmployee;
 
     /**
-     * 
+     * Text content of this request.
      */
     private String content;
 
     /**
-     * 
+     * Employee who signed this request.
      */
     private Employee signedBy;
 
     /**
-     * 
+     * Returns whether this request has been signed.
      */
     boolean isSigned() {
         return this.signedBy != null;
     }
 
+    /**
+     * Returns the employee who submitted this request.
+     */
     Employee getEmployee() {
         return this.fromEmployee;
     }
 
+    /**
+     * Returns the content of this request.
+     */
     String getContent() {
         return this.content;
     }
 
+    /**
+     * Returns the employee who signed this request.
+     */
     Employee getSignedBy() {
         return this.signedBy;
     }
 
+    /**
+     * Sets the employee who signs this request.
+     */
     void setSign(Employee employee) {
         this.signedBy = employee;
     }
 
+    /**
+     * Returns string representation of this employee request
+     * including sender and sign status.
+     */
     @Override
     public String toString() {
         return super.toString() + "From: " + fromEmployee + ", signed: " + isSigned() + "\n";
     }
 
+    /**
+     * Compares this employee request to another object by id.
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
@@ -71,6 +94,9 @@ public class EmployeeRequest extends Request {
         return this.getId() == other.getId();
     }
 
+    /**
+     * Returns hash code based on request id.
+     */
     @Override
     public int hashCode() {
         return Integer.hashCode(getId());
