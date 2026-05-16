@@ -12,39 +12,44 @@ public class EnrollmentService {
     /**
      * Database instance used for data access.
      */
-    private final Database database;
+    private final Database db;
 
     /**
-     * Constructor that initializes the service with a database instance.
+     * RequestService used to check registration requests.
      */
-    EnrollmentService(Database database) {
-        this.database = database;
+    private final RequestService requestService;
+
+    /**
+     * Constructor that initializes the service with database and request service.
+     */
+    EnrollmentService(Database db, RequestService requestService) {
+        this.db = db;
+        this.requestService = requestService;
     }
 
     /**
-     * Assigns a student to a section if all conditions are met.
-     * Checks for approved registration request, and verifies
-     * the student is not already enrolled.
+     * Assigns a student to a section if approved request exists
+     * and student is not already enrolled.
      */
-    void assign(Student student, Section section) {
-        if (!hasApprovedRequest(student, section.getCourse())) {
+    void assign(Student st, Section sec) {
+        if (!requestService.hasApprovedRequest(st, sec.getCourse())) {
             throw new IllegalStateException("No approved registration request for this course!");
         }
-        if (isEnrolledInSection(student, section)) {
+        if (isEnrolledInSection(st, sec)) {
             throw new IllegalStateException("Already enrolled in this section!");
         }
-        if (isEnrolledInCourse(student, section.getCourse())) {
+        if (isEnrolledInCourse(st, sec.getCourse())) {
             throw new IllegalStateException("Already enrolled in this course!");
         }
-        database.createEnrollment(new Enrollment(student, section));
+        db.createEnrollment(new Enrollment(st, sec));
     }
 
     /**
      * Withdraws a student from a course.
      * Cannot withdraw from completed or already withdrawn enrollments.
      */
-    void withdraw(Student student, Course course) {
-        Enrollment target = findEnrollment(student, course);
+    void withdraw(Student st, Course course) {
+        Enrollment target = findEnrollment(st, course);
         if (target == null) {
             throw new IllegalStateException("Enrollment not found!");
         }
@@ -58,35 +63,23 @@ public class EnrollmentService {
     /**
      * Returns all enrollments for the given student.
      */
-    List<Enrollment> getStudentEnrollments(Student student) {
-        return database.getFilteredEnrollments(student);
+    List<Enrollment> getStudentEnrollments(Student st) {
+        return db.getFilteredEnrollments(st);
     }
 
     /**
      * Returns enrollments filtered by teacher, course and enrollment status.
      */
     List<Enrollment> getTeacherCourseEnrollments(Teacher teacher, Course course, EnrollmentStatus status) {
-        return database.getFilteredEnrollments(teacher, course, status);
-    }
-
-    /**
-     * Checks if the student has an approved registration request for the course.
-     */
-    private boolean hasApprovedRequest(Student student, Course course) {
-        for (RegistrationRequest r : database.getFilteredRegistrationRequests(student)) {
-            if (r.getCourse().equals(course) && r.getStatus() == RequestStatus.APPROVED) {
-                return true;
-            }
-        }
-        return false;
+        return db.getFilteredEnrollments(teacher, course, status);
     }
 
     /**
      * Checks if the student is already enrolled in the given section.
      */
-    private boolean isEnrolledInSection(Student student, Section section) {
-        for (Enrollment e : database.getFilteredEnrollments(student)) {
-            if (e.getSection().equals(section)) {
+    private boolean isEnrolledInSection(Student st, Section sec) {
+        for (Enrollment e : db.getFilteredEnrollments(st)) {
+            if (e.getSection().equals(sec)) {
                 return true;
             }
         }
@@ -96,8 +89,8 @@ public class EnrollmentService {
     /**
      * Checks if the student is already enrolled in the given course.
      */
-    private boolean isEnrolledInCourse(Student student, Course course) {
-        for (Enrollment e : database.getFilteredEnrollments(student)) {
+    private boolean isEnrolledInCourse(Student st, Course course) {
+        for (Enrollment e : db.getFilteredEnrollments(st)) {
             if (e.getSection().getCourse().equals(course) &&
                (e.getStatus() == EnrollmentStatus.ACTIVE ||
                 e.getStatus() == EnrollmentStatus.COMPLETED)) {
@@ -111,8 +104,8 @@ public class EnrollmentService {
      * Finds and returns the enrollment for the given student and course.
      * Returns null if not found.
      */
-    private Enrollment findEnrollment(Student student, Course course) {
-        for (Enrollment e : database.getFilteredEnrollments(student)) {
+    private Enrollment findEnrollment(Student st, Course course) {
+        for (Enrollment e : db.getFilteredEnrollments(st)) {
             if (e.getSection().getCourse().equals(course)) {
                 return e;
             }
