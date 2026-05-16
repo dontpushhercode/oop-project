@@ -32,7 +32,7 @@ public class EnrollmentService {
      * and student is not already enrolled.
      */
     void assign(Student st, Section sec) {
-        if (!requestService.hasApprovedRequest(st, sec.getCourse())) {
+        if (!requestService.getRegistrationRequest(st, sec.getCourse()).isApproved()) {
             throw new IllegalStateException("No approved registration request for this course!");
         }
         if (isEnrolledInSection(st, sec)) {

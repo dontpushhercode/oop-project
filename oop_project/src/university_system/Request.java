@@ -47,9 +47,16 @@ public abstract class Request {
      * Date when this request was created.
      */
     private LocalDate createdAt;
+    
+    /**
+     * Date when this request was last updated.
+     */
+    private LocalDate updatedAt;
 
     /**
      * Returns the unique id of this request.
+     *
+     * @return request id
      */
     int getId() {
         return this.id;
@@ -57,20 +64,45 @@ public abstract class Request {
 
     /**
      * Returns the current status of this request.
+     *
+     * @return request status
      */
     RequestStatus getStatus() {
         return this.status;
     }
-
+    
+    /**
+     * Returns the request creation date.
+     *
+     * @return creation date
+     */
+    LocalDate getCreationDate() {
+    	return this.createdAt;
+    }
+    
+    /**
+     * Returns the last update date of this request.
+     *
+     * @return update date (may be null if never updated)
+     */
+    LocalDate getUpdationDate() {
+    	return this.updatedAt;
+    }
+    
     /**
      * Sets the status of this request.
+     *
+     * @param status new request status
      */
     void setStatus(RequestStatus status) {
         this.status = status;
+        this.updatedAt = LocalDate.now();
     }
 
     /**
      * Returns whether this request is approved.
+     *
+     * @return true if approved, false otherwise
      */
     boolean isApproved() {
         return this.isApproved;
@@ -79,13 +111,16 @@ public abstract class Request {
     /**
      * Sets the approval status of this request.
      */
-    void setApproved(boolean approved) {
-        this.isApproved = approved;
+    void setApproved() {
+        this.isApproved = true;
+        this.updatedAt = LocalDate.now();
     }
 
     /**
      * Returns string representation of this request
      * including id, status and creation date.
+     *
+     * @return string representation of request
      */
     @Override
     public String toString() {
@@ -94,6 +129,9 @@ public abstract class Request {
 
     /**
      * Compares this request to another object by id.
+     *
+     * @param obj object to compare
+     * @return true if objects have the same id
      */
     @Override
     public boolean equals(Object obj) {
@@ -105,6 +143,8 @@ public abstract class Request {
 
     /**
      * Returns hash code based on request id.
+     *
+     * @return hash code value
      */
     @Override
     public int hashCode() {

@@ -75,8 +75,8 @@ public class Section extends Course {
     /**
      * 
      */
-    public void getCourse() {
-        // TODO implement here
+    Course getCourse() {
+        return this.course;
     }
 
     /**

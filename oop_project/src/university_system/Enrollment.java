@@ -146,6 +146,13 @@ public class Enrollment {
     }
     
     /**
+     * Marks the enrollment as withdrawn.
+     */
+    void withdraw() {
+	    this.status = EnrollmentStatus.WITHDRAWN;
+	}
+    
+    /**
      * Returns a string representation of the enrollment.
      *
      * @return enrollment information as string
