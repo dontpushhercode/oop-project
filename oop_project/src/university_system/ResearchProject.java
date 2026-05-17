@@ -9,6 +9,11 @@ import java.io.Serializable;
 public class ResearchProject implements Serializable {
     private static final long serialVersionUID = 1L;
 
+	private static int counter = 0;
+	
+	{
+		this.id=++counter;
+	}
 
 	/**
 	 * Represents a research project in the university system.
@@ -47,6 +52,11 @@ public class ResearchProject implements Serializable {
     /**
      * 
      */
+    private int id;
+    
+    /**
+     * 
+     */
     private ArrayList<ResearchPaper> papers;
 
     /**
@@ -58,6 +68,13 @@ public class ResearchProject implements Serializable {
      * 
      */
     private String projectName;
+    
+    /**
+     * 
+     */
+    int getId() {
+    	return this.id;
+    }
 
 
     /**
@@ -77,7 +94,7 @@ public class ResearchProject implements Serializable {
     /**
      * Returns project name.
      */
-    public String getProjectName() {
+    String getProjectName() {
         return projectName;
     }
     

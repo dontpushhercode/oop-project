@@ -1,5 +1,4 @@
 package university_system;
-import java.io.*;
 import java.util.*;
 
 /**
@@ -13,19 +12,18 @@ public class ResearchService {
 	/**
      * Database used to store and access research data.
      */
-    private Database database;
+    private final Database database;
 
 
     /**
      * Creates a ResearchService with the given database.
      *
      * @param database the database used by this service
-     * @throws IllegalArgumentException if database is null
      */
     ResearchService(Database database) {
-    	 if (database == null) {
-             throw new IllegalArgumentException("Database cannot be null");
-         }
+    	if (database == null) {
+    	    throw new IllegalArgumentException("Database cannot be null");
+    	}
     	this.database = database;	
     }
 
@@ -39,7 +37,7 @@ public class ResearchService {
      * @throws IllegalArgumentException if user is null
      * @throws IllegalStateException if the user already has a research profile
      */
-    Researcher assignResearchProfile(User user) {
+    public void createResearchProfile(User user) {
     	if (user == null) {
              throw new IllegalArgumentException("User cannot be null");
          }
@@ -49,11 +47,10 @@ public class ResearchService {
             throw new IllegalStateException("User already has a research profile");
         }
 
-        Researcher researcher = new Researcher(user);
-
-        database.getResearchers().add(researcher);
-
-        return researcher;
+        User u = database.getUser(user.getId());
+        
+        Researcher researcher = new Researcher(u);
+        u.setResearchProfile(researcher);
     }
 
 
@@ -64,7 +61,7 @@ public class ResearchService {
      * @throws IllegalArgumentException if user is null
      * @throws IllegalStateException if the user does not have a research profile
      */
-    void removeResearchProfile(User user) {
+    public void removeResearchProfile(User user) {
     	if (user == null) {
             throw new IllegalArgumentException("User cannot be null");
         }
@@ -74,8 +71,9 @@ public class ResearchService {
         if (researcher == null) {
             throw new IllegalStateException("User does not have a research profile");
         }
-
-        database.getResearchers().remove(researcher);
+        
+        User u = database.getUser(user.getId());
+        u.deleteResearchProfile();
     }
 
     /**
@@ -83,38 +81,29 @@ public class ResearchService {
      *
      * @param user the user whose research profile should be returned
      * @return the researcher profile, or null if the user has no profile
-     * @throws IllegalArgumentException if user is null
      */
-    Researcher getResearchProfile(User user) {
+    public Researcher getResearchProfile(User user) {
     	 if (user == null) {
              throw new IllegalArgumentException("User cannot be null");
          }
-
-         for (Researcher researcher : database.getResearchers()) {
-             if (researcher.getUser().equals(user)) {
-                 return researcher;
-             }
-         }
-
-         return null;
+    	 
+    	 User u = database.getUser(user.getId());
+         return u.getResearchProfile();
     }
 
     /**
-     *Creates a new research project.
+     * Creates a new research project.
      *
      * @param projectName the name of the project
      * @return the created research project
      * @throws IllegalArgumentException if projectName is empty 
      */
-    ResearchProject createProject(String projectName) {
+    public ResearchProject createProject(String projectName, Researcher researcher) {
     	if (projectName == null || projectName.isBlank()) {
-            throw new IllegalArgumentException("Project name cannot be empty");
-        }
-
-        ResearchProject project = new ResearchProject(projectName);
-
-        database.getProjects().add(project);
-
+    	    throw new IllegalArgumentException("Project name cannot be empty");
+    	}
+        ResearchProject project = new ResearchProject(projectName, researcher);
+        database.createProject(project);
         return project;
     }
 
@@ -126,7 +115,7 @@ public class ResearchService {
      * @throws IllegalArgumentException if project or researcher is null
      * @throws IllegalStateException if researcher is already a member
      */
-    void addMember(ResearchProject project, Researcher researcher) {
+    public void addMember(ResearchProject project, Researcher researcher) {
     	if (project == null) {
             throw new IllegalArgumentException("Research project cannot be null");
         }
@@ -135,11 +124,12 @@ public class ResearchService {
             throw new IllegalArgumentException("Researcher cannot be null");
         }
 
-        if (project.getMembers().contains(researcher)) {
+        ResearchProject p = database.getProject(project.getId());
+        if (p.getMembers().contains(researcher)) {
             throw new IllegalStateException("Researcher is already a member of this project");
         }
-
-        project.addMember(researcher);
+        
+        p.addMember(researcher);
     }
 
 
@@ -151,20 +141,20 @@ public class ResearchService {
      * @throws IllegalArgumentException if project or researcher is null
      * @throws IllegalStateException if researcher is not a member
      */
-    void removeMember(ResearchProject project, Researcher researcher) {
-        if (project == null) {
-            throw new IllegalArgumentException("Research project cannot be null");
+    public void removeMember(ResearchProject project, Researcher researcher) {
+    	if (project == null) {
+    		throw new IllegalArgumentException("Research project cannot be null");
         }
 
-        if (researcher == null) {
-            throw new IllegalArgumentException("Researcher cannot be null");
-        }
-
-        if (!project.getMembers().contains(researcher)) {
-            throw new IllegalStateException("Researcher is not a member of this project");
-        }
-
-        project.deleteMember(researcher);
+    	if (researcher == null) {
+    		throw new IllegalArgumentException("Researcher cannot be null");
+    	}
+    	
+    	ResearchProject p = database.getProject(project.getId());
+    	if (!p.getMembers().contains(researcher)) {
+    		throw new IllegalStateException("Researcher is not a member of this project");
+    	}
+    	p.deleteMember(researcher);
     }
 
     /**
@@ -175,7 +165,7 @@ public class ResearchService {
      * @throws IllegalArgumentException if project or paper is null
      * @throws IllegalStateException if paper already exists in the project
      */
-    void addPaper(ResearchProject project, ResearchPaper paper) {
+    public void addPaper(ResearchProject project, ResearchPaper paper) {
     	if (project == null) {
             throw new IllegalArgumentException("Research project cannot be null");
         }
@@ -184,50 +174,60 @@ public class ResearchService {
             throw new IllegalArgumentException("Research paper cannot be null");
         }
 
-        if (project.getPapers().contains(paper)) {
+        ResearchProject p = database.getProject(project.getId());
+        if (p.getPapers().contains(paper)) {
             throw new IllegalStateException("Paper already exists in this project");
         }
-
-        project.addPaper(paper);
-
-        if (!database.getPapers().contains(paper)) {
-            database.getPapers().add(paper);
-        }
+        p.addPaper(paper);
+        database.createPaper(paper);
     }
 
     /**
+     * Returns research papers related to the project.
      * 
+     * @param project the research project
+     * @return list of papers
      */
-    List<ResearchPaper> getPapers(ResearchProject project) {
+    public List<ResearchPaper> getPapers(ResearchProject project) {
     	if (project == null) {
             throw new IllegalArgumentException("Research project cannot be null");
         }
 
-        return project.getPapers();
+    	ResearchProject p = database.getProject(project.getId());
+        return new ArrayList<>(p.getPapers());
     }
 
     /**
-     * ssigns a supervisor to a researcher.
+     * Assigns a supervisor to a researcher.
      *
      * @param researcher the researcher who receives a supervisor
      * @param supervisor the supervisor
      * @throws IllegalArgumentException if researcher or supervisor is null
      * @throws IllegalArgumentException if researcher and supervisor are the same person
      */
-    void assignSupervisor(Researcher researcher, Researcher supervisor) {
-    	if (researcher == null) {
-            throw new IllegalArgumentException("Researcher cannot be null");
+    public void assignSupervisor(Student student, Researcher supervisor) {
+    	if (student == null) {
+    	    throw new IllegalArgumentException("Student cannot be null");
+    	}
+    	
+    	if (student.getResearchProfile() == null) {
+            throw new IllegalArgumentException("Student does not have a research profile");
         }
 
         if (supervisor == null) {
             throw new IllegalArgumentException("Supervisor cannot be null");
         }
 
-        if (researcher.equals(supervisor)) {
+        if (student.getResearchProfile().equals(supervisor)) {
             throw new IllegalArgumentException("Researcher cannot be supervisor of himself/herself");
         }
+        
+        if(supervisor.getHIndex()<3) {
+        	throw new IllegalArgumentException("Supervisor's h-index must be greater than 3!");
+        }
 
-        researcher.setSupervisor(supervisor);
+        Student st = database.getStudent(student.getId());
+        st.setResearchSupervisor(supervisor);
     }
 
     /**

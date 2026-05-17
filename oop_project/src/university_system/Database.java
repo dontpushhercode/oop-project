@@ -463,6 +463,21 @@ public class Database implements Serializable {
     }
     
     /**
+     * Returns all users that are researchers.
+     * 
+     * @return list of users
+     */
+    List<User> getFilteredUsers(){
+    	List<User> filtered = new ArrayList<User>();
+    	for(User u:users) {
+    		if(u.isResearcher()) {
+    			filtered.add(u);
+    		}
+    	}
+    	return filtered;
+    }
+    
+    /**
      * Returns all students stored in the system.
      *
      * @return list of students
@@ -687,6 +702,15 @@ public class Database implements Serializable {
 		return null;
 	}
     
+    ResearchProject getProject(int id) {
+    	for(ResearchProject p:projects) {
+    		if(p.getId() == id) {
+    			return p;
+    		}
+    	}
+    	return null;
+    }
+    
     /**
      * Returns a teacher by identifier.
      *
@@ -703,7 +727,22 @@ public class Database implements Serializable {
 		return null;
 	}
     
-
+    /**
+     * Returns a student by identifier.
+     * 
+     * @param id student identifier
+     * @return matching student or null if not found
+     */
+    Student getStudent(int id) {
+    	for(User u:users) {
+			if(u.getId() == id) {
+				Student s = (Student) u;
+				return s;
+			}
+		}
+		return null;
+    }
+    
 	/**
 	 * Returns a request by identifier.
 	 *
