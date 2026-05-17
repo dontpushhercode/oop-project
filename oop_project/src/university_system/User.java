@@ -1,151 +1,149 @@
 package university_system;
 import java.io.*;
 import java.util.*;
-
 /**
- * 
+ *
  */
 public abstract class User {
 
-    /**
-     * Default constructor
-     */
-    public User() {
+    private static int counter = 0;
+
+    {
+        this.id = ++counter;
     }
 
+    User() {
+    }
+
+    User(String firstName, String surName, String username, String password) {
+        this.firstName = firstName;
+        this.surName = surName;
+        this.username = username;
+        this.password = password;
+        this.isLoggedIn = false;
+    }
     /**
-     * 
+     *
      */
     private int id;
-
     /**
-     * 
+     *
      */
     private String username;
-
     /**
-     * 
+     *
      */
     private String password;
-
     /**
-     * 
+     *
      */
     private String firstName;
-
     /**
-     * 
+     *
      */
     private String surName;
-
     /**
-     * 
+     *
      */
     private Boolean isLoggedIn;
-
     /**
-     * 
+     *
      */
     private Researcher researchProfile;
-
-
-
     /**
-     * 
+     *
      */
-    public void getId() {
-        // TODO implement here
+    int getId() {
+        return this.id;
+    }
+    /**
+     *
+     */
+    String getUserName() {
+        return this.username;
+    }
+    /**
+     *
+     */
+    String getFullName() {
+        return this.firstName + " " + this.surName;
+    }
+    /**
+     *
+     */
+    void login() {
+        this.isLoggedIn = true;
+    }
+    /**
+     *
+     */
+    void logout() {
+        this.isLoggedIn = false;
+    }
+    /**
+     *
+     */
+    private void setPassword(String password) {
+        this.password = password;
+    }
+    /**
+     *
+     */
+    void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+    /**
+     *
+     */
+    void setSurName(String surName) {
+        this.surName = surName;
+    }
+    /**
+     *
+     */
+    void setUsername(String username) {
+        this.username = username;
+    }
+    /**
+     *
+     */
+    void setResearchProfile(Researcher researchProfile) {
+        this.researchProfile = researchProfile;
+    }
+    /**
+     *
+     */
+    Researcher getResearchProfile() {
+        return this.researchProfile;
+    }
+    /**
+     *
+     */
+    void deleteResearchProfile() {
+        this.researchProfile = null;
+    }
+    /**
+     *
+     */
+    Boolean getIsLoggedIn() {
+        return this.isLoggedIn;
     }
 
-    /**
-     * 
-     */
-    public void getUserName() {
-        // TODO implement here
+    @Override
+    public String toString() {
+        return this.firstName + " " + this.surName + ", id: " + this.id + "\n";
     }
 
-    /**
-     * 
-     */
-    public void getFullName() {
-        // TODO implement here
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        User other = (User) obj;
+        return this.id == other.id;
     }
 
-    /**
-     * 
-     */
-    public void login() {
-        // TODO implement here
+    @Override
+    public int hashCode() {
+        return Integer.hashCode(id);
     }
-
-    /**
-     * 
-     */
-    public void logout() {
-        // TODO implement here
-    }
-
-    /**
-     * 
-     */
-    private void setPassword() {
-        // TODO implement here
-    }
-
-    /**
-     * 
-     */
-    void setFirstName() {
-        // TODO implement here
-    }
-
-    /**
-     * 
-     */
-    void setSurName() {
-        // TODO implement here
-    }
-
-    /**
-     * 
-     */
-    void setUsername() {
-        // TODO implement here
-    }
-
-    /**
-     * 
-     */
-    void getUsername() {
-        // TODO implement here
-    }
-
-    /**
-     * 
-     */
-    void setResearchProfile() {
-        // TODO implement here
-    }
-
-    /**
-     * 
-     */
-    public void getResearchProfile() {
-        // TODO implement here
-    }
-
-    /**
-     * 
-     */
-    public void deleteResearchProfile() {
-        // TODO implement here
-    }
-
-    /**
-     * 
-     */
-    public void getIsLoggedIn() {
-        // TODO implement here
-    }
-
 }

@@ -31,4 +31,22 @@ public class Teacher extends Employee {
         this.ratingSum += score;
         this.ratingCount++;
     }
+	
+	@Override
+	public String toString() {
+	    return super.toString() + "School: " + school + ", Type: " + teacherType + "\n";
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+	    if (this == obj) return true;
+	    if (obj == null || getClass() != obj.getClass()) return false;
+	    Teacher other = (Teacher) obj; 
+	    return this.getId() == other.getId();
+	}
+
+	@Override
+	public int hashCode() {
+	    return Integer.hashCode(getId());
+	}
 }

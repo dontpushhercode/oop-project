@@ -68,11 +68,11 @@ public class AcademicService {
     	Section dbSection = db.getSection(sec.getId());
     	
         if (dbSection == null) {
-            throw new IllegalStateException("Section not found");
+            throw new IllegalStateException("Section not found!");
         }
     	
 	    if (dbSection.getTeacher() == null || !dbSection.getTeacher().equals(teacher)) {
-	        throw new IllegalStateException("Cannot put mark on this section");
+	        throw new IllegalStateException("Cannot put mark on this section!");
 	    }
 
 	    Enrollment target = null;
@@ -84,13 +84,13 @@ public class AcademicService {
 	    }
 
 	    if (target == null) {
-	        throw new IllegalStateException("Student not enrolled in this section");
+	        throw new IllegalStateException("Student not enrolled in this section!");
 	    }
 	    if (target.getStatus() == EnrollmentStatus.WITHDRAWN) {
-	        throw new IllegalStateException("Cannot grade withdrawn student");
+	        throw new IllegalStateException("Cannot grade withdrawn student!");
 	    }
 	    if (target.getStatus() == EnrollmentStatus.COMPLETED) {
-	        throw new IllegalStateException("Course already completed");
+	        throw new IllegalStateException("Course already completed!");
 	    }
 	    target.setMark(mark);
 	}
@@ -118,7 +118,7 @@ public class AcademicService {
     	Teacher t = db.getTeacher(teacher.getId());
     	
     	if (t == null) {
-            throw new IllegalStateException("Teacher not found");
+            throw new IllegalStateException("Teacher not found!");
         }
     	
 		boolean completed = false;
@@ -129,7 +129,7 @@ public class AcademicService {
 		        }
 		    }
 		if (!completed) {
-		   throw new IllegalStateException("You can only rate after completing the course");
+		   throw new IllegalStateException("You can only rate after completing the course!");
 		}
 		t.addRating(score);
     }

@@ -1,47 +1,177 @@
 package university_system;
-import java.io.*;
-import java.util.*;
+
+import java.time.LocalDate;
 
 /**
- * 
+ * Represents a generated system report.
+ *
+ * A report contains statistical information
+ * about students, courses, or enrollments.
  */
-public class Report {
-
-    /**
-     * Default constructor
+public class Report implements Comparable<Report>{
+	
+	/**
+     * Auto-incremented unique identifier.
      */
-    public Report() {
-    }
+    private static int counter = 0;
 
     /**
-     * 
+     * Unique id of the report.
+     */
+    private int id;
+
+	/**
+     * Type of the report.
      */
     private ReportType reportType;
-
+    
     /**
-     * 
+     * Date when the report was created.
      */
-    private Date createdAt;
-
+    private LocalDate createdAt;
+    
     /**
-     * 
+     * User who created this report.
      */
-    private int createdBy;
-
-
-
+    private Manager createdBy;
+    
     /**
-     * 
+     * Text content of the report.
      */
-    public void getData() {
-        // TODO implement here
+    private String content;
+    
+    {
+        this.id = ++counter;
     }
 
     /**
-     * 
+     * Creates a report with specified type and author.
+     *
+     * The creation date is set automatically to the current date.
+     *
+     * @param reportType type of report
+     * @param createdBy manager who generated the report
      */
-    public void export() {
-        // TODO implement here
+    Report(ReportType reportType, Manager createdBy) {
+        this.reportType = reportType;
+        this.createdBy = createdBy;
+        this.createdAt = LocalDate.now();
     }
 
+    /**
+     * Returns the unique id of this report.
+     * 
+     * @return report id
+     */
+    int getId() {
+        return id;
+    }
+    
+    /**
+     * Returns the type of this report.
+     *
+     * @return report type
+     */
+    ReportType getReportType() {
+        return reportType;
+    }
+
+    /**
+     * Returns the creation date of this report.
+     *
+     * @return creation date
+     */
+    LocalDate getCreatedAt() {
+        return createdAt;
+    }
+
+    /**
+     * Returns the manager who created this report.
+     *
+     * @return creator of report
+     */
+    Manager getCreatedBy() {
+        return createdBy;
+    }
+
+    /**
+     * Returns the content of the report.
+     *
+     * @return report content
+     */
+    String getContent() {
+        return content;
+    }
+
+    /**
+     * Sets the content of the report.
+     *
+     * Intended to be used only by service layer.
+     *
+     * @param content report text content
+     */
+    void setContent(String content) {
+        this.content = content;
+    }
+
+    /**
+     * Exports report as formatted text.
+     *
+     * @return string representation of report
+     */
+    public String export() {
+        return "Report Type: " + reportType +
+               "\nCreated At: " + createdAt +
+               "\nCreated By: " + createdBy +
+               "\n\n" + content;
+    }
+    
+    /**
+     * Compares reports by creation date (newest first).
+     */
+    @Override
+    public int compareTo(Report other) {
+        return other.createdAt.compareTo(this.createdAt);
+    }
+    
+    /**
+     * Checks equality based on report id.
+     * 
+     * @param obj object to compare
+     * @return true if objects have the same id
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Report report = (Report) o;
+        return id == report.id;
+    }
+    
+    /**
+     * Returns hash code based on report id.
+     *
+     * @return hash code value
+     */
+    @Override
+    public int hashCode() {
+        return Integer.hashCode(this.id);
+    }
+    
+    /**
+     * Returns string representation of this report.
+     * including id, type and creator and date.
+     *
+     * @return string representation of request
+     */
+    @Override
+    public String toString() {
+        return "Report{" +
+                "id=" + id +
+                ", type=" + reportType.toString() +
+                ", createdAt=" + createdAt.toString() +
+                ", createdBy=" + createdBy.toString() +
+                '}';
+    }
+    
 }

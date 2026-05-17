@@ -19,10 +19,16 @@ public class Course {
 	private static int counter = 0;
 	
 	/**
+     * Unique identifier of the course.
+     */
+    private int id;
+	
+	/**
 	 *  Instance initializer block.
      *
      * It assigns a unique ID to every new Course object.
 	 */
+	
 	
 	{
 		this.id = ++counter;
@@ -82,11 +88,7 @@ public class Course {
         this.instructors = instructors;
         this.prerequisites = prerequisites;
    }
-    /**
-     * Unique identifier of the course.
-     */
-
-    private int id;
+    
     
     /**
      * Course code.
@@ -249,8 +251,14 @@ public class Course {
      * Adds a teacher to the list of course instructors.
      *
      * @param teacher the teacher to add
+     * @throws IllegalArgumentException if the teacher is already assigned to this course
      */
     void addInstructor(Teacher teacher) {
+    	
+    	 if (this.instructors.contains(teacher)) {
+    	        throw new IllegalArgumentException("Teacher is already assigned to this course");
+    	    }
+    	 
     	 this.instructors.add(teacher);
     }
 
@@ -258,8 +266,14 @@ public class Course {
      * Removes a teacher from the list of course instructors.
      *
      * @param teacher the teacher to remove
+     * @throws IllegalArgumentException if the teacher is not assigned to this course
      */
     void dropInstructor(Teacher teacher) {
+    	
+    	 if (!this.instructors.contains(teacher)) {
+    	        throw new IllegalArgumentException("Teacher is not assigned to this course");
+    	    }
+    	 
     	 this.instructors.remove(teacher);
     }
 
@@ -267,8 +281,14 @@ public class Course {
      * Adds a prerequisite course.
      *
      * @param course the prerequisite course to add
+     * @throws IllegalArgumentException if prerequisite already exists
      */
     void addPrerequisite(Course course) {
+    	
+    	if (this.prerequisites.contains(course)) {
+            throw new IllegalArgumentException("Prerequisite already exists");
+        }
+    	
     	 this.prerequisites.add(course);
     }
 
@@ -276,16 +296,24 @@ public class Course {
      * Removes a prerequisite course.
      *
      * @param course the prerequisite course to remove
+     * @throws IllegalArgumentException if the prerequisite course is not found
      */
     void dropPrerequisite(Course course) {
+    	
+    	if (!this.prerequisites.contains(course)) {
+            throw new IllegalArgumentException("Prerequisite course not found");
+        }
+    	
     	 this.prerequisites.remove(course);
     }
     
+
     /**
      * Returns a string representation of the course.
      *
      * @return course information as a string
      */
+    @Override
     public String toString() {
         return "Course{" +
                 "id=" + id +
@@ -300,30 +328,32 @@ public class Course {
     /**
      * Compares this course with another object.
      *
-     * Two courses are considered equal if they have the same id,
-     * credits, code and name.
+     * Two courses are considered equal if they have the same id.
+     * 
      *
      * @param obj the object to compare with
      * @return true if the courses are equal, otherwise false
      */
+    
+    @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-        Course course = (Course) obj;
-        return id == course.id &&
-                credits == course.credits &&
-                Objects.equals(code, course.code) &&
-                Objects.equals(name, course.name);
+    	if (this == obj) return true;
+    	if (obj == null || getClass() != obj.getClass()) return false;
+
+    	    Course course = (Course) obj;
+
+    	    return this.id == course.id;
     }
 
     /**
      * Returns the hash code of the course.
      *
-     * The hash code is based on id, code, name and credits.
+     * The hash code is based on id.
      *
      * @return the hash code of the course
      */
+    @Override
     public int hashCode() {
-    	 return Objects.hash(id, code, name, credits);
+    	 return Objects.hash(this.id);
     }
 }
