@@ -64,7 +64,7 @@ public class UserService {
      * Creates a new manager and saves it to the database.
      */
     public Manager createManager(String firstname, String surname, String password, String username, ManagerType type) {
-        Manager manager = new Manager(firstname, surname, password, username, type);
+        Manager manager = new Manager(firstname, surname, username, password, type);
         db.createUser(manager);
         return manager;
     }
@@ -73,10 +73,19 @@ public class UserService {
      * Creates a new employee and saves it to the database.
      */
     public Employee createEmployee(String firstname, String surname, String password, String username, DepartmentType department) {
-        Employee employee = new Employee(firstname, surname, password, username, department);
+        Employee employee = new Employee(firstname, surname, username, password, department);
         db.createUser(employee);
         return employee;
-    }   
+    }
+    
+    /**
+     * Creates a new admin and saves it to the database.
+     */
+    public Admin createAdmin(String firstname, String surname, String password, String username) {
+        Admin admin = new Admin(firstname, surname, username, password);
+        db.createUser(admin);
+        return admin;
+    }
 
     /**
      * Updates the personal info of a user.

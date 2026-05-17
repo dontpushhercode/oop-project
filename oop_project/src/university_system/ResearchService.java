@@ -102,8 +102,9 @@ public class ResearchService {
     	if (projectName == null || projectName.isBlank()) {
     	    throw new IllegalArgumentException("Project name cannot be empty");
     	}
-        ResearchProject project = new ResearchProject(projectName, researcher);
+        ResearchProject project = new ResearchProject(projectName);
         database.createProject(project);
+        addMember(project, researcher);
         return project;
     }
 
@@ -129,7 +130,7 @@ public class ResearchService {
             throw new IllegalStateException("Researcher is already a member of this project");
         }
         
-        p.addMember(researcher);
+        researcher.addResearchProject(p);
     }
 
 

@@ -24,12 +24,25 @@ public class RequestService {
             throw new NoPermissionException();
         }
     }
+    
+    private void checkRegistrationPermission(Manager manager) {
+        if (manager == null || manager.getManagerType() != ManagerType.OR) {
+            throw new NoPermissionException();
+        }
+    }
 
     /**
      * 
      */
     public RegistrationRequest createRegistrationRequest(Manager manager, Student student, Course course) {
-        checkPermission(manager);
+        checkRegistrationPermission(manager);
+        return createRegistrationRequest(student, course);
+    }
+
+    /**
+     * Creates a registration request from a student.
+     */
+    public RegistrationRequest createRegistrationRequest(Student student, Course course) {
 
         for (RegistrationRequest r : database.getFilteredRegistrationRequests(student)) {
             if (r.getCourse().equals(course) && r.getStatus() != RequestStatus.REJECTED) {
@@ -54,7 +67,7 @@ public class RequestService {
      * 
      */
     public List<RegistrationRequest> getRegistrationRequests(Manager manager, RequestStatus status) {
-        checkPermission(manager);
+        checkRegistrationPermission(manager);
         return database.getFilteredRegistrationRequests(status);
     }
 
@@ -62,7 +75,7 @@ public class RequestService {
      * 
      */
     public List<RegistrationRequest> getRegistrationRequests(Manager manager, Student student, RequestStatus status) {
-        checkPermission(manager);
+        checkRegistrationPermission(manager);
         return database.getFilteredRegistrationRequests(student, status);
     }
 
@@ -127,12 +140,19 @@ public class RequestService {
      */
     public void setStatus(Manager manager, Request request, RequestStatus status)
             throws NoPermissionException, RequestNotFoundException {
-        checkPermission(manager);
+        if (request instanceof RegistrationRequest) {
+            checkRegistrationPermission(manager);
+        } else {
+            checkPermission(manager);
+        }
         Request r = database.getRequest(request.getId());
         if (r == null) {
             throw new RequestNotFoundException();
         }
         r.setStatus(status);
+        if (status == RequestStatus.APPROVED) {
+            r.setApproved();
+        }
     }
 
     /**
@@ -156,7 +176,7 @@ public class RequestService {
      */
     public List<RegistrationRequest> getPendingRegistrationRequests(Manager manager)
             throws NoPermissionException {
-        checkPermission(manager);
+        checkRegistrationPermission(manager);
         return database.getFilteredRegistrationRequests(RequestStatus.PENDING);
     }
 

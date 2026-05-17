@@ -62,6 +62,17 @@ public class Database implements Serializable {
         }
         return new Database();
     }
+    
+    /**
+     * Saves database state to a serialized file.
+     */
+    void saveToFile(String fileName) {
+        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(fileName))) {
+            out.writeObject(this);
+        } catch (IOException e) {
+            throw new IllegalStateException("Could not save database", e);
+        }
+    }
 
     /**
      * Registered system users.
@@ -444,6 +455,15 @@ public class Database implements Serializable {
      */
     List<Course> getCourses(){
     	return this.courses;
+    }
+    
+    /**
+     * Returns all course sections stored in the system.
+     *
+     * @return list of sections
+     */
+    List<Section> getSections() {
+        return this.sections;
     }
 
     /**

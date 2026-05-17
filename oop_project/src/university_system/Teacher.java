@@ -27,7 +27,7 @@ public class Teacher extends Employee implements Serializable {
 
 	Teacher(String firstName, String surName, String username,
 	        String password, TeacherType teacherType, School school) {
-	    super(firstName, surName, password, username, DepartmentType.EDUCATION); 
+	    super(firstName, surName, username, password, DepartmentType.EDUCATION); 
 	    this.teacherType = teacherType;
 	    this.school = school;
 	    this.ratingSum = 0;

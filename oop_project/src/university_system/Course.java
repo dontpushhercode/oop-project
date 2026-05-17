@@ -1,4 +1,5 @@
 package university_system;
+import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -9,7 +10,8 @@ import java.util.*;
  *
  * Each course has a unique id that is generated automatically.
  */
-public class Course {
+public class Course implements Serializable {
+    private static final long serialVersionUID = 1L;
 	
 	private static int counter = 0;
 	

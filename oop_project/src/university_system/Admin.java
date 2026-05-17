@@ -1,10 +1,18 @@
 package university_system;
-import java.io.*;
-import java.util.*;
+
+import java.io.Serializable;
 
 /**
  * Represents an administrator in the university system.
  */
-public class Admin implements Serializable {
+public class Admin extends Employee implements Serializable {
     private static final long serialVersionUID = 1L;
+
+    Admin() {
+        super();
+    }
+
+    Admin(String firstname, String surname, String username, String password) {
+        super(firstname, surname, username, password, DepartmentType.ADMINISTRATION);
+    }
 }
