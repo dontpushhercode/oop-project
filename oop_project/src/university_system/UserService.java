@@ -1,94 +1,103 @@
 package university_system;
-import java.io.*;
+
 import java.util.*;
 
 /**
- * 
+ *
+ * Service responsible for managing users
+ * in the university system.
  */
 public class UserService {
 
     /**
-     * Default constructor
+     * Database instance used for data access.
      */
-    public UserService() {
+    private final Database db;
+
+    /**
+     * Constructor that initializes the service with a database instance.
+     */
+    UserService(Database db) {
+        this.db = db;
     }
 
     /**
-     * 
+     * Creates a new student and saves it to the database.
      */
-    private Database database;
-
-
-
-
-    /**
-     * 
-     */
-    public void createStudent() {
-        // TODO implement here
+    Student createStudent(String firstname, String surname, String password, String username, int year, School school) {
+        Student student = new Student(firstname, surname, password, username, year, school);
+        db.createUser(student);
+        return student;
     }
 
     /**
-     * 
+     * Creates a new teacher and saves it to the database.
      */
-    public void createTeacher() {
-        // TODO implement here
+    Teacher createTeacher(String firstname, String surname, String password, String username, School school, TeacherType teacherType) {
+        Teacher teacher = new Teacher(firstname, surname, password, username, school, teacherType);
+        db.createUser(teacher);
+        return teacher;
     }
 
     /**
-     * 
+     * Creates a new manager and saves it to the database.
      */
-    public void createManager() {
-        // TODO implement here
+    Manager createManager(String firstname, String surname, String password, String username, ManagerType type) {
+        Manager manager = new Manager(firstname, surname, password, username, type);
+        db.createUser(manager);
+        return manager;
     }
 
     /**
-     * 
+     * Creates a new employee and saves it to the database.
      */
-    public void createEmployee() {
-        // TODO implement here
+    Employee createEmployee(String firstname, String surname, String password, String username, DepartmentType department) {
+        Employee employee = new Employee(firstname, surname, password, username, department);
+        db.createUser(employee);
+        return employee;
     }
 
     /**
-     * 
+     * Updates the personal info of a user.
      */
-    public void changeInfo() {
-        // TODO implement here
+    void changeInfo(User user, String firstname, String surname) {
+        User u = db.getFilteredUsers(user.getId());
+        u.setFirstname(firstname);
+        u.setSurname(surname);
     }
 
     /**
-     * 
+     * Deletes a user from the database.
      */
-    public void deleteUser() {
-        // TODO implement here
+    void deleteUser(User user) {
+        db.deleteUser(user);
     }
 
     /**
-     * 
+     * Returns all students in the database.
      */
-    public void getStudents() {
-        // TODO implement here
+    List<Student> getStudents() {
+        return db.getStudents();
     }
 
     /**
-     * 
+     * Returns all teachers in the database.
      */
-    public void getTeachers() {
-        // TODO implement here
+    List<Teacher> getTeachers() {
+        return db.getTeachers();
     }
 
     /**
-     * 
+     * Returns all managers in the database.
      */
-    public void getManagers() {
-        // TODO implement here
+    List<Manager> getManagers() {
+        return db.getManagers();
     }
 
     /**
-     * 
+     * Returns all employees in the database.
      */
-    public void getEmployees() {
-        // TODO implement here
+    List<Employee> getEmployees() {
+        return db.getEmployees();
     }
-
 }
