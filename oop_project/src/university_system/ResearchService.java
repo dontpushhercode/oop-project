@@ -64,7 +64,7 @@ public class ResearchService {
      * @throws IllegalArgumentException if user is null
      * @throws IllegalStateException if the user does not have a research profile
      */
-    void removeResearchProfile() {
+    void removeResearchProfile(User user) {
     	if (user == null) {
             throw new IllegalArgumentException("User cannot be null");
         }
@@ -85,7 +85,7 @@ public class ResearchService {
      * @return the researcher profile, or null if the user has no profile
      * @throws IllegalArgumentException if user is null
      */
-    Researcher getResearchProfile() {
+    Researcher getResearchProfile(User user) {
     	 if (user == null) {
              throw new IllegalArgumentException("User cannot be null");
          }
@@ -152,20 +152,19 @@ public class ResearchService {
      * @throws IllegalStateException if researcher is not a member
      */
     void removeMember(ResearchProject project, Researcher researcher) {
-    	removeMember(ResearchProject project, Researcher researcher) {
-            if (project == null) {
-                throw new IllegalArgumentException("Research project cannot be null");
-            }
+        if (project == null) {
+            throw new IllegalArgumentException("Research project cannot be null");
+        }
 
-            if (researcher == null) {
-                throw new IllegalArgumentException("Researcher cannot be null");
-            }
+        if (researcher == null) {
+            throw new IllegalArgumentException("Researcher cannot be null");
+        }
 
-            if (!project.getMembers().contains(researcher)) {
-                throw new IllegalStateException("Researcher is not a member of this project");
-            }
+        if (!project.getMembers().contains(researcher)) {
+            throw new IllegalStateException("Researcher is not a member of this project");
+        }
 
-            project.deleteMember(researcher);
+        project.deleteMember(researcher);
     }
 
     /**
@@ -266,4 +265,3 @@ public class ResearchService {
          return result;
      }
 }
-

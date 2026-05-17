@@ -41,6 +41,10 @@ public class Lesson {
      */
     private LocalTime endTime;
 
+    private static int counter = 0;
+    private int id;
+    { this.id = ++counter; }
+
 
 
     /**

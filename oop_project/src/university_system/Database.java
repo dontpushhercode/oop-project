@@ -30,6 +30,7 @@ public class Database implements Serializable {
 		transcripts = new ArrayList<>();
 		employeeRequests = new ArrayList<>();
 		registrationRequests = new ArrayList<>();
+		researchers = new ArrayList<>();
 		papers = new ArrayList<>();
 		projects = new ArrayList<>();
 		logs = new ArrayList<>();
@@ -45,6 +46,21 @@ public class Database implements Serializable {
             db = loadFromFile("data.ser");
         }
         return db;
+    }
+    
+    /**
+     * Loads database state from a serialized file.
+     */
+    private static Database loadFromFile(String fileName) {
+        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(fileName))) {
+            Object object = in.readObject();
+            if (object instanceof Database) {
+                return (Database) object;
+            }
+        } catch (IOException | ClassNotFoundException e) {
+            return new Database();
+        }
+        return new Database();
     }
 
     /**
@@ -81,6 +97,11 @@ public class Database implements Serializable {
      * Student registration requests.
      */
     private ArrayList<RegistrationRequest> registrationRequests;
+    
+    /**
+     * Research profiles stored in the system.
+     */
+    private ArrayList<Researcher> researchers;
 
     /**
      * Research papers stored in the system.
@@ -240,7 +261,7 @@ public class Database implements Serializable {
     List<ResearchPaper> getFilteredPapers(Researcher researcher) {
         List<ResearchPaper> filtered = new ArrayList<ResearchPaper>();
         for(ResearchPaper p:papers) {
-        	if(p.getAuthor().equals(researcher)) {
+        	if(p.hasAuthor(researcher)) {
         		filtered.add(p);
         	}
         }
@@ -256,9 +277,9 @@ public class Database implements Serializable {
     List<ResearchProject> getFilteredProjects(Researcher researcher) {
         List<ResearchProject> filtered = new ArrayList<ResearchProject>();
         for(ResearchProject p:projects) {
-        	List<User> members = p.getMembers();
-        	for(User u:members) {
-        		if(u.getResearchProfile().equals(researcher)) {
+        	List<Researcher> members = p.getMembers();
+        	for(Researcher member:members) {
+        		if(member.equals(researcher)) {
         			filtered.add(p);
         		}
         	}
@@ -530,6 +551,27 @@ public class Database implements Serializable {
     List<ResearchProject> getProjects() {
     	return this.projects;
     }
+    
+    /**
+     * Returns all research profiles in the system.
+     *
+     * @return list of researchers
+     */
+    List<Researcher> getResearchers() {
+        if (this.researchers == null) {
+            this.researchers = new ArrayList<>();
+        }
+        return this.researchers;
+    }
+    
+    /**
+     * Returns all research papers in the system.
+     *
+     * @return list of papers
+     */
+    List<ResearchPaper> getPapers() {
+        return this.papers;
+    }
 
     /**
      * Returns all system logs.
@@ -554,6 +596,21 @@ public class Database implements Serializable {
 		}
 		return null;
 	}
+    
+    /**
+     * Adds a user to the database or updates an existing user with the same id.
+     *
+     * @param user user to store
+     */
+    void createUser(User user) {
+        for (int i = 0; i < users.size(); i++) {
+            if (users.get(i).equals(user)) {
+                users.set(i, user);
+                return;
+            }
+        }
+        users.add(user);
+    }
     
     /**
      * Returns a course by identifier.

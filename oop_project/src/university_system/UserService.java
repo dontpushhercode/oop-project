@@ -45,16 +45,17 @@ public class UserService {
      * Creates a new student and saves it to the database.
      */
     public Student createStudent(String firstname, String surname, String password, String username, int year, School school) {
-        Student student = new Student(firstname, surname, password, username, year, school);
-        db.createStudent(student);
+        Student student = new Student(firstname, surname, username, password, year, school);
+        db.createUser(student);
         return student;
     }
+
 
     /**
      * Creates a new teacher and saves it to the database.
      */
-    Teacher createTeacher(String firstname, String surname, String password, String username, School school, TeacherType teacherType) {
-        Teacher teacher = new Teacher(firstname, surname, password, username, school, teacherType);
+    public Teacher createTeacher(String firstname, String surname, String password, String username, School school, TeacherType teacherType) {
+        Teacher teacher = new Teacher(firstname, surname, username, password, teacherType, school);
         db.createUser(teacher);
         return teacher;
     }
@@ -64,7 +65,7 @@ public class UserService {
      */
     public Manager createManager(String firstname, String surname, String password, String username, ManagerType type) {
         Manager manager = new Manager(firstname, surname, password, username, type);
-        db.createManager(manager);
+        db.createUser(manager);
         return manager;
     }
 
@@ -73,24 +74,24 @@ public class UserService {
      */
     public Employee createEmployee(String firstname, String surname, String password, String username, DepartmentType department) {
         Employee employee = new Employee(firstname, surname, password, username, department);
-        db.createEmployee(employee);
+        db.createUser(employee);
         return employee;
-    }
+    }   
 
     /**
      * Updates the personal info of a user.
      */
-    void changeInfo(User user, String firstname, String surname) {
-        User u = db.getFilteredUsers(user.getId());
-        u.setFirstname(firstname);
-        u.setSurname(surname);
+    public void changeInfo(User user, String firstname, String surname) {
+        User u = db.getUser(user.getId());
+        u.setFirstName(firstname);
+        u.setSurName(surname);
     }
 
     /**
      * Deletes a user from the database.
      */
     public void deleteUser(User user) {
-        db.deleteUser(user);
+        db.getUsers().remove(user);
     }
 
     /**

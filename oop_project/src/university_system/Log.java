@@ -1,5 +1,6 @@
 package university_system; 
 import java.time.LocalDate; 
+import java.io.Serializable;
 
 /**
  * Represents a system log entry.

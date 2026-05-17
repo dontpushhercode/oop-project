@@ -10,11 +10,6 @@ public abstract class User implements Serializable {
     private static int counter = 0;
 
     /**
-     * Unique id of this user.
-     */
-    private int id;
-
-    /**
      * Initializer block that assigns unique id to every user.
      */
     {
@@ -91,6 +86,13 @@ public abstract class User implements Serializable {
     		throw new IllegalArgumentException("Wrong password!");
     	}
     }
+    
+    /**
+     *
+     */
+    void login() {
+        this.isLoggedIn = true;
+    }
     /**
      *
      */
@@ -136,6 +138,12 @@ public abstract class User implements Serializable {
     /**
      *
      */
+    Researcher getResearchProfile() {
+        return this.researchProfile;
+    }
+    /**
+     *
+     */
     boolean isResearcher() {
         return this.researchProfile != null;
     }
@@ -152,6 +160,10 @@ public abstract class User implements Serializable {
     Boolean getIsLoggedIn() {
         return this.isLoggedIn;
     }
+
+    boolean checkPassword(String password) {
+    return this.password.equals(password);
+    }   
 
     @Override
     public String toString() {

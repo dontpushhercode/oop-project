@@ -1,5 +1,6 @@
 package university_system;
 import java.util.*;
+import java.io.Serializable;
 
 /**
  * 
@@ -39,8 +40,16 @@ public class Transcript implements Serializable {
     /**
      * 
      */
-    public void getGpa() {
-        // TODO implement here
+    public double getGpa() {
+        double total = 0;
+        int count = 0;
+        for (Enrollment enrollment : getEnrollments()) {
+            if (enrollment.getStatus() == EnrollmentStatus.COMPLETED) {
+                total += enrollment.getMark().getTotalPoints();
+                count++;
+            }
+        }
+        return count == 0 ? 0 : total / count;
     }
 
 }

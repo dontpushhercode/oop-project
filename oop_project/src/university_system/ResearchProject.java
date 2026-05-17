@@ -1,5 +1,6 @@
 package university_system;
 import java.util.*;
+import java.io.Serializable;
 
 
 /**
@@ -17,6 +18,17 @@ public class ResearchProject implements Serializable {
     	this.projectName = projectName;
     	this.members = new ArrayList<Researcher>(members);
     	this.papers = new ArrayList<ResearchPaper>();
+    }
+    
+    /**
+     * Creates a research project without initial members.
+     *
+     * @param projectName name of project
+     */
+    public ResearchProject(String projectName) {
+        this.projectName = projectName;
+        this.members = new ArrayList<Researcher>();
+        this.papers = new ArrayList<ResearchPaper>();
     }
     
     /**
@@ -53,6 +65,13 @@ public class ResearchProject implements Serializable {
      */
     List<ResearchPaper> getPapers(){
     	return new ArrayList<>(papers);
+    }
+    
+    /**
+     * Returns project members.
+     */
+    List<Researcher> getMembers() {
+        return new ArrayList<>(members);
     }
     
     /**

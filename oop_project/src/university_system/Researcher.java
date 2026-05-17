@@ -1,5 +1,6 @@
 package university_system;
 import java.util.*;
+import java.io.Serializable;
 
 /**
  * Represents a researcher profile with research papers and projects.
@@ -30,6 +31,11 @@ public class Researcher implements Serializable {
      * 
      */
     private User user;
+    
+    /**
+     * 
+     */
+    private Researcher supervisor;
 
     /**
      * 
@@ -82,6 +88,27 @@ public class Researcher implements Serializable {
         if (user != null && user.getResearchProfile() != this) {
             user.setResearchProfile(this);
         }
+    }
+    
+    /**
+     * 
+     */
+    Researcher getSupervisor() {
+        return this.supervisor;
+    }
+    
+    /**
+     * 
+     */
+    void setSupervisor(Researcher supervisor) {
+        this.supervisor = supervisor;
+    }
+    
+    /**
+     * 
+     */
+    String getUserInfo() {
+        return user == null ? "" : user.toString();
     }
 
     /**
