@@ -58,6 +58,29 @@ public class ReportService {
         report.setContent(content);
         return report;
     }
+    
+    /**
+     * Generates an enrollment report.
+     *
+     * Contains information about total number of enrollments in the system.
+     *
+     * @param manager manager requesting the report
+     * @return generated enrollments report
+     * @throws IllegalStateException if manager does not have academic permissions
+     */
+    public Report generateEnrollmentReport(Manager manager) {
+
+        checkPermission(manager);
+
+        int enrollmentsCount = db.getEnrollments().size();
+
+        String content = "Total enrollments: " + enrollmentsCount;
+
+        Report report = new Report(ReportType.ENROLLMENT, manager);
+        report.setContent(content);
+
+        return report;
+    }
 
     /**
      * Builds a string containing academic statistics.

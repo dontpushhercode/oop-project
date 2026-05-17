@@ -1,5 +1,4 @@
 package university_system;
-import java.io.*;
 import java.util.*;
 
 /**
@@ -10,14 +9,16 @@ public class Researcher {
     /**
      * Default constructor
      */
-    public Researcher() {
+    public Researcher(User user) {
     	this.researchPapers = new ArrayList<ResearchPaper>();
+    	this.researchProjects = new ArrayList<ResearchProject>();
+    	setUser(user);
     }
 
     /**
      * 
      */
-    private ResearchProject researchProject;
+    private ArrayList<ResearchProject> researchProjects;
 
     /**
      * 
@@ -29,48 +30,107 @@ public class Researcher {
      */
     private User user;
 
-
-
     /**
      * 
      */
-    void getHIndex() {
-        // TODO implement here
+    int getHIndex() {
+    	List<Integer> citations = new ArrayList<>();
+
+        for (ResearchPaper paper : researchPapers) {
+            citations.add(paper.getCitationNumber());
+        }
+
+        citations.sort(Collections.reverseOrder());
+
+        int h = 0;
+        for (int i = 0; i < citations.size(); i++) {
+            if (citations.get(i) >= i + 1) {
+                h = i + 1;
+            } else {
+                break;
+            }
+        }
+        return h;
     }
 
     /**
      * 
      */
-    void printPapers() {
-        // TODO implement here
+    void printPapers(Comparator<ResearchPaper> comparator) {
+        List<ResearchPaper> sorted = new ArrayList<>(researchPapers);
+        sorted.sort(comparator);
+
+        for (ResearchPaper p : sorted) {
+            System.out.println(p);
+        }
     }
 
     /**
      * 
      */
-    void getUserInfo() {
-        // TODO implement here
+    User getUser() {
+        return this.user;
     }
 
     /**
      * 
      */
-    void setUser() {
-        // TODO implement here
+    void setUser(User user) {
+        this.user = user;
+
+        if (user != null && user.getResearchProfile() != this) {
+            user.setResearchProfile(this);
+        }
     }
 
     /**
      * 
      */
-    void setResearchProject() {
-        // TODO implement here
+    void addResearchProject(ResearchProject project) {
+    	if(!researchProjects.contains(project)) {
+    		this.researchProjects.add(project);
+            project.addMember(this);
+    	}
     }
 
     /**
      * 
      */
-    void addResearchPaper() {
-        // TODO implement here
+    void addResearchPaper(ResearchPaper paper) {
+    	if (!researchPapers.contains(paper)) {
+    	    researchPapers.add(paper);
+    	    paper.addAuthor(this);
+    	}
+    }
+    
+    List<ResearchPaper> getResearchPapers(){
+    	return new ArrayList<ResearchPaper>(this.researchPapers);
+    }
+    
+    List<ResearchProject> getResearchProjects(){
+    	return new ArrayList<ResearchProject>(this.researchProjects);
+    }
+    
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Researcher)) return false;
+        Researcher that = (Researcher) o;
+        return Objects.equals(user, that.user);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(user);
+    }
+    
+    @Override
+    public String toString() {
+        return "Researcher{" +
+                "papers=" + researchPapers.size() +
+                ", projects=" + researchProjects.size() +
+                ", hIndex=" + getHIndex() +
+                '}';
     }
 
 }

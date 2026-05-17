@@ -42,7 +42,7 @@ public class RequestService {
         int total = 0;
         for (RegistrationRequest r : database.getFilteredRegistrationRequests(student)) {
             if (r.getStatus() == RequestStatus.APPROVED) {
-                total += r.getCourse().getCredits();
+                total += r.getCourse().getCourseCredits();
             }
         }
         return total;
@@ -63,7 +63,7 @@ public class RequestService {
     public RegistrationRequest createRegistrationRequest(
             Manager manager, Student student, Course course) {
         checkPermission(manager);
-        if (getTotalCredits(student) + course.getCredits() > 21) {
+        if (getTotalCredits(student) + course.getCourseCredits() > 21) {
             throw new IllegalStateException("Student cannot exceed 21 credits");
         }
         for (RegistrationRequest r : database.getFilteredRegistrationRequests(student)) {

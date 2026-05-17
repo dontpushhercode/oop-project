@@ -1,6 +1,4 @@
 package university_system;
-import java.io.*;
-import java.util.*;
 
 /**
  * Represents a bachelor student enrolled in the university system.
@@ -46,12 +44,6 @@ public class Student extends User {
     private Researcher researchSupervisor;
     
     /**
-     * Total credits the student is currently enrolled in.
-     * Cannot exceed 21.
-     */
-    private int credits;
-    
-    /**
      * Number of times the student has failed a course.
      * Cannot exceed 3.
      */
@@ -85,7 +77,7 @@ public class Student extends User {
      * Returns the research supervisor of the student.
      * @return research supervisor or null if not assigned
      */
-    User getResearchSupervisor() {
+    Researcher getResearchSupervisor() {
         return this.researchSupervisor;
     }
 
@@ -93,10 +85,9 @@ public class Student extends User {
      * Returns number of times student has failed a course.
      * @return fail count
      */
-    public int getFailCount() {
+    int getFailCount() {
         return this.failCount;
     }
-    
 
     /**
      * Sets the academic year of the student.
@@ -106,7 +97,7 @@ public class Student extends User {
     void setYear(int year) {
         this.year = year;
         if (year == 4 && getResearchProfile() == null) {
-        	setResearchProfile(new Researcher());
+        	setResearchProfile(new Researcher(this));
         }
     }
     

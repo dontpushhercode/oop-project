@@ -1,6 +1,4 @@
 package university_system;
-import java.io.*;
-import java.util.*;
 
 /**
  * Abstract base class representing any user in the university system.
@@ -118,8 +116,13 @@ public abstract class User {
      * Logs the user into the system.
      * Sets isLoggedIn to true.
      */
-    void login() {
-        this.isLoggedIn = true;
+    void login(String password) {
+    	if(this.password.equals(password)) {
+    		this.isLoggedIn = true;
+    	}
+    	else {
+    		throw new IllegalArgumentException("Wrong password!");
+    	}
     }
     
     /**
@@ -134,8 +137,13 @@ public abstract class User {
      * Private to prevent external modification.
      * @param password the password to set
      */
-    private void setPassword(String password) {
-        this.password = password;
+    void setPassword(String password, String newPassword) {
+    	if(this.password == password) {
+    		this.password = password;
+    	}
+    	else {
+    		throw new IllegalArgumentException("Wrong password!");
+    	}
     }
     
     /**

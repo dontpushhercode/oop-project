@@ -1,6 +1,4 @@
 package university_system;
-import java.io.*;
-import java.util.*;
 /**
  * Represents a teacher in the university system.
  * Teachers who are professors are always researchers.
@@ -34,7 +32,7 @@ public class Teacher extends Employee {
 	    this.ratingSum = 0;
 	    this.ratingCount = 0;
 	    if (teacherType == TeacherType.PROFESSOR) {
-	    	setResearchProfile(new Researcher());
+	    	setResearchProfile(new Researcher(this));
 	    }
 	}
 	
@@ -99,7 +97,7 @@ public class Teacher extends Employee {
     void setTeacherType(TeacherType teacherType) {
         this.teacherType = teacherType;
         if (teacherType == TeacherType.PROFESSOR && getResearchProfile() == null) {
-        	setResearchProfile(new Researcher());
+        	setResearchProfile(new Researcher(this));
         }
         
     }

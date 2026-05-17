@@ -31,7 +31,7 @@ public class EnrollmentService {
      * Assigns a student to a section if approved request exists
      * and student is not already enrolled.
      */
-    void assign(Student st, Section sec) {
+    public void assign(Student st, Section sec) {
         if (!requestService.getRegistrationRequest(st, sec.getCourse()).isApproved()) {
             throw new IllegalStateException("No approved registration request for this course!");
         }
@@ -48,7 +48,7 @@ public class EnrollmentService {
      * Withdraws a student from a course.
      * Cannot withdraw from completed or already withdrawn enrollments.
      */
-    void withdraw(Student st, Course course) {
+    public void withdraw(Student st, Course course) {
         Enrollment target = findEnrollment(st, course);
         if (target == null) {
             throw new IllegalStateException("Enrollment not found!");
@@ -63,14 +63,14 @@ public class EnrollmentService {
     /**
      * Returns all enrollments for the given student.
      */
-    List<Enrollment> getStudentEnrollments(Student st) {
+    public List<Enrollment> getStudentEnrollments(Student st) {
         return db.getFilteredEnrollments(st);
     }
 
     /**
      * Returns enrollments filtered by teacher, course and enrollment status.
      */
-    List<Enrollment> getTeacherCourseEnrollments(Teacher teacher, Course course, EnrollmentStatus status) {
+    public List<Enrollment> getTeacherCourseEnrollments(Teacher teacher, Course course, EnrollmentStatus status) {
         return db.getFilteredEnrollments(teacher, course, status);
     }
 

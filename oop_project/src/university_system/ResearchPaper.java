@@ -10,6 +10,10 @@ import java.util.*;
  */
 public class ResearchPaper {
 	
+	{
+		this.id = ++counter;
+	}
+	
 	/**
 	 * Creates a research paper with bibliographic information.
 	 *
@@ -18,7 +22,6 @@ public class ResearchPaper {
 	 * @param publicationYear publication year
 	 */
     public ResearchPaper(String title, List<Researcher> authors, LocalDate publicationDate, int pages, String journal) {
-    	this.id = ++counter;
     	
     	this.title = title;
         this.authors = authors;
@@ -27,6 +30,16 @@ public class ResearchPaper {
         this.journal = journal;
 
         generateDoi();
+    }
+    
+    public ResearchPaper(String title, Researcher author, LocalDate publicationDate, int pages, String journal) {
+    	this.title = title;
+    	this.authors = new ArrayList<Researcher>();
+    	this.publicationDate = publicationDate;
+    	this.pages = pages;
+    	this.journal = journal;
+    	
+    	addAuthor(author);
     }
 
     /**
@@ -86,6 +99,13 @@ public class ResearchPaper {
      */
     void addCitation() {
         this.citationNumber++;
+    }
+    
+    /**
+     * 
+     */
+    void addAuthor(Researcher author) {
+    	this.authors.add(author);
     }
     
     /**
