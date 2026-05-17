@@ -10,6 +10,11 @@ import java.util.*;
  */
 public class ResearchProject {
 
+	private static int counter = 0;
+	
+	{
+		this.id=++counter;
+	}
 
 	/**
 	 * Represents a research project in the university system.
@@ -37,6 +42,11 @@ public class ResearchProject {
     /**
      * 
      */
+    private int id;
+    
+    /**
+     * 
+     */
     private ArrayList<ResearchPaper> papers;
 
     /**
@@ -48,6 +58,13 @@ public class ResearchProject {
      * 
      */
     private String projectName;
+    
+    /**
+     * 
+     */
+    int getId() {
+    	return this.id;
+    }
 
     /**
      * Returns project members.
@@ -66,7 +83,7 @@ public class ResearchProject {
     /**
      * Returns project name.
      */
-    public String getProjectName() {
+    String getProjectName() {
         return projectName;
     }
     
