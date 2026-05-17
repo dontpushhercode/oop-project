@@ -24,10 +24,20 @@ public class CourseService {
     }
 
     /**
+     * Checks if the manager has permission to perform course operations.
+     */
+    private void checkPermission(Manager manager) {
+        if (manager == null || manager.getManagerType() != ManagerType.ADMINISTRATIVE) {
+            throw new IllegalStateException("No permission");
+        }
+    }
+
+    /**
      * Creates a new course and saves it to the database.
      * Only a manager can create a course.
      */
-    Course createCourse(Manager manager, String code, String name, String description, School school, int credits) {
+    public Course createCourse(Manager manager, String code, String name, String description, School school, int credits) {
+        checkPermission(manager);
         Course course = new Course(code, name, description, school, credits);
         db.createCourse(course);
         return course;
@@ -36,7 +46,7 @@ public class CourseService {
     /**
      * Returns a course from the database by id.
      */
-    Course getCourse(Course course) {
+    public Course getCourse(Course course) {
         return db.getCourse(course.getId());
     }
 
@@ -44,7 +54,8 @@ public class CourseService {
      * Creates a new section for a course and saves it to the database.
      * Only a manager can create a section.
      */
-    Section createSection(Manager manager, Course course, Semester semester) {
+    public Section createSection(Manager manager, Course course, Semester semester) {
+        checkPermission(manager);
         Section section = new Section(course, semester);
         db.createSection(section);
         return section;
@@ -53,7 +64,7 @@ public class CourseService {
     /**
      * Returns a section from the database by id.
      */
-    Section getSection(Section section) {
+    public Section getSection(Section section) {
         return db.getSection(section.getId());
     }
 
@@ -61,21 +72,22 @@ public class CourseService {
      * Creates a new lesson with given type, day and time.
      * Only a manager can create a lesson.
      */
-    Lesson createLesson(Manager manager, LessonType type, DayOfWeek day, LocalTime startTime, LocalTime endTime) {
+    public Lesson createLesson(Manager manager, LessonType type, DayOfWeek day, LocalTime startTime, LocalTime endTime) {
+        checkPermission(manager);
         return new Lesson(type, day, startTime, endTime);
     }
 
     /**
      * Returns all courses associated with the given teacher.
      */
-    List<Course> getCourses(Teacher teacher) {
+    public List<Course> getCourses(Teacher teacher) {
         return db.getFilteredCourses(teacher);
     }
 
     /**
      * Returns all sections associated with the given teacher.
      */
-    List<Section> getSections(Teacher teacher) {
+    public List<Section> getSections(Teacher teacher) {
         return db.getFilteredSections(teacher);
     }
 
@@ -83,7 +95,8 @@ public class CourseService {
      * Updates the name and description of a course.
      * Only a manager can update a course.
      */
-    void updateCourse(Manager manager, Course course, String name, String description) {
+    public void updateCourse(Manager manager, Course course, String name, String description) {
+        checkPermission(manager);
         Course c = db.getCourse(course.getId());
         c.setName(name);
         c.setDescription(description);
@@ -93,7 +106,8 @@ public class CourseService {
      * Adds an instructor to a course.
      * Throws exception if teacher is already assigned.
      */
-    void addInstructor(Manager manager, Course course, Teacher teacher) {
+    public void addInstructor(Manager manager, Course course, Teacher teacher) {
+        checkPermission(manager);
         Course c = db.getCourse(course.getId());
         for (Teacher t : c.getCoordinators()) {
             if (t.equals(teacher)) {
@@ -107,7 +121,8 @@ public class CourseService {
      * Assigns a teacher to a section.
      * Throws exception if section already has a teacher.
      */
-    void addTeacher(Manager manager, Section sec, Teacher teacher) {
+    public void addTeacher(Manager manager, Section sec, Teacher teacher) {
+        checkPermission(manager);
         Section s = db.getSection(sec.getId());
         if (s.getTeacher() != null) {
             throw new IllegalStateException("Teacher already assigned to this section!");
@@ -119,7 +134,8 @@ public class CourseService {
      * Removes an instructor from a course.
      * Throws exception if teacher is not assigned to course.
      */
-    void dropInstructor(Manager manager, Course course, Teacher teacher) {
+    public void dropInstructor(Manager manager, Course course, Teacher teacher) {
+        checkPermission(manager);
         Course c = db.getCourse(course.getId());
         for (Teacher t : c.getCoordinators()) {
             if (t.equals(teacher)) {
@@ -134,7 +150,8 @@ public class CourseService {
      * Removes the teacher from a section.
      * Throws exception if no teacher is assigned.
      */
-    void dropTeacher(Manager manager, Section sec) {
+    public void dropTeacher(Manager manager, Section sec) {
+        checkPermission(manager);
         Section s = db.getSection(sec.getId());
         if (s.getTeacher() == null) {
             throw new IllegalStateException("No teacher assigned to this section!");
@@ -146,7 +163,8 @@ public class CourseService {
      * Adds a lesson to a section.
      * Throws exception if lesson already exists in section.
      */
-    void addLesson(Manager manager, Section sec, Lesson lesson) {
+    public void addLesson(Manager manager, Section sec, Lesson lesson) {
+        checkPermission(manager);
         Section s = db.getSection(sec.getId());
         for (Lesson l : s.getLessons()) {
             if (l.equals(lesson)) {
@@ -160,7 +178,8 @@ public class CourseService {
      * Removes a lesson from a section.
      * Throws exception if lesson is not found in section.
      */
-    void dropLesson(Manager manager, Section sec, Lesson lesson) {
+    public void dropLesson(Manager manager, Section sec, Lesson lesson) {
+        checkPermission(manager);
         Section s = db.getSection(sec.getId());
         for (Lesson l : s.getLessons()) {
             if (l.equals(lesson)) {
