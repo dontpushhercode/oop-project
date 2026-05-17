@@ -155,14 +155,14 @@ public class RequestService {
      * Throws exception if request is not found or not pending.
      */
     public void cancelRequest(Manager manager, Request request)
-            throws NoPermissionException, RequestNotFoundException {
+            throws NoPermissionException, RequestNotFoundException, InvalidRequestStatusException {
         checkPermission(manager);
         Request r = database.getRequest(request.getId());
         if (r == null) {
             throw new RequestNotFoundException();
         }
         if (r.getStatus() != RequestStatus.PENDING) {
-            throw new IllegalStateException("Only pending requests can be cancelled");
+            throw new InvalidRequestStatusException("Only pending requests can be cancelled");
         }
         r.setStatus(RequestStatus.REJECTED);
     }

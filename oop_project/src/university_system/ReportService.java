@@ -30,9 +30,9 @@ public class ReportService {
      *
      * @param manager manager requesting the report
      * @return generated academic report
-     * @throws IllegalStateException if manager does not have academic permissions
+     * @throws NoPermissionException if manager does not have academic permissions
      */
-    public Report generateAcademicReport(Manager manager) {
+    public Report generateAcademicReport(Manager manager) throws NoPermissionException {
 
         checkPermission(manager);
         Report report = new Report(ReportType.ACADEMIC_PERFORMANCE, manager);
@@ -48,9 +48,9 @@ public class ReportService {
      *
      * @param manager manager requesting the report
      * @return generated course performance report
-     * @throws IllegalStateException if manager does not have academic permissions
+     * @throws NoPermissionException if manager does not have academic permissions
      */
-    public Report generateCourseReport(Manager manager) {
+    public Report generateCourseReport(Manager manager) throws NoPermissionException {
 
         checkPermission(manager);
         Report report = new Report(ReportType.COURSE_PERFORMANCE, manager);
@@ -80,11 +80,11 @@ public class ReportService {
      * Only managers with ACADEMIC type are allowed.
      *
      * @param manager manager to check permissions for
-     * @throws IllegalStateException if manager does not have access rights
+     * @throws NoPermissionException if manager does not have access rights
      */
-    private void checkPermission(Manager manager) {
-        if (manager.getManagerType() != ManagerType.ACADEMIC) {
-            throw new IllegalStateException("No permission");
+    private void checkPermission(Manager manager) throws NoPermissionException {
+        if (manager == null || manager.getManagerType() != ManagerType.ACADEMIC) {
+            throw new NoPermissionException();
         }
     }
 }

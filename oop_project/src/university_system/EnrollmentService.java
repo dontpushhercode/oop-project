@@ -32,15 +32,15 @@ public class EnrollmentService {
      * and student is not already enrolled.
      */
     public void assign(Student st, Section sec)
-            throws NoApprovedRequestException, AlreadyEnrolledException, CreditLimitExceededException, CourseFailLimitException {
+            throws NoApprovedRequestException, AlreadyAssignedException, CreditLimitExceededException, CourseFailLimitException {
         if (!requestService.hasApprovedRequest(st, sec.getCourse())) {
             throw new NoApprovedRequestException();
         }
         if (isEnrolledInSection(st, sec)) {
-            throw new AlreadyEnrolledException("Student is already enrolled in this section");
+            throw new AlreadyAssignedException("Student is already assigned to this section");
         }
         if (isEnrolledInCourse(st, sec.getCourse())) {
-            throw new AlreadyEnrolledException("Student is already enrolled in this course");
+            throw new AlreadyAssignedException("Student is already assigned to this course");
         }
         if (getTotalCredits(st) + sec.getCourse().getCredits() > 21) {
             throw new CreditLimitExceededException();
@@ -55,14 +55,14 @@ public class EnrollmentService {
      * Withdraws a student from a course.
      * Cannot withdraw from completed or already withdrawn enrollments.
      */
-    public void withdraw(Student st, Course course) throws EnrollmentNotFoundException {
+    public void withdraw(Student st, Course course) throws EnrollmentNotFoundException, InvalidEnrollmentStatusException {
         Enrollment target = findEnrollment(st, course);
         if (target == null) {
             throw new EnrollmentNotFoundException();
         }
         if (target.getStatus() == EnrollmentStatus.COMPLETED ||
             target.getStatus() == EnrollmentStatus.WITHDRAWN) {
-            throw new IllegalStateException("Cannot withdraw from completed or withdrawn course");
+            throw new InvalidEnrollmentStatusException("Cannot withdraw from completed or withdrawn course");
         }
         target.withdraw();
     }

@@ -4,9 +4,9 @@ import java.io.Serializable;
 
 /**
  * Thrown when a student tries to enroll in a course they are already enrolled in.
- * This is part of AcademicException hierarchy.
+ * Prefer AlreadyAssignedException when a more general duplicate assignment error is enough.
  */
-public class AlreadyEnrolledException extends AcademicException implements Serializable {
+public class AlreadyEnrolledException extends AlreadyAssignedException implements Serializable {
     private static final long serialVersionUID = 1L;
 
     public AlreadyEnrolledException() {
