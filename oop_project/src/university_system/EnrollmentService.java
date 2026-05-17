@@ -23,6 +23,9 @@ public class EnrollmentService {
      * Constructor that initializes the service with database.
      */
     public EnrollmentService(Database db) {
+    	if (db == null) {
+    	    throw new IllegalArgumentException("Database cannot be null");
+    	}
         this.db = db;
         this.requestService = new RequestService(db);
     }
@@ -31,7 +34,11 @@ public class EnrollmentService {
      * Assigns a student to a section if approved request exists
      * and student is not already enrolled.
      */
-    public void assign(Student st, Section sec) {
+    public void assign(Student student, Section section) {
+    	
+    	Student st = db.getStudent(student.getId());
+    	Section sec = db.getSection(section.getId());
+    	
         if (!requestService.getRegistrationRequest(st, sec.getCourse()).isApproved()) {
             throw new IllegalStateException("No approved registration request for this course!");
         }
@@ -41,6 +48,7 @@ public class EnrollmentService {
         if (isEnrolledInCourse(st, sec.getCourse())) {
             throw new IllegalStateException("Already enrolled in this course!");
         }
+        
         db.createEnrollment(new Enrollment(st, sec));
     }
 
@@ -48,8 +56,11 @@ public class EnrollmentService {
      * Withdraws a student from a course.
      * Cannot withdraw from completed or already withdrawn enrollments.
      */
-    public void withdraw(Student st, Course course) {
-        Enrollment target = findEnrollment(st, course);
+    public void withdraw(Student student, Course course) {
+    	Student st = db.getStudent(student.getId());
+    	Course c = db.getCourse(course.getId());
+    	
+        Enrollment target = findEnrollment(st, c);
         if (target == null) {
             throw new IllegalStateException("Enrollment not found!");
         }
@@ -64,14 +75,14 @@ public class EnrollmentService {
      * Returns all enrollments for the given student.
      */
     public List<Enrollment> getStudentEnrollments(Student st) {
-        return db.getFilteredEnrollments(st);
+        return new ArrayList<>(db.getFilteredEnrollments(st));
     }
 
     /**
      * Returns enrollments filtered by teacher, course and enrollment status.
      */
     public List<Enrollment> getTeacherCourseEnrollments(Teacher teacher, Course course, EnrollmentStatus status) {
-        return db.getFilteredEnrollments(teacher, course, status);
+        return new ArrayList<>(db.getFilteredEnrollments(teacher, course, status));
     }
 
     /**

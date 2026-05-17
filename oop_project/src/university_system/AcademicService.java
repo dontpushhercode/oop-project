@@ -22,6 +22,9 @@ public class AcademicService {
      * 
      */
     AcademicService(Database db) {
+    	if (db == null) {
+    	    throw new IllegalArgumentException("Database cannot be null");
+    	}
     	this.db = db;
     }
 

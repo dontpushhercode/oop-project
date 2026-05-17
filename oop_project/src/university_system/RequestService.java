@@ -1,4 +1,5 @@
 package university_system;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,6 +20,9 @@ public class RequestService {
      * @param database the database to use
      */
     public RequestService(Database database) {
+    	if (database == null) {
+    	    throw new IllegalArgumentException("Database cannot be null");
+    	}
         this.database = database;
     }
 
@@ -97,7 +101,7 @@ public class RequestService {
     public List<RegistrationRequest> getRegistrationRequests(
             Manager manager, RequestStatus status) {
         checkPermission(manager);
-        return database.getFilteredRegistrationRequests(status);
+        return new ArrayList<>(database.getFilteredRegistrationRequests(status));
     }
 
     /**
@@ -110,7 +114,7 @@ public class RequestService {
     public List<RegistrationRequest> getRegistrationRequests(
             Manager manager, Student student, RequestStatus status) {
         checkPermission(manager);
-        return database.getFilteredRegistrationRequests(student, status);
+        return new ArrayList<>(database.getFilteredRegistrationRequests(student, status));
     }
 
     /**
@@ -153,7 +157,7 @@ public class RequestService {
     public List<EmployeeRequest> getEmployeeRequests(
             Manager manager, RequestStatus status) {
         checkPermission(manager);
-        return database.getFilteredEmployeeRequests(status);
+        return new ArrayList<>(database.getFilteredEmployeeRequests(status));
     }
 
     /**
@@ -166,7 +170,7 @@ public class RequestService {
     public List<EmployeeRequest> getEmployeeRequests(
             Manager manager, Employee employee, RequestStatus status) {
         checkPermission(manager);
-        return database.getFilteredEmployeeRequests(employee, status);
+        return new ArrayList<>(database.getFilteredEmployeeRequests(employee, status));
     }
 
     /**
@@ -177,7 +181,7 @@ public class RequestService {
      */
     public List<Request> getRequests(Manager manager, RequestStatus status) {
         checkPermission(manager);
-        return database.getFilteredRequests(status);
+        return new ArrayList<>(database.getFilteredRequests(status));
     }
 
     /**
@@ -232,7 +236,7 @@ public class RequestService {
      */
     public List<RegistrationRequest> getPendingRegistrationRequests(Manager manager) {
         checkPermission(manager);
-        return database.getFilteredRegistrationRequests(RequestStatus.PENDING);
+        return new ArrayList<>(database.getFilteredRegistrationRequests(RequestStatus.PENDING));
     }
 
     /**
@@ -242,6 +246,6 @@ public class RequestService {
      */
     public List<EmployeeRequest> getPendingEmployeeRequests(Manager manager) {
         checkPermission(manager);
-        return database.getFilteredEmployeeRequests(RequestStatus.PENDING);
+        return new ArrayList<>(database.getFilteredEmployeeRequests(RequestStatus.PENDING));
     }
 }
