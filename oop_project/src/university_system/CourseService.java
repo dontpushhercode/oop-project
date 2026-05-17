@@ -27,7 +27,7 @@ public class CourseService {
      * Checks if the manager has permission to perform course operations.
      */
     private void checkPermission(Manager manager) {
-        if (manager == null || manager.getManagerType() != ManagerType.ADMINISTRATIVE) {
+        if (manager == null || manager.getManagerType() != ManagerType.OR) {
             throw new IllegalStateException("No permission");
         }
     }
