@@ -34,7 +34,7 @@ public class Teacher extends Employee {
 	    this.ratingSum = 0;
 	    this.ratingCount = 0;
 	    if (teacherType == TeacherType.PROFESSOR) {
-	        this.researchProfile = new Researcher();
+	    	setResearchProfile(new Researcher());
 	    }
 	}
 	
@@ -49,13 +49,11 @@ public class Teacher extends Employee {
     private School school;
     
     /**
-     * Research profile. Automatically assigned if teacher is a professor.
+     * Sum of all ratings given to this teacher.
      */
     private double ratingSum;
     /**
-     * Returns the average rating of this teacher.
-     * Returns 0 if no ratings have been given yet.
-     * @return average rating as double
+     * Number of ratings received by this teacher.
      */
     private double ratingCount;
     
@@ -94,31 +92,13 @@ public class Teacher extends Employee {
     }
     
     /**
-     * Returns the research profile of this teacher.
-     * Only professors have a research profile by default.
-     * @return research profile or null if not a researcher
-     */
-    public Researcher getResearchProfile() {
-        return this.researchProfile;
-    }
-    
-    /**
      * Returns whether this teacher is a researcher.
      * Professors are always researchers.
      * @return true if teacher is a researcher
      */
-    public boolean isResearcher() {
-        return this.teacherType == TeacherType.PROFESSOR
-                || this.researchProfile != null;
-    }
-    
-    /**
-     * Sets the research profile of this teacher.
-     * Any teacher can optionally be a researcher.
-     * @param researchProfile the research profile to assign
-     */
-    public void setResearchProfile(Researcher researchProfile) {
-        this.researchProfile = researchProfile;
+    @Override
+    boolean isResearcher() {
+        return this.teacherType == TeacherType.PROFESSOR || super.isResearcher();
     }
     
     /**
@@ -128,8 +108,8 @@ public class Teacher extends Employee {
      */
     void setTeacherType(TeacherType teacherType) {
         this.teacherType = teacherType;
-        if (teacherType == TeacherType.PROFESSOR && this.researchProfile == null) {
-            this.researchProfile = new Researcher();
+        if (teacherType == TeacherType.PROFESSOR && getResearchProfile() == null) {
+        	setResearchProfile(new Researcher());
         }
         
     }

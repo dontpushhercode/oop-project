@@ -40,11 +40,6 @@ public class Student extends User {
     private AcademicDegree degree;
     
     /**
-     * Research profile, automatically assigned for 4th year students.
-     */
-    private Researcher researchProfile;
-    
-    /**
      * Research supervisor, required for 4th year students.
      * Supervisor must have h-index of at least 3.
      */
@@ -92,14 +87,6 @@ public class Student extends User {
     User getResearchSupervisor() {
         return this.researchSupervisor;
     }
-    
-    /**
-     * Returns the research profile of the student.
-     * @return research profile or null if not a researcher
-     */
-    public Researcher getResearchProfile() {
-        return this.researchProfile;
-    }
 
     /**
      * Returns number of times student has failed a course.
@@ -114,8 +101,9 @@ public class Student extends User {
      * 4th year students are always researchers.
      * @return true if student is a researcher
      */
-    public boolean isResearcher() {
-        return this.year == 4 || this.researchProfile != null;
+    @Override
+    boolean isResearcher() {
+        return this.year == 4 || super.isResearcher();
     }
 
     /**
@@ -125,8 +113,8 @@ public class Student extends User {
      */
     void setYear(int year) {
         this.year = year;
-        if (year == 4 && this.researchProfile == null) {
-            this.researchProfile = new Researcher();
+        if (year == 4 && getResearchProfile() == null) {
+        	setResearchProfile(new Researcher());
         }
     }
     
@@ -144,14 +132,6 @@ public class Student extends User {
      */
     void setDegree(AcademicDegree degree) {
         this.degree = degree;
-    }
-    
-    /**
-     * Sets the research profile of the student.
-     * @param researchProfile the research profile to assign
-     */
-    void setResearchProfile(Researcher researchProfile) {
-        this.researchProfile = researchProfile;
     }
     
     /**

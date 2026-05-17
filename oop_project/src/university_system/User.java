@@ -170,6 +170,14 @@ public abstract class User {
     }
     
     /**
+     * Returns whether this user is a researcher.
+     * @return true if user has a research profile
+     */
+    boolean isResearcher() {
+        return this.researchProfile != null;
+    }
+    
+    /**
      * Removes the research profile of this user.
      */
     void deleteResearchProfile() {
