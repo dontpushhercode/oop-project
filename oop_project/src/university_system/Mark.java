@@ -71,10 +71,22 @@ public class Mark {
     }
 
     /**
-     * GPA is calculated in Transcript, not here.
-     */
-    void getGpa() {
-    }
+ * Returns the GPA for this mark based on total points.
+ */
+double getGpa() {
+    double total = getTotalPoints();
+    if (total >= 95) return 4.0;
+    if (total >= 90) return 3.67;
+    if (total >= 85) return 3.33;
+    if (total >= 80) return 3.0;
+    if (total >= 75) return 2.67;
+    if (total >= 70) return 2.33;
+    if (total >= 65) return 2.0;
+    if (total >= 60) return 1.67;
+    if (total >= 55) return 1.33;
+    if (total >= 50) return 1.0;
+    return 0.0;
+}
 
     /**
      * Sets the first attestation score.
