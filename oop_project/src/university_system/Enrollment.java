@@ -10,19 +10,39 @@ import java.util.*;
  */
 public class Enrollment {
 	
+	/**
+     * Counter used to generate unique enrollment IDs.
+     */
+	private static int counter = 0;
+	
+	 /**
+     * Unique enrollment identifier.
+     */
+	private int id;
+	
+	/**
+	 * Assigns a unique ID to each new Enrollment object.
+	 */
+	
 	{
 		this.id=++counter;
 	}
-    
-    /**
-     * Counter used for automatic enrollment id generation.
+
+	/**
+     * Creates a new enrollment for a student in a course section.
+     *
+     * The enrollment is initialized with an empty mark and ACTIVE status.
+     *
+     * @param student the student who is enrolled
+     * @param section the section where the student is enrolled
      */
-    private static int counter;
-    
-    /**
-     * Unique enrollment identifier.
-     */
-    private int id;
+    Enrollment(Student student, Section section) {
+    	this.student = student;
+		this.section = section;
+		this.mark = new Mark();
+		this.status = EnrollmentStatus.ACTIVE;
+    }
+
 
     /**
      * Student associated with the enrollment.
@@ -45,148 +65,137 @@ public class Enrollment {
     private EnrollmentStatus status;
     
     /**
-     * Creates a new enrollment for a student in a course section.
+     * Returns the enrollment ID.
      *
-     * The enrollment is initialized with:
-     *
-     * an automatically generated id
-     * an empty mark record
-     * ACTIVE status
-     *
-     *
-     * @param student enrolled student
-     * @param section course section
-     */
-    Enrollment(Student student, Section section) {
-    	this.student = student;
-    	this.section = section;
-    	this.mark = new Mark();
-    	this.status = EnrollmentStatus.ACTIVE;
-    }
-
-    /**
-     * Returns the enrollment identifier.
-     *
-     * @return enrollment id
+     * @return the enrollment ID
      */
     int getId() {
-    	return this.id;
-    }
+		return this.id;
+	}
     
     /**
-     * Returns the enrolled student.
-     *
-     * @return associated student
-     */
+    * Returns the student associated with this enrollment.
+    *
+    * @return the enrolled student
+    */
     Student getStudent() {
-        return this.student;
+    	return this.student;
     }
-
     /**
-     * Returns the associated course section.
-     *
-     * @return course section
-     */
+    * Returns the section associated with this enrollment.
+    *
+    * @return the course section
+    */
     Section getSection() {
-        return this.section;
+    	return this.section;
     }
 
     /**
-     * Returns the student's academic mark.
-     *
-     * @return enrollment mark
-     */
+    * Returns the student's mark.
+    *
+    * @return the academic mark
+    */
     Mark getMark() {
-        return this.mark;
+    	return this.mark;
     }
 
-    /**
+     /**
      * Returns the current enrollment status.
      *
      * @return enrollment status
      */
     EnrollmentStatus getStatus() {
-        return this.status;
+    	return this.status;
+    }
+    /**
+     * Updates the student associated with this enrollment.
+     *
+     * @param student the new student
+     */
+    void setStudent(Student student) {
+        this.student=student;
     }
 
-    /**
+     /**
      * Updates the enrollment status.
      *
-     * @param status new enrollment status
+     * @param status the new enrollment status
      */
+
     void setStatus(EnrollmentStatus status) {
         this.status = status;
     }
 
     /**
-     * Updates the enrolled student.
-     *
-     * @param student new student
-     */
-    void setStudent(Student student) {
-        this.student = student;
+    * Updates the section associated with this enrollment.
+    *
+    * @param section the new section
+    */
+    void setSection(Section section) {
+    	this.section = section;
     }
-
+    
     /**
-     * Updates the enrollment mark.
+     * Updates the student's mark.
      *
-     * @param mark new academic mark
+     * @param mark the new academic mark
      */
     void setMark(Mark mark) {
         this.mark = mark;
     }
-
+    
     /**
-     * Updates the associated course section.
-     *
-     * @param section new course section
+     * Marks this enrollment as completed.
      */
-    void setSection(Section section) {
-        this.section = section;
+    void completeCourse() {
+        this.status = EnrollmentStatus.COMPLETED;
     }
     
     /**
-     * Marks the enrollment as withdrawn.
+     * Marks this enrollment as withdrawn.
      */
     void withdraw() {
-	    this.status = EnrollmentStatus.WITHDRAWN;
-	}
-    
+        this.status = EnrollmentStatus.WITHDRAWN;
+    }
+
     /**
      * Returns a string representation of the enrollment.
      *
-     * @return enrollment information as string
+     * @return enrollment information as a string
      */
     @Override
     public String toString() {
-    	return "Enrollment: Student: " + this.student.getFullName()+", Section: " 
-    			+ this.section.getCourseName() + ", Mark: " + mark.getTotalPoints()
-    			+ ", Status: " + this.status;
+        return "Enrollment: Student: " + this.student.getFullName()
+                + ", Section: " + this.section.getCourseName()
+                + ", Mark: " + this.mark.getTotalPoints()
+                + ", Status: " + this.status;
     }
 
     /**
-     * Compares enrollments by their unique identifier.
+     * Compares this enrollment with another object.
      *
-     * @param obj object to compare
-     * @return true if enrollments have the same id
-     * false otherwise
+     * Two enrollments are considered equal if they have the same ID.
+     *
+     * @param obj the object to compare with
+     * @return true if both enrollments have the same ID, otherwise false
      */
     @Override
     public boolean equals(Object obj) {
-    	if (this == obj) return true;
+        if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
+
         Enrollment other = (Enrollment) obj;
-        return this.getId() == other.getId();
+
+        return this.id == other.id;
     }
-    
+
     /**
-     * Returns hash code based on enrollment id.
+     * Returns hash code based on the enrollment ID.
      *
      * @return hash code value
      */
     @Override
     public int hashCode() {
-    	return Integer.hashCode(this.getId());
+        return Objects.hash(this.id);
     }
-    
 }

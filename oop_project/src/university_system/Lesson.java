@@ -5,78 +5,193 @@ import java.time.LocalTime;
 import java.util.*;
 
 /**
- * 
+ * Represents a lesson in the university system.
+ *
+ * A lesson stores information about its type, day of the week,
+ * start time and end time.
+ *
+ * Each lesson has a unique ID that is generated automatically.
  */
 public class Lesson {
-
-    /**
-     * Default constructor
+	
+	/**
+     * Static counter used to generate unique lesson IDs.
      */
-    public Lesson() {
+	private static int counter = 0;
+	
+	 /**
+     * Unique lesson identifier.
+     */
+	private int id;
+	
+	/**
+	 *  Instance initializer block.
+     *
+     * It assigns a unique ID to every new Lesson object.
+	 */
+	
+    {
+    	this.id = ++counter;
     }
 
     /**
-     * 
+     * Creates a new lesson with the given type, day and time.
+     *
+     * @param type the lesson type
+     * @param day the day of the week
+     * @param startTime the lesson start time
+     * @param endTime the lesson end time
+     */
+    Lesson(LessonType type, DayOfWeek day, LocalTime startTime, LocalTime endTime) {
+    	this.type = type;
+    	this.day = day;
+    	this.startTime = startTime;
+    	this.endTime = endTime;
+    }
+
+    /**
+     *  Type of the lesson.
      */
     private LessonType type;
 
     /**
-     * 
+     * Day of the week when the lesson takes place.
      */
     private DayOfWeek day;
 
     /**
-     * 
+     * Lesson start time.
      */
     private LocalTime startTime;
 
     /**
-     * 
+     * Lesson end time.
      */
     private LocalTime endTime;
 
 
 
     /**
-     * 
+     * Returns the lesson ID.
+     *
+     * @return the lesson ID
      */
-    void setTime() {
-        // TODO implement here
+    int getId() {
+        return this.id;
+    }
+    
+    /**
+     * Updates the start and end time of the lesson.
+     *
+     * @param startTime the new start time
+     * @param endTime the new end time
+     */
+    void setTime(LocalTime startTime, LocalTime endTime) {
+    	this.startTime = startTime;
+        this.endTime = endTime;
     }
 
     /**
-     * 
+     * Updates the day of the lesson.
+     *
+     * @param day the new day of the week
      */
-    void setDay() {
-        // TODO implement here
+    void setDay(DayOfWeek day) {
+    	this.day = day;
     }
 
     /**
-     * 
+     * Updates the lesson type.
+     *
+     * @param type the new lesson type
      */
-    void setType() {
-        // TODO implement here
+    void setType(LessonType type) {
+    	this.type = type;
     }
 
     /**
-     * 
+     *  Returns the lesson time as a string.
+     *
+     * @return lesson time in the format startTime - endTime
      */
-    public void getTime() {
-        // TODO implement here
+    String getTime() {
+    	return this.startTime + " - " + this.endTime;
     }
 
     /**
-     * 
+     * Returns the lesson day.
+     *
+     * @return the day of the week
      */
-    public void getDay() {
-        // TODO implement here
+    DayOfWeek getDay() {
+    	return this.day;
     }
 
     /**
-     * 
+     * Returns the lesson type.
+     *
+     * @return the lesson type
      */
-    public void getType() {
-        // TODO implement here
+    LessonType getType() {
+    	return this.type;
     }
+
+
+    /**
+     * Returns the lesson start time.
+     *
+     * @return the start time
+     */  
+    LocalTime getStartTime() {
+        return this.startTime;
+    }
+    
+    /**
+     * Returns the lesson end time.
+     *
+     * @return the end time
+     */
+    LocalTime getEndTime() {
+        return this.endTime;
+    }
+    
+    /**
+     * Returns a string representation of the lesson.
+     *
+     * @return lesson information as a string
+     */
+    @Override
+    public String toString() {
+        return this.type + ", " + this.day + ", " + 
+               this.startTime + "-" + this.endTime + 
+               ", id: " + this.id + "\n";
+    }
+    /**
+     * Compares this lesson with another object.
+     *
+     * Two lessons are considered equal if they have the same ID.
+     *
+     * @param obj the object to compare with
+     * @return true if both lessons have the same ID, otherwise false
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+
+        Lesson lesson = (Lesson) obj;
+
+        return id == lesson.id;
+    }            
+    /**
+    * Returns hash code based on the lesson ID.
+    *
+    * @return hash code value
+    */
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.id);
+    }
+
 
 }
