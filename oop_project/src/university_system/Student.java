@@ -33,6 +33,7 @@ public class Student extends User {
         this.credits = 0;
         this.failCount = 0;
     }
+    
     /**
      * Academic year of the student (1-4).
      */

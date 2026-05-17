@@ -37,6 +37,7 @@ public class Teacher extends Employee {
             this.researchProfile = new Researcher();
         }
 	}
+	
     /**
      * Type/title of the teacher (TUTOR, LECTURER, SENIOR_LECTURER, PROFESSOR, etc).
      */

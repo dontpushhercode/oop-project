@@ -41,6 +41,7 @@ public abstract class User {
         this.password = password;
         this.isLoggedIn = false;
     }
+    
     /**
      * Unique auto-incremented identifier for this user.
      */
