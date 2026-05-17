@@ -26,17 +26,16 @@ public class CourseService {
     /**
      * Checks if the manager has permission to perform course operations.
      */
-    private void checkPermission(Manager manager) {
-        if (manager == null || manager.getManagerType() != ManagerType.OR) {
-            throw new IllegalStateException("No permission");
+    private void checkPermission(Manager manager) throws NoPermissionException {
+        if (manager == null || manager.getManagerType() != ManagerType.ADMINISTRATIVE) {
+            throw new NoPermissionException();
         }
     }
 
     /**
      * Creates a new course and saves it to the database.
-     * Only a manager can create a course.
      */
-    public Course createCourse(Manager manager, String code, String name, String description, School school, int credits) {
+    public Course createCourse(Manager manager, String code, String name, String description, School school, int credits) throws NoPermissionException {
         checkPermission(manager);
         Course course = new Course(code, name, description, school, credits);
         db.createCourse(course);
@@ -52,9 +51,8 @@ public class CourseService {
 
     /**
      * Creates a new section for a course and saves it to the database.
-     * Only a manager can create a section.
      */
-    public Section createSection(Manager manager, Course course, Semester semester) {
+    public Section createSection(Manager manager, Course course, Semester semester) throws NoPermissionException {
         checkPermission(manager);
         Section section = new Section(course, semester);
         db.createSection(section);
@@ -70,9 +68,8 @@ public class CourseService {
 
     /**
      * Creates a new lesson with given type, day and time.
-     * Only a manager can create a lesson.
      */
-    public Lesson createLesson(Manager manager, LessonType type, DayOfWeek day, LocalTime startTime, LocalTime endTime) {
+    public Lesson createLesson(Manager manager, LessonType type, DayOfWeek day, LocalTime startTime, LocalTime endTime) throws NoPermissionException {
         checkPermission(manager);
         return new Lesson(type, day, startTime, endTime);
     }
@@ -93,9 +90,8 @@ public class CourseService {
 
     /**
      * Updates the name and description of a course.
-     * Only a manager can update a course.
      */
-    public void updateCourse(Manager manager, Course course, String name, String description) {
+    public void updateCourse(Manager manager, Course course, String name, String description) throws NoPermissionException {
         checkPermission(manager);
         Course c = db.getCourse(course.getId());
         c.setName(name);
@@ -104,14 +100,13 @@ public class CourseService {
 
     /**
      * Adds an instructor to a course.
-     * Throws exception if teacher is already assigned.
      */
-    public void addInstructor(Manager manager, Course course, Teacher teacher) {
+    public void addInstructor(Manager manager, Course course, Teacher teacher) throws NoPermissionException, TeacherAlreadyAssignedException {
         checkPermission(manager);
         Course c = db.getCourse(course.getId());
         for (Teacher t : c.getCoordinators()) {
             if (t.equals(teacher)) {
-                throw new IllegalStateException("Teacher already assigned to this course!");
+                throw new TeacherAlreadyAssignedException("Teacher already assigned to this course");
             }
         }
         c.addInstructor(teacher);
@@ -119,22 +114,20 @@ public class CourseService {
 
     /**
      * Assigns a teacher to a section.
-     * Throws exception if section already has a teacher.
      */
-    public void addTeacher(Manager manager, Section sec, Teacher teacher) {
+    public void addTeacher(Manager manager, Section sec, Teacher teacher) throws NoPermissionException, TeacherAlreadyAssignedException {
         checkPermission(manager);
         Section s = db.getSection(sec.getId());
         if (s.getTeacher() != null) {
-            throw new IllegalStateException("Teacher already assigned to this section!");
+            throw new TeacherAlreadyAssignedException("Teacher already assigned to this section");
         }
         s.setTeacher(teacher);
     }
 
     /**
      * Removes an instructor from a course.
-     * Throws exception if teacher is not assigned to course.
      */
-    public void dropInstructor(Manager manager, Course course, Teacher teacher) {
+    public void dropInstructor(Manager manager, Course course, Teacher teacher) throws NoPermissionException {
         checkPermission(manager);
         Course c = db.getCourse(course.getId());
         for (Teacher t : c.getCoordinators()) {
@@ -143,32 +136,30 @@ public class CourseService {
                 return;
             }
         }
-        throw new IllegalStateException("Teacher not assigned to this course!");
+        throw new IllegalStateException("Teacher not assigned to this course");
     }
 
     /**
      * Removes the teacher from a section.
-     * Throws exception if no teacher is assigned.
      */
-    public void dropTeacher(Manager manager, Section sec) {
+    public void dropTeacher(Manager manager, Section sec) throws NoPermissionException {
         checkPermission(manager);
         Section s = db.getSection(sec.getId());
         if (s.getTeacher() == null) {
-            throw new IllegalStateException("No teacher assigned to this section!");
+            throw new IllegalStateException("No teacher assigned to this section");
         }
         s.setTeacher(null);
     }
 
     /**
      * Adds a lesson to a section.
-     * Throws exception if lesson already exists in section.
      */
-    public void addLesson(Manager manager, Section sec, Lesson lesson) {
+    public void addLesson(Manager manager, Section sec, Lesson lesson) throws NoPermissionException {
         checkPermission(manager);
         Section s = db.getSection(sec.getId());
         for (Lesson l : s.getLessons()) {
             if (l.equals(lesson)) {
-                throw new IllegalStateException("Lesson already assigned to this section!");
+                throw new IllegalStateException("Lesson already assigned to this section");
             }
         }
         s.addLesson(lesson);
@@ -176,9 +167,8 @@ public class CourseService {
 
     /**
      * Removes a lesson from a section.
-     * Throws exception if lesson is not found in section.
      */
-    public void dropLesson(Manager manager, Section sec, Lesson lesson) {
+    public void dropLesson(Manager manager, Section sec, Lesson lesson) throws NoPermissionException {
         checkPermission(manager);
         Section s = db.getSection(sec.getId());
         for (Lesson l : s.getLessons()) {
@@ -187,6 +177,6 @@ public class CourseService {
                 return;
             }
         }
-        throw new IllegalStateException("Lesson not found in this section!");
+        throw new IllegalStateException("Lesson not found in this section");
     }
 }

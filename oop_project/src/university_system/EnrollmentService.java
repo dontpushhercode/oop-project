@@ -31,15 +31,22 @@ public class EnrollmentService {
      * Assigns a student to a section if approved request exists
      * and student is not already enrolled.
      */
-    void assign(Student st, Section sec) {
-        if (!requestService.getRegistrationRequest(st, sec.getCourse()).isApproved()) {
-            throw new IllegalStateException("No approved registration request for this course!");
+    public void assign(Student st, Section sec)
+            throws NoApprovedRequestException, AlreadyEnrolledException, CreditLimitExceededException, CourseFailLimitException {
+        if (!requestService.hasApprovedRequest(st, sec.getCourse())) {
+            throw new NoApprovedRequestException();
         }
         if (isEnrolledInSection(st, sec)) {
-            throw new IllegalStateException("Already enrolled in this section!");
+            throw new AlreadyEnrolledException("Student is already enrolled in this section");
         }
         if (isEnrolledInCourse(st, sec.getCourse())) {
-            throw new IllegalStateException("Already enrolled in this course!");
+            throw new AlreadyEnrolledException("Student is already enrolled in this course");
+        }
+        if (getTotalCredits(st) + sec.getCourse().getCredits() > 21) {
+            throw new CreditLimitExceededException();
+        }
+        if (getFailCount(st, sec.getCourse()) >= 3) {
+            throw new CourseFailLimitException();
         }
         db.createEnrollment(new Enrollment(st, sec));
     }
@@ -48,14 +55,14 @@ public class EnrollmentService {
      * Withdraws a student from a course.
      * Cannot withdraw from completed or already withdrawn enrollments.
      */
-    void withdraw(Student st, Course course) {
+    public void withdraw(Student st, Course course) throws EnrollmentNotFoundException {
         Enrollment target = findEnrollment(st, course);
         if (target == null) {
-            throw new IllegalStateException("Enrollment not found!");
+            throw new EnrollmentNotFoundException();
         }
         if (target.getStatus() == EnrollmentStatus.COMPLETED ||
             target.getStatus() == EnrollmentStatus.WITHDRAWN) {
-            throw new IllegalStateException("Cannot withdraw from completed or withdrawn course!");
+            throw new IllegalStateException("Cannot withdraw from completed or withdrawn course");
         }
         target.withdraw();
     }
@@ -63,15 +70,43 @@ public class EnrollmentService {
     /**
      * Returns all enrollments for the given student.
      */
-    List<Enrollment> getStudentEnrollments(Student st) {
+    public List<Enrollment> getStudentEnrollments(Student st) {
         return db.getFilteredEnrollments(st);
     }
 
     /**
      * Returns enrollments filtered by teacher, course and enrollment status.
      */
-    List<Enrollment> getTeacherCourseEnrollments(Teacher teacher, Course course, EnrollmentStatus status) {
+    public List<Enrollment> getTeacherCourseEnrollments(Teacher teacher, Course course, EnrollmentStatus status) {
         return db.getFilteredEnrollments(teacher, course, status);
+    }
+
+    /**
+     * Returns total credits the student is currently enrolled in.
+     */
+    private int getTotalCredits(Student st) {
+        int total = 0;
+        for (Enrollment e : db.getFilteredEnrollments(st)) {
+            if (e.getStatus() == EnrollmentStatus.ACTIVE) {
+                total += e.getSection().getCourse().getCredits();
+            }
+        }
+        return total;
+    }
+
+    /**
+     * Returns how many times the student has failed the given course.
+     */
+    private int getFailCount(Student st, Course course) {
+        int count = 0;
+        for (Enrollment e : db.getFilteredEnrollments(st)) {
+            if (e.getSection().getCourse().equals(course) &&
+                e.getStatus() == EnrollmentStatus.COMPLETED &&
+                e.getMark().getLiteralGrade().equals("F")) {
+                count++;
+            }
+        }
+        return count;
     }
 
     /**
