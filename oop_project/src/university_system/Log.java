@@ -1,5 +1,6 @@
 package university_system; 
 import java.time.LocalDate; 
+import java.io.Serializable;
 
 /**
  * Represents a system log entry.
@@ -7,7 +8,8 @@ import java.time.LocalDate;
  * Each log records an action performed by an actor
  * at a specific time.
  */
-public class Log {
+public class Log implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     /**
      * Name or identifier of the actor who performed the action.

@@ -1,4 +1,5 @@
 package university_system;
+import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -7,7 +8,8 @@ import java.util.*;
  * A section connects a course with a semester, teacher and list of lessons.
  * Each section has a unique ID that is generated automatically.
  */
-public class Section{
+public class Section implements Serializable {
+    private static final long serialVersionUID = 1L;
 	
 	 /**
      * Static counter used to generate unique section IDs.

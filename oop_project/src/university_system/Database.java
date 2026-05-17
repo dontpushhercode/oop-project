@@ -1,4 +1,5 @@
 package university_system;
+import java.io.*;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -10,7 +11,8 @@ import java.util.*;
  *
  * Implemented as a singleton.
  */
-public class Database {
+public class Database implements Serializable {
+	private static final long serialVersionUID = 1L;
 	
 	/**
 	 * Singleton database instance.
@@ -28,6 +30,7 @@ public class Database {
 		transcripts = new ArrayList<>();
 		employeeRequests = new ArrayList<>();
 		registrationRequests = new ArrayList<>();
+		researchers = new ArrayList<>();
 		papers = new ArrayList<>();
 		projects = new ArrayList<>();
 		logs = new ArrayList<>();
@@ -39,10 +42,36 @@ public class Database {
 	 * @return database instance
 	 */
     public static Database getDb() {
-    	if(db==null) {
-    		db = new Database();
-    	}
-    	return db;
+        if (db == null) {
+            db = loadFromFile("data.ser");
+        }
+        return db;
+    }
+    
+    /**
+     * Loads database state from a serialized file.
+     */
+    private static Database loadFromFile(String fileName) {
+        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(fileName))) {
+            Object object = in.readObject();
+            if (object instanceof Database) {
+                return (Database) object;
+            }
+        } catch (IOException | ClassNotFoundException e) {
+            return new Database();
+        }
+        return new Database();
+    }
+    
+    /**
+     * Saves database state to a serialized file.
+     */
+    void saveToFile(String fileName) {
+        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(fileName))) {
+            out.writeObject(this);
+        } catch (IOException e) {
+            throw new IllegalStateException("Could not save database", e);
+        }
     }
 
     /**
@@ -79,6 +108,11 @@ public class Database {
      * Student registration requests.
      */
     private ArrayList<RegistrationRequest> registrationRequests;
+    
+    /**
+     * Research profiles stored in the system.
+     */
+    private ArrayList<Researcher> researchers;
 
     /**
      * Research papers stored in the system.
@@ -238,10 +272,8 @@ public class Database {
     List<ResearchPaper> getFilteredPapers(Researcher researcher) {
         List<ResearchPaper> filtered = new ArrayList<ResearchPaper>();
         for(ResearchPaper p:papers) {
-        	for(Researcher r:p.getAuthors()) {
-        		if(r.equals(researcher)) {
-        			filtered.add(p);
-        		}
+        	if(p.hasAuthor(researcher)) {
+        		filtered.add(p);
         	}
         }
         return filtered;
@@ -257,8 +289,8 @@ public class Database {
         List<ResearchProject> filtered = new ArrayList<ResearchProject>();
         for(ResearchProject p:projects) {
         	List<Researcher> members = p.getMembers();
-        	for(Researcher r:members) {
-        		if(r.equals(researcher)) {
+        	for(Researcher member:members) {
+        		if(member.equals(researcher)) {
         			filtered.add(p);
         		}
         	}
@@ -426,6 +458,22 @@ public class Database {
     }
     
     /**
+     * Returns all course sections stored in the system.
+     *
+     * @return list of sections
+     */
+    List<Section> getSections() {
+        return this.sections;
+    }
+
+    /**
+    * Returns all users stored in the system.
+    */
+    List<User> getUsers() {
+        return this.users;
+    }
+    
+    /**
      * Returns all enrollments stored in the system.
      * 
      * @param list of enrollments
@@ -538,6 +586,27 @@ public class Database {
     List<ResearchProject> getProjects() {
     	return this.projects;
     }
+    
+    /**
+     * Returns all research profiles in the system.
+     *
+     * @return list of researchers
+     */
+    List<Researcher> getResearchers() {
+        if (this.researchers == null) {
+            this.researchers = new ArrayList<>();
+        }
+        return this.researchers;
+    }
+    
+    /**
+     * Returns all research papers in the system.
+     *
+     * @return list of papers
+     */
+    List<ResearchPaper> getPapers() {
+        return this.papers;
+    }
 
     /**
      * Returns all system logs.
@@ -562,6 +631,21 @@ public class Database {
 		}
 		return null;
 	}
+    
+    /**
+     * Adds a user to the database or updates an existing user with the same id.
+     *
+     * @param user user to store
+     */
+    void createUser(User user) {
+        for (int i = 0; i < users.size(); i++) {
+            if (users.get(i).equals(user)) {
+                users.set(i, user);
+                return;
+            }
+        }
+        users.add(user);
+    }
     
     /**
      * Returns a course by identifier.
@@ -708,54 +792,6 @@ public class Database {
 	    }
 	    users.add(teacher);
     }
-    
-    /**
-     * Adds a student to the database or updates
-     * an existing student with the same id.
-     *
-     * @param student student to store
-     */
-    void createStudent(Student student) {
-    	for (int i = 0; i < users.size(); i++) {
-	        if (users.get(i).equals(student)) {
-	            users.set(i, student);
-	            return;
-	        }
-	    }
-	    users.add(student);
-    }
-    
-    /**
-     * Adds a employee to the database or updates
-     * an existing employee with the same id.
-     *
-     * @param employee employee to store
-     */
-    void createEmployee(Employee employee) {
-    	for (int i = 0; i < users.size(); i++) {
-	        if (users.get(i).equals(employee)) {
-	            users.set(i, employee);
-	            return;
-	        }
-	    }
-	    users.add(employee);
-    }
-    
-    /**
-     * Adds a manager to the database or updates
-     * an existing manager with the same id.
-     *
-     * @param manager manager to store
-     */
-    void createManager(Manager manager) {
-    	for (int i = 0; i < users.size(); i++) {
-	        if (users.get(i).equals(manager)) {
-	            users.set(i, manager);
-	            return;
-	        }
-	    }
-	    users.add(manager);
-    }
 
     /**
      * Adds an enrollment to the database or updates an existing
@@ -883,19 +919,5 @@ public class Database {
 			}
 		}
     	logs.add(log);
-    }
-    
-    /**
-     * Deletes user if presented in database.
-     * 
-     * @param user user
-     */
-    void deleteUser(User user) {
-    	if(this.users.contains(user)) {
-    		this.users.remove(user);
-    	}
-    	else {
-    		throw new IllegalArgumentException("User does not exist!");
-    	}
     }
 }

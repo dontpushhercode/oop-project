@@ -1,11 +1,14 @@
 package university_system;
 
+import java.io.Serializable;
+
 /**
  *
  * Represents a student's mark in a course
  * in the university system.
  */
-public class Mark {
+public class Mark implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     /**
      * Auto-incremented counter for generating unique ids.
@@ -28,6 +31,20 @@ public class Mark {
         this.firstAttestation = 0;
         this.secondAttestation = 0;
         this.finalExam = 0;
+    }
+
+    /**
+     * Returns the mark identifier.
+     */
+    int getId() {
+        return this.id;
+    }
+
+    /**
+     * Keeps generated mark ids unique after deserialization.
+     */
+    static void syncCounter(int maxId) {
+        counter = Math.max(counter, maxId);
     }
 
     /**

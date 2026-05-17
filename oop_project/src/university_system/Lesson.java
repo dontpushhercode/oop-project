@@ -1,51 +1,26 @@
 package university_system;
+import java.io.Serializable;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.util.*;
 
 /**
- * Represents a lesson in the university system.
- *
- * A lesson stores information about its type, day of the week,
- * start time and end time.
- *
- * Each lesson has a unique ID that is generated automatically.
+ * 
  */
-public class Lesson {
-	
-	/**
-     * Static counter used to generate unique lesson IDs.
-     */
-	private static int counter = 0;
-	
-	 /**
-     * Unique lesson identifier.
-     */
-	private int id;
-	
-	/**
-	 *  Instance initializer block.
-     *
-     * It assigns a unique ID to every new Lesson object.
-	 */
-	
-    {
-    	this.id = ++counter;
-    }
+public class Lesson implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     /**
-     * Creates a new lesson with the given type, day and time.
-     *
-     * @param type the lesson type
-     * @param day the day of the week
-     * @param startTime the lesson start time
-     * @param endTime the lesson end time
+     * Default constructor
      */
+    public Lesson() {
+    }
+
     Lesson(LessonType type, DayOfWeek day, LocalTime startTime, LocalTime endTime) {
-    	this.type = type;
-    	this.day = day;
-    	this.startTime = startTime;
-    	this.endTime = endTime;
+        this.type = type;
+        this.day = day;
+        this.startTime = startTime;
+        this.endTime = endTime;
     }
 
     /**
@@ -67,6 +42,10 @@ public class Lesson {
      * Lesson end time.
      */
     private LocalTime endTime;
+
+    private static int counter = 0;
+    private int id;
+    { this.id = ++counter; }
 
 
 

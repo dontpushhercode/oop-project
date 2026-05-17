@@ -1,4 +1,5 @@
 package university_system;
+import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -9,11 +10,8 @@ import java.util.*;
  *
  * Each course has a unique id that is generated automatically.
  */
-public class Course {
-	
-	/**
-	 * Static counter used to generate unique course IDs.
-	 */
+public class Course implements Serializable {
+    private static final long serialVersionUID = 1L;
 	
 	private static int counter = 0;
 	
@@ -55,14 +53,18 @@ public class Course {
      * @param school the school that offers this course
      */
 
-    Course(String code, String name, int credits, String description, School school) {
-        this.code = code;
-        this.name = name;
-        this.credits = credits;
-        this.description = description;
-        this.school = school;
-        this.instructors = new ArrayList<>();
-        this.prerequisites = new ArrayList<>();
+	    Course(String code, String name, int credits, String description, School school) {
+	        this.code = code;
+	        this.name = name;
+	        this.credits = credits;
+	        this.description = description;
+	        this.school = school;
+	        this.instructors = new ArrayList<>();
+	        this.prerequisites = new ArrayList<>();
+	    }
+
+    Course(String code, String name, String description, School school, int credits) {
+        this(code, name, credits, description, school);
     }
     
     /**
@@ -132,8 +134,15 @@ public class Course {
      * @return the course ID
      */
     
-    int getId() {
-        return this.id;
+	int getId() {
+	        return this.id;
+	    }
+
+    /**
+     * Keeps generated course ids unique after deserialization.
+     */
+    static void syncCounter(int maxId) {
+        counter = Math.max(counter, maxId);
     }
     
     /**
@@ -165,6 +174,10 @@ public class Course {
     	return this.credits;
     }
 
+    int getCredits() {
+        return this.credits;
+    }
+
     /**
      * Returns the course description.
      *
@@ -190,6 +203,10 @@ public class Course {
      */
     List<Teacher> getInstructors() {
     	return this.instructors;
+    }
+
+    List<Teacher> getCoordinators() {
+        return this.instructors;
     }
 
     /**

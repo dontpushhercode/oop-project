@@ -1,4 +1,5 @@
 package university_system;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -8,7 +9,8 @@ import java.util.*;
  * Stores bibliographic information such as title,
  * author, publication year, citation count, and DOI.
  */
-public class ResearchPaper {
+public class ResearchPaper implements Serializable {
+    private static final long serialVersionUID = 1L;
 	
 	{
 		this.id = ++counter;
@@ -144,6 +146,13 @@ public class ResearchPaper {
 	int getId() {
 		return id;
 	}
+
+    /**
+     * Keeps generated paper ids unique after deserialization.
+     */
+    static void syncCounter(int maxId) {
+        counter = Math.max(counter, maxId);
+    }
 	
 	/**
 	 * Returns research journal name.

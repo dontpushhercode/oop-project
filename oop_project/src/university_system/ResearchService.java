@@ -102,8 +102,9 @@ public class ResearchService {
     	if (projectName == null || projectName.isBlank()) {
     	    throw new IllegalArgumentException("Project name cannot be empty");
     	}
-        ResearchProject project = new ResearchProject(projectName, researcher);
+        ResearchProject project = new ResearchProject(projectName);
         database.createProject(project);
+        addMember(project, researcher);
         return project;
     }
 
@@ -129,7 +130,7 @@ public class ResearchService {
             throw new IllegalStateException("Researcher is already a member of this project");
         }
         
-        p.addMember(researcher);
+        researcher.addResearchProject(p);
     }
 
 
@@ -235,9 +236,33 @@ public class ResearchService {
      *
      * @return list of all researchers
      */
-    public List<User> getResearchers() {
-    	return new ArrayList<>(database.getFilteredUsers());
+    List<Researcher> getResearchers() {
+    	return database.getResearchers();
     }
 
-}
+    /**
+     * Returns researchers filtered by keyword.
+     *
+     * The method searches by user information.
+     *
+     * @param keyword the search keyword
+     * @return list of filtered researchers
+     * @throws IllegalArgumentException if keyword is null
+     */
+     List<Researcher> getFilteredResearchers(String keyword) {
+    	 if (keyword == null) {
+             throw new IllegalArgumentException("Keyword cannot be null");
+         }
 
+         List<Researcher> result = new ArrayList<>();
+
+         for (Researcher researcher : database.getResearchers()) {
+             String info = researcher.getUserInfo();
+
+             if (info != null && info.toLowerCase().contains(keyword.toLowerCase())) {
+                 result.add(researcher);
+             }
+       }
+         return result;
+     }
+}

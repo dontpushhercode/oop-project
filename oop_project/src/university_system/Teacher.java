@@ -5,7 +5,8 @@ package university_system;
  * Teachers can view and manage courses, view students, put marks,
  * send messages and complaints to other employees.
  */
-public class Teacher extends Employee {
+import java.io.Serializable;
+public class Teacher extends Employee implements Serializable {
     /**
      * Default constructor
      */
@@ -26,7 +27,7 @@ public class Teacher extends Employee {
 
 	Teacher(String firstName, String surName, String username,
 	        String password, TeacherType teacherType, School school) {
-	    super(firstName, surName, password, username, DepartmentType.EDUCATION); 
+	    super(firstName, surName, username, password, DepartmentType.EDUCATION); 
 	    this.teacherType = teacherType;
 	    this.school = school;
 	    this.ratingSum = 0;
@@ -35,7 +36,6 @@ public class Teacher extends Employee {
 	    	setResearchProfile(new Researcher(this));
 	    }
 	}
-	
     /**
      * Type/title of the teacher (TUTOR, LECTURER, SENIOR_LECTURER, PROFESSOR, etc).
      */

@@ -1,16 +1,12 @@
 package university_system;
 import java.util.*;
+import java.io.Serializable;
 
 /**
- * Represents an academic transcript for a student.
- *
- * The Transcript provides access to a student's enrollments
- * and calculates academic performance metrics such as GPA.
- *
- * This class retrieves enrollment data through the EnrollmentService
- * provided by the OfficeRegister.
+ * 
  */
-public class Transcript {
+public class Transcript implements Serializable {
+    private static final long serialVersionUID = 1L;
 
 	/**
      * Creates a transcript for the given student.
@@ -42,23 +38,18 @@ public class Transcript {
     }
     
     /**
-     * Calculates the Grade Point Average (GPA) of the student.
-     *
-     * Only enrollments with status COMPLETED are included in the calculation.
-     * If the student has no completed enrollments, GPA is 0.
-     *
-     * @return calculated GPA value
+     * 
      */
-    double getGpa() {
-    	double total = 0;
+    public double getGpa() {
+        double total = 0;
         int count = 0;
-        for (Enrollment e : getEnrollments()) {
-            if (e.getStatus() == EnrollmentStatus.COMPLETED) {
-                total += e.getMark().getTotalPoints();
+        for (Enrollment enrollment : getEnrollments()) {
+            if (enrollment.getStatus() == EnrollmentStatus.COMPLETED) {
+                total += enrollment.getMark().getTotalPoints();
                 count++;
             }
         }
-        return count == 0?0:total/count;
+        return count == 0 ? 0 : total / count;
     }
 
 }

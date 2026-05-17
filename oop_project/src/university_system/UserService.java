@@ -1,5 +1,4 @@
 package university_system;
-
 import java.util.*;
 
 /**
@@ -22,45 +21,76 @@ public class UserService {
     }
 
     /**
+     * Authenticates a user by username and password.
+     * Throws exception if credentials are invalid.
+     */
+    public User login(String username, String password) throws AuthenticationException {
+        for (User u : db.getUsers()) {
+            if (u.getUserName().equals(username) && u.checkPassword(password)) {
+                u.login();
+                return u;
+            }
+        }
+        throw new AuthenticationException();
+    }
+
+    /**
+     * Logs out a user.
+     */
+    public void logout(User user) {
+        user.logout();
+    }
+
+    /**
      * Creates a new student and saves it to the database.
      */
-    Student createStudent(String firstname, String surname, String password, String username, int year, School school) {
-        Student student = new Student(firstname, surname, password, username, year, school);
-        db.createStudent(student);
+    public Student createStudent(String firstname, String surname, String password, String username, int year, School school) {
+        Student student = new Student(firstname, surname, username, password, year, school);
+        db.createUser(student);
         return student;
     }
+
 
     /**
      * Creates a new teacher and saves it to the database.
      */
-    Teacher createTeacher(String firstname, String surname, String password, String username, School school, TeacherType teacherType) {
+    public Teacher createTeacher(String firstname, String surname, String password, String username, School school, TeacherType teacherType) {
         Teacher teacher = new Teacher(firstname, surname, username, password, teacherType, school);
-        db.createTeacher(teacher);
+        db.createUser(teacher);
         return teacher;
     }
 
     /**
      * Creates a new manager and saves it to the database.
      */
-    Manager createManager(String firstname, String surname, String password, String username, ManagerType type) {
-        Manager manager = new Manager(firstname, surname, password, username, type);
-        db.createManager(manager);
+    public Manager createManager(String firstname, String surname, String password, String username, ManagerType type) {
+        Manager manager = new Manager(firstname, surname, username, password, type);
+        db.createUser(manager);
         return manager;
     }
 
     /**
      * Creates a new employee and saves it to the database.
      */
-    Employee createEmployee(String firstname, String surname, String password, String username, DepartmentType department) {
-        Employee employee = new Employee(firstname, surname, password, username, department);
-        db.createEmployee(employee);
+    public Employee createEmployee(String firstname, String surname, String password, String username, DepartmentType department) {
+        Employee employee = new Employee(firstname, surname, username, password, department);
+        db.createUser(employee);
         return employee;
+    }
+    
+    /**
+     * Creates a new admin and saves it to the database.
+     */
+    public Admin createAdmin(String firstname, String surname, String password, String username) {
+        Admin admin = new Admin(firstname, surname, username, password);
+        db.createUser(admin);
+        return admin;
     }
 
     /**
      * Updates the personal info of a user.
      */
-    void changeInfo(User user, String firstname, String surname) {
+    public void changeInfo(User user, String firstname, String surname) {
         User u = db.getUser(user.getId());
         u.setFirstName(firstname);
         u.setSurName(surname);
@@ -69,35 +99,35 @@ public class UserService {
     /**
      * Deletes a user from the database.
      */
-    void deleteUser(User user) {
-        db.deleteUser(user);
+    public void deleteUser(User user) {
+        db.getUsers().remove(user);
     }
 
     /**
      * Returns all students in the database.
      */
-    List<Student> getStudents() {
+    public List<Student> getStudents() {
         return db.getStudents();
     }
 
     /**
      * Returns all teachers in the database.
      */
-    List<Teacher> getTeachers() {
+    public List<Teacher> getTeachers() {
         return db.getTeachers();
     }
 
     /**
      * Returns all managers in the database.
      */
-    List<Manager> getManagers() {
+    public List<Manager> getManagers() {
         return db.getManagers();
     }
 
     /**
      * Returns all employees in the database.
      */
-    List<Employee> getEmployees() {
+    public List<Employee> getEmployees() {
         return db.getEmployees();
     }
 }

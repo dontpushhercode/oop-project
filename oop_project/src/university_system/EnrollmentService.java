@@ -43,10 +43,16 @@ public class EnrollmentService {
             throw new IllegalStateException("No approved registration request for this course!");
         }
         if (isEnrolledInSection(st, sec)) {
-            throw new IllegalStateException("Already enrolled in this section!");
+            throw new AlreadyAssignedException("Student is already assigned to this section");
         }
         if (isEnrolledInCourse(st, sec.getCourse())) {
-            throw new IllegalStateException("Already enrolled in this course!");
+            throw new AlreadyAssignedException("Student is already assigned to this course");
+        }
+        if (getTotalCredits(st) + sec.getCourse().getCredits() > 21) {
+            throw new CreditLimitExceededException();
+        }
+        if (getFailCount(st, sec.getCourse()) >= 3) {
+            throw new CourseFailLimitException();
         }
         
         db.createEnrollment(new Enrollment(st, sec));
@@ -62,11 +68,11 @@ public class EnrollmentService {
     	
         Enrollment target = findEnrollment(st, c);
         if (target == null) {
-            throw new IllegalStateException("Enrollment not found!");
+            throw new EnrollmentNotFoundException();
         }
         if (target.getStatus() == EnrollmentStatus.COMPLETED ||
             target.getStatus() == EnrollmentStatus.WITHDRAWN) {
-            throw new IllegalStateException("Cannot withdraw from completed or withdrawn course!");
+            throw new InvalidEnrollmentStatusException("Cannot withdraw from completed or withdrawn course");
         }
         target.withdraw();
     }
@@ -83,6 +89,34 @@ public class EnrollmentService {
      */
     public List<Enrollment> getTeacherCourseEnrollments(Teacher teacher, Course course, EnrollmentStatus status) {
         return new ArrayList<>(db.getFilteredEnrollments(teacher, course, status));
+    }
+
+    /**
+     * Returns total credits the student is currently enrolled in.
+     */
+    private int getTotalCredits(Student st) {
+        int total = 0;
+        for (Enrollment e : db.getFilteredEnrollments(st)) {
+            if (e.getStatus() == EnrollmentStatus.ACTIVE) {
+                total += e.getSection().getCourse().getCredits();
+            }
+        }
+        return total;
+    }
+
+    /**
+     * Returns how many times the student has failed the given course.
+     */
+    private int getFailCount(Student st, Course course) {
+        int count = 0;
+        for (Enrollment e : db.getFilteredEnrollments(st)) {
+            if (e.getSection().getCourse().equals(course) &&
+                e.getStatus() == EnrollmentStatus.COMPLETED &&
+                e.getMark().getLiteralGrade().equals("F")) {
+                count++;
+            }
+        }
+        return count;
     }
 
     /**

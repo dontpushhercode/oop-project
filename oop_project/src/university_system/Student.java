@@ -6,7 +6,8 @@ package university_system;
  * a research supervisor with h-index of at least 3.
  * Students cannot exceed 21 credits and cannot fail more than 3 times. 
  */
-public class Student extends User {
+import java.io.Serializable;
+public class Student extends User implements Serializable {
     /**
      * Default constructor
      */

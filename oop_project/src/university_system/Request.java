@@ -1,4 +1,5 @@
 package university_system;
+import java.io.Serializable;
 import java.time.LocalDate;
 
 /**
@@ -6,7 +7,8 @@ import java.time.LocalDate;
  * Abstract base class representing a request
  * in the university system.
  */
-public abstract class Request {
+public abstract class Request implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     /**
      * Auto-incremented counter for generating unique ids.
@@ -58,6 +60,13 @@ public abstract class Request {
      */
     int getId() {
         return this.id;
+    }
+
+    /**
+     * Keeps generated request ids unique after deserialization.
+     */
+    static void syncCounter(int maxId) {
+        counter = Math.max(counter, maxId);
     }
 
     /**

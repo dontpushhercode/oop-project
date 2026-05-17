@@ -1,14 +1,13 @@
 package university_system;
 import java.util.*;
+import java.io.Serializable;
 
 
 /**
- * Represents a research project in the university system.
- *
- * A project contains researchers as participants and
- * research papers produced during the project lifecycle.
+ * 
  */
-public class ResearchProject {
+public class ResearchProject implements Serializable {
+    private static final long serialVersionUID = 1L;
 
 	private static int counter = 0;
 	
@@ -24,6 +23,17 @@ public class ResearchProject {
     	this.projectName = projectName;
     	this.members = new ArrayList<Researcher>(members);
     	this.papers = new ArrayList<ResearchPaper>();
+    }
+    
+    /**
+     * Creates a research project without initial members.
+     *
+     * @param projectName name of project
+     */
+    public ResearchProject(String projectName) {
+        this.projectName = projectName;
+        this.members = new ArrayList<Researcher>();
+        this.papers = new ArrayList<ResearchPaper>();
     }
     
     /**
@@ -66,18 +76,19 @@ public class ResearchProject {
     	return this.id;
     }
 
-    /**
-     * Returns project members.
-     */
-    List<Researcher> getMembers(){
-    	return new ArrayList<>(members);
-    }
-    
+
     /**
      * Returns project papers.
      */
     List<ResearchPaper> getPapers(){
     	return new ArrayList<>(papers);
+    }
+    
+    /**
+     * Returns project members.
+     */
+    List<Researcher> getMembers() {
+        return new ArrayList<>(members);
     }
     
     /**

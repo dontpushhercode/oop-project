@@ -4,7 +4,8 @@ package university_system;
  *
  * Represents a manager in the university system.
  */
-public class Manager extends Employee {
+import java.io.Serializable;
+public class Manager extends Employee implements Serializable {
 
     /**
      * Default constructor
@@ -16,8 +17,8 @@ public class Manager extends Employee {
     /**
      * Constructor that initializes manager with all fields.
      */
-    Manager(String firstname, String surname, String password, String username, ManagerType type) {
-        super(firstname, surname, password, username, DepartmentType.MANAGEMENT);
+    Manager(String firstname, String surname, String username, String password, ManagerType type) {
+        super(firstname, surname, username, password, DepartmentType.MANAGEMENT);
         this.type = type;
     }
 

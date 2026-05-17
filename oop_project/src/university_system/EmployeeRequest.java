@@ -5,7 +5,8 @@ package university_system;
  * Represents a request submitted by an employee
  * in the university system.
  */
-public class EmployeeRequest extends Request {
+import java.io.Serializable;
+public class EmployeeRequest extends Request implements Serializable {
 
     /**
      * Default constructor

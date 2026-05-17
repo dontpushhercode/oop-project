@@ -1,4 +1,5 @@
 package university_system;
+import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -7,10 +8,15 @@ import java.util.*;
  * Each enrollment uniquely connects a student to a section
  * and stores academic progress information.
  */
-public class Enrollment {
+public class Enrollment implements Serializable {
+    private static final long serialVersionUID = 1L;
 	
-	/**
-     * Counter used to generate unique enrollment IDs.
+	{
+		this.id=++counter;
+	}
+    
+    /**
+     * Counter used for automatic enrollment id generation.
      */
 	private static int counter = 0;
 	
@@ -23,10 +29,6 @@ public class Enrollment {
 	 * Assigns a unique ID to each new Enrollment object.
 	 */
 	
-	{
-		this.id=++counter;
-	}
-
 	/**
      * Creates a new enrollment for a student in a course section.
      *
@@ -69,8 +71,8 @@ public class Enrollment {
      * @return the enrollment ID
      */
     int getId() {
-		return this.id;
-	}
+    	return this.id;
+    }
     
     /**
     * Returns the student associated with this enrollment.

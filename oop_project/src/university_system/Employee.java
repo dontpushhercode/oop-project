@@ -4,7 +4,8 @@ package university_system;
  *
  * Represents an employee in the university system.
  */
-public class Employee extends User {
+import java.io.Serializable;
+public class Employee extends User implements Serializable {
 
     /**
      * Default constructor
@@ -16,8 +17,8 @@ public class Employee extends User {
     /**
      * Constructor that initializes employee with all fields.
      */
-    Employee(String firstname, String surname, String password, String username, DepartmentType department) {
-        super(firstname, surname, password, username);
+    Employee(String firstname, String surname, String username, String password, DepartmentType department) {
+        super(firstname, surname, username, password);
         this.department = department;
     }
 
