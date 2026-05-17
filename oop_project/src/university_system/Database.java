@@ -408,13 +408,31 @@ public class Database {
     List<Log> getFilteredLogs(LocalDate time) {
         List<Log> filtered = new ArrayList<Log>();
         for(Log l:logs) {
-        	if(l.getDate().isAfter(time)) {
+        	if(l.getTime().isAfter(time)) {
         		filtered.add(l);
         	}
         }
         return filtered;
     }
-
+    
+    /**
+     * Returns all courses stored in the system.
+     * 
+     * @return list of courses
+     */
+    List<Course> getCourses(){
+    	return this.courses;
+    }
+    
+    /**
+     * Returns all enrollments stored in the system.
+     * 
+     * @param list of enrollments
+     */
+    List<Enrollment> getEnrollments(){
+    	return this.enrollments;
+    }
+    
     /**
      * Returns all students stored in the system.
      *

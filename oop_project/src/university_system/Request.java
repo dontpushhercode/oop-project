@@ -1,7 +1,5 @@
 package university_system;
-import java.io.*;
 import java.time.LocalDate;
-import java.util.*;
 
 /**
  *
@@ -117,7 +115,7 @@ public abstract class Request {
     }
 
     /**
-     * Returns string representation of this request
+     * Returns string representation of this request.
      * including id, status and creation date.
      *
      * @return string representation of request
