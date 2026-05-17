@@ -3,6 +3,7 @@ import java.io.*;
 import java.util.*;
 
 /**
+ *
  * Represents a manager in the university system.
  */
 public class Manager extends Employee {
@@ -11,11 +12,11 @@ public class Manager extends Employee {
      * Default constructor
      */
     Manager() {
-    	super();
+        super();
     }
 
     /**
-     * Constructor with all fields
+     * Constructor that initializes manager with all fields.
      */
     Manager(String firstname, String surname, String password, String username, ManagerType type) {
         super(firstname, surname, password, username, DepartmentType.MANAGEMENT);
@@ -23,26 +24,27 @@ public class Manager extends Employee {
     }
 
     /**
-     * type of this manager
+     * Type of this manager.
      */
     private ManagerType type;
 
     /**
-     * returns the type of this manager
+     * Returns the type of this manager.
      */
     ManagerType getManagerType() {
         return this.type;
     }
 
     /**
-     * sets the type of this manager
+     * Sets the type of this manager.
      */
     void setManagerType(ManagerType type) {
         this.type = type;
     }
 
     /**
-     * returns string representation of manager
+     * Returns string representation of this manager
+     * including manager type information.
      */
     @Override
     public String toString() {
@@ -50,7 +52,7 @@ public class Manager extends Employee {
     }
 
     /**
-     * compares managers by id
+     * Compares this manager to another object by id.
      */
     @Override
     public boolean equals(Object obj) {
@@ -61,7 +63,7 @@ public class Manager extends Employee {
     }
 
     /**
-     * returns hash code based on id
+     * Returns hash code based on manager id.
      */
     @Override
     public int hashCode() {

@@ -1,14 +1,20 @@
 package university_system;
 
 /**
- * students marks in course
+ *
+ * Represents a student's mark in a course
+ * in the university system.
  */
 public class Mark {
 
-    /** auto-incremented counter for unique ids */
+    /**
+     * Auto-incremented counter for generating unique ids.
+     */
     private static int counter = 0;
 
-    /** unique id of this mark */
+    /**
+     * Unique id of this mark.
+     */
     private int id;
 
     {
@@ -16,7 +22,7 @@ public class Mark {
     }
 
     /**
-     * default constructor
+     * Default constructor that initializes all scores to zero.
      */
     public Mark() {
         this.firstAttestation = 0;
@@ -25,29 +31,29 @@ public class Mark {
     }
 
     /**
-     * score for the first attestation
+     * Score for the first attestation.
      */
     private double firstAttestation;
 
     /**
-     * score for the second attestation
+     * Score for the second attestation.
      */
     private double secondAttestation;
 
     /**
-     * score for the final exam
+     * Score for the final exam.
      */
     private double finalExam;
 
     /**
-     * returns the sum of all scores
+     * Returns the sum of all scores.
      */
     double getTotalPoints() {
         return firstAttestation + secondAttestation + finalExam;
     }
 
     /**
-     * returns the literal grade based on total points
+     * Returns the literal grade based on total points.
      */
     String getLiteralGrade() {
         double total = getTotalPoints();
@@ -65,34 +71,47 @@ public class Mark {
     }
 
     /**
-     * GPA is calculated in Transcript, not here
-     */
-    void getGpa() {
+    * Returns the GPA for this mark based on total points.
+    */
+    double getGpa() {
+        double total = getTotalPoints();
+        if (total >= 95) return 4.0;
+        if (total >= 90) return 3.67;
+        if (total >= 85) return 3.33;
+        if (total >= 80) return 3.0;
+        if (total >= 75) return 2.67;
+        if (total >= 70) return 2.33;
+        if (total >= 65) return 2.0;
+        if (total >= 60) return 1.67;
+        if (total >= 55) return 1.33;
+        if (total >= 50) return 1.0;
+        return 0.0;
     }
 
     /**
-     * sets the first attestation score
+     * Sets the first attestation score.
      */
     void setFirstAttestation(double score) {
         this.firstAttestation = score;
     }
 
     /**
-     * sets the second attestation score
+     * Sets the second attestation score.
      */
     void setSecondAttestation(double score) {
         this.secondAttestation = score;
     }
 
     /**
-     * sets the final exam score
+     * Sets the final exam score.
      */
     void setFinalExam(double score) {
         this.finalExam = score;
     }
 
     /**
-     * returns string representation of mark
+     * Returns string representation of this mark
+     * including total points and literal grade.
      */
     @Override
     public String toString() {
@@ -100,7 +119,7 @@ public class Mark {
     }
 
     /**
-     * compares marks by id
+     * Compares this mark to another object by id.
      */
     @Override
     public boolean equals(Object obj) {
@@ -111,7 +130,7 @@ public class Mark {
     }
 
     /**
-     * returns hash code based on id
+     * Returns hash code based on mark id.
      */
     @Override
     public int hashCode() {
