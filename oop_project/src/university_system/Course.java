@@ -6,13 +6,43 @@ import java.util.*;
  * 
  */
 public class Course {
+	
+	private static int counter = 0;
+	
+	{
+		this.id = ++counter;
+	}
 
     /**
-     * Default constructor
+     * Default constructors
      */
-    public Course() {
+    Course() {
+    	this.instructors = new ArrayList<>();
+        this.prerequisites = new ArrayList<>();
     }
 
+    Course(String code, String name, int credits, String description, School school) {
+        this.code = code;
+        this.name = name;
+        this.credits = credits;
+        this.description = description;
+        this.school = school;
+        this.instructors = new ArrayList<>();
+        this.prerequisites = new ArrayList<>();
+    }
+    
+    Course(String code, String name, int credits, String description, School school,
+            List<Teacher> instructors, List<Course> prerequisites) {
+        this.code = code;
+        this.name = name;
+        this.credits = credits;
+        this.description = description;
+        this.school = school;
+        this.instructors = instructors;
+        this.prerequisites = prerequisites;
+   }
+
+    private int id;
     /**
      * 
      */
@@ -36,7 +66,7 @@ public class Course {
     /**
      * 
      */
-    private School School;
+    private School school;
 
     /**
      * 
@@ -53,113 +83,145 @@ public class Course {
     /**
      * 
      */
-    public void getCourseCode() {
-        // TODO implement here
+    
+    int getId() {
+        return this.id;
+    }
+    
+    String getCourseCode() {
+    	return this.code;
     }
 
     /**
      * 
      */
-    public void getCourseName() {
-        // TODO implement here
+    String getCourseName() {
+    	return this.name;
     }
 
     /**
      * 
      */
-    public void getCourseCredits() {
-        // TODO implement here
+    int getCourseCredits() {
+    	return this.credits;
     }
 
     /**
      * 
      */
-    public void getCourseDescription() {
-        // TODO implement here
+    String getCourseDescription() {
+    	return this.description;
     }
 
     /**
      * 
      */
-    public void getSchool() {
-        // TODO implement here
+    School getSchool() {
+    	 return this.school;
     }
 
     /**
      * 
      */
-    public void getInstructors() {
-        // TODO implement here
+    List<Teacher> getInstructors() {
+    	return this.instructors;
     }
 
     /**
      * 
      */
-    public void getPrerequisites() {
-        // TODO implement here
+    List<Course> getPrerequisites() {
+    	return this.prerequisites;
     }
 
     /**
      * 
      */
-    void setCode() {
-        // TODO implement here
+    void setCode(String code) {
+    	this.code = code;
     }
 
     /**
      * 
      */
-    void setName() {
-        // TODO implement here
+    void setName(String name) {
+    	this.name = name;
     }
 
     /**
      * 
      */
-    void setCredits() {
-        // TODO implement here
+    void setCredits(int credits) {
+    	this.credits = credits;
     }
 
     /**
      * 
      */
-    void setDescription() {
-        // TODO implement here
+    void setDescription(String description) {
+    	this.description = description;
     }
 
     /**
      * 
      */
-    void setSchool() {
-        // TODO implement here
+    void setSchool(School school) {
+    	this.school = school;
     }
 
     /**
      * 
      */
-    void addInstructor() {
-        // TODO implement here
+    void addInstructor(Teacher teacher) {
+    	 this.instructors.add(teacher);
     }
 
     /**
      * 
      */
-    void dropInstructor() {
-        // TODO implement here
+    void dropInstructor(Teacher teacher) {
+    	 this.instructors.remove(teacher);
     }
 
     /**
      * 
      */
-    void addPrerequisite() {
-        // TODO implement here
+    void addPrerequisite(Course course) {
+    	 this.prerequisites.add(course);
     }
 
     /**
      * 
      */
-    void dropPrerequisite() {
-        // TODO implement here
+    void dropPrerequisite(Course course) {
+    	 this.prerequisites.remove(course);
+    }
+    
+    @Override
+    public String toString() {
+        return "Course{" +
+                "id=" + id +
+                ", code='" + code + '\'' +
+                ", name='" + name + '\'' +
+                ", credits=" + credits +
+                ", description='" + description + '\'' +
+                ", school=" + school +
+                '}';
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Course course = (Course) obj;
+        return id == course.id &&
+                credits == course.credits &&
+                Objects.equals(code, course.code) &&
+                Objects.equals(name, course.name);
     }
 
+    @Override
+    public int hashCode() {
+    	 return Objects.hash(id, code, name, credits);
+    }
 }

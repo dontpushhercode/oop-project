@@ -12,20 +12,11 @@ public class Student extends User {
     /**
      * Default constructor
      */
-    public Student() {
+    Student() {
         super();
     }
     
-    /**
-     * Constructor that initializes student with personal info, year and school.
-     * @param firstName first name of the student
-     * @param surName last name of the student
-     * @param username username for authentication
-     * @param password password for authentication
-     * @param year academic year of the student (1-4)
-     * @param school school the student belongs to
-     */
-    public Student(String firstName, String surName, String username,
+    Student(String firstName, String surName, String username,
                    String password, int year, School school) {
         super(firstName, surName, username, password);
         this.year = year;
@@ -76,7 +67,7 @@ public class Student extends User {
      * Returns the academic degree of the student.
      * @return academic degree
      */
-    public AcademicDegree getDegree() {
+    AcademicDegree getDegree() {
         return this.degree;
     }
     
@@ -84,14 +75,14 @@ public class Student extends User {
      * Returns the academic year of the student.
      * @return year (1-4)
      */
-    public int getYear() {
+    int getYear() {
         return this.year;
     }
     /**
      * Returns the school the student belongs to.
      * @return school
      */
-    public School getSchool() {
+    School getSchool() {
         return this.school;
     }
     
@@ -99,7 +90,7 @@ public class Student extends User {
      * Returns the research supervisor of the student.
      * @return research supervisor or null if not assigned
      */
-    public Researcher getResearchSupervisor() {
+    User getResearchSupervisor() {
         return this.researchSupervisor;
     }
     

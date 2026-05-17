@@ -11,6 +11,7 @@ public class Researcher {
      * Default constructor
      */
     public Researcher() {
+    	this.researchPapers = new ArrayList<ResearchPaper>();
     }
 
     /**

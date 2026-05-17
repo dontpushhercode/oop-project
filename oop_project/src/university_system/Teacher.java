@@ -11,7 +11,7 @@ public class Teacher extends Employee {
     /**
      * Default constructor
      */
-	public Teacher() {
+	Teacher() {
 	    super();
 	}
 	
@@ -26,7 +26,7 @@ public class Teacher extends Employee {
      * @param school school the teacher belongs to
      */
 
-	public Teacher(String firstName, String surName, String username,
+	Teacher(String firstName, String surName, String username,
 	               String password, TeacherType teacherType, School school) {
 	    super();
 	    this.teacherType = teacherType;
@@ -51,25 +51,18 @@ public class Teacher extends Employee {
     /**
      * Research profile. Automatically assigned if teacher is a professor.
      */
-    private Researcher researchProfile;
-    
-    /**
-     * Sum of all ratings given to this teacher.
-     */
     private double ratingSum;
-    
-    /**
-     * Number of ratings received by this teacher.
-     */
-    private int ratingCount;
-    
     /**
      * Returns the average rating of this teacher.
      * Returns 0 if no ratings have been given yet.
      * @return average rating as double
      */
-    public double getRating() {
-        return ratingCount == 0 ? 0 : ratingSum / ratingCount;
+    private double ratingCount;
+    /**
+     * 
+     */
+    double getRating() {
+    	 return ratingCount == 0?0:ratingSum/ratingCount;
     }
 
     /**
@@ -85,7 +78,7 @@ public class Teacher extends Employee {
      * Returns the school this teacher belongs to.
      * @return school of the teacher
      */
-    public School getSchool() {
+    School getSchool() {
         return this.school;
     }
     
@@ -93,7 +86,7 @@ public class Teacher extends Employee {
      * Returns the type/title of this teacher.
      * @return teacher type
      */
-    public TeacherType getTeacherType() {
+    TeacherType getTeacherType() {
         return this.teacherType;
     }
     

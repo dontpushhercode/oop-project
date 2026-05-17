@@ -21,10 +21,7 @@ public abstract class User {
         this.id = ++counter;
     }
 
-    /**
-     * Default constructor.
-     */
-    public User() {
+    User() {
     }
 
     /**

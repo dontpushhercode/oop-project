@@ -14,9 +14,6 @@ public class RequestService {
     /**
      * Default constructor
      */
-    public RequestService() {
-    }
-
     public RequestService(Database database) {
         this.database = database;
     }
@@ -26,6 +23,7 @@ public class RequestService {
             throw new IllegalStateException("No permission");
         }
     }
+    
     /**
      * 
      */
@@ -39,9 +37,10 @@ public class RequestService {
         }
 
         RegistrationRequest regReq = new RegistrationRequest(student, course);
-        database.createRegistration(regReq);
+        database.createRegistrationRequest(regReq);
         return regReq;
     }
+    
     /**
      * 
      */
@@ -50,6 +49,7 @@ public class RequestService {
         database.createEmployeeRequest(r);
         return r;
     }
+    
     /**
      * 
      */
@@ -57,6 +57,7 @@ public class RequestService {
         checkPermission(manager);
         return database.getFilteredRegistrationRequests(status);
     }
+    
     /**
      * 
      */
@@ -64,6 +65,7 @@ public class RequestService {
         checkPermission(manager);
         return database.getFilteredRegistrationRequests(student, status);
     }
+    
     /**
      * 
      */
@@ -71,6 +73,7 @@ public class RequestService {
         checkPermission(manager);
         return database.getFilteredEmployeeRequests(status);
     }
+    
     /**
      * 
      */
@@ -78,6 +81,7 @@ public class RequestService {
         checkPermission(manager);
         return database.getFilteredEmployeeRequests(employee, status);
     }
+    
     /**
      * 
      */
@@ -85,6 +89,7 @@ public class RequestService {
         checkPermission(manager);
         return database.getFilteredRequests(status);
     }
+    
     /**
      * 
      */
@@ -92,6 +97,16 @@ public class RequestService {
         checkPermission(manager);
         return database.getRequest(request.getId());
     }
+    
+    public RegistrationRequest getRegistrationRequest(Student student, Course course) {
+    	for (RegistrationRequest r : database.getFilteredRegistrationRequests(student)) {
+            if (r.getCourse().equals(course)) {
+            	return r;
+            }
+        }
+    	return null;
+    }
+    
     /**
      * 
      */
@@ -103,8 +118,8 @@ public class RequestService {
             throw new IllegalStateException("Request not found");
         }
         r.setStatus(status);
-        r.setUpdatedAt(LocalDate.now());
     }
+    
     /**
      * 
      */
@@ -119,8 +134,8 @@ public class RequestService {
             throw new IllegalStateException("Only pending requests can be cancelled");
         }
         r.setStatus(RequestStatus.REJECTED);
-        r.setUpdatedAt(LocalDate.now());
     }
+    
     /**
      * 
      */
@@ -128,6 +143,7 @@ public class RequestService {
         checkPermission(manager);
         return database.getFilteredRegistrationRequests(RequestStatus.PENDING);
     }
+    
     /**
      * 
      */

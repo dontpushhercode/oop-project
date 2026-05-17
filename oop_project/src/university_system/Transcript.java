@@ -10,7 +10,7 @@ public class Transcript {
     /**
      * Default constructor
      */
-    public Transcript() {
+    Transcript() {
     }
 
     /**

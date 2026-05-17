@@ -18,7 +18,7 @@ public class Lesson {
     /**
      * 
      */
-    private Lesson.LessonType type;
+    private LessonType type;
 
     /**
      * 
@@ -77,15 +77,6 @@ public class Lesson {
      */
     public void getType() {
         // TODO implement here
-    }
-
-    /**
-     * 
-     */
-    public enum LessonType {
-        LECTURE,
-        PRACTICE,
-        LABORATORY
     }
 
 }

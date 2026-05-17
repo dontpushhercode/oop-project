@@ -3,17 +3,7 @@ import java.io.*;
 import java.util.*;
 
 /**
- * 
+ * Represents an administrator in the university system.
  */
-public class Admin extends Employee {
-
-    /**
-     * Default constructor
-     */
-    public Admin() {
-    }
-
-
-
-
+public class Admin {
 }
