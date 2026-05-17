@@ -20,6 +20,9 @@ public class CourseService {
      * Constructor that initializes the service with a database instance.
      */
     CourseService(Database db) {
+    	if (db == null) {
+    	    throw new IllegalArgumentException("Database cannot be null");
+    	}
         this.db = db;
     }
 
@@ -78,14 +81,14 @@ public class CourseService {
      * Returns all courses associated with the given teacher.
      */
     public List<Course> getCourses(Teacher teacher) {
-        return db.getFilteredCourses(teacher);
+        return new ArrayList<>(db.getFilteredCourses(teacher));
     }
 
     /**
      * Returns all sections associated with the given teacher.
      */
     public List<Section> getSections(Teacher teacher) {
-        return db.getFilteredSections(teacher);
+        return new ArrayList<>(db.getFilteredSections(teacher));
     }
 
     /**
