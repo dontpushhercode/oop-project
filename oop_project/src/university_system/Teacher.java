@@ -2,7 +2,10 @@ package university_system;
 import java.io.*;
 import java.util.*;
 /**
- * 
+ * Represents a teacher in the university system.
+ * Teachers who are professors are always researchers.
+ * Teachers can view and manage courses, view students, put marks,
+ * send messages and complaints to other employees.
  */
 public class Teacher extends Employee {
     /**
@@ -11,60 +14,151 @@ public class Teacher extends Employee {
 	public Teacher() {
 	    super();
 	}
+	
+	 /**
+     * Constructor that initializes teacher with personal info, type and school.
+     * If teacher type is PROFESSOR, research profile is automatically assigned.
+     * @param firstName first name of the teacher
+     * @param surName last name of the teacher
+     * @param username username for authentication
+     * @param password password for authentication
+     * @param teacherType type/title of the teacher
+     * @param school school the teacher belongs to
+     */
 
 	public Teacher(String firstName, String surName, String username,
 	               String password, TeacherType teacherType, School school) {
 	    super();
 	    this.teacherType = teacherType;
 	    this.school = school;
+	    this.ratingSum = 0;
+        this.ratingCount = 0;
+        if (teacherType == TeacherType.PROFESSOR) {
+            this.researchProfile = new Researcher();
+        }
 	}
     /**
-     * 
+     * Type/title of the teacher (TUTOR, LECTURER, SENIOR_LECTURER, PROFESSOR, etc).
      */
     private TeacherType teacherType;
+    
     /**
-     * 
+     * School the teacher belongs to.
      */
     private School school;
+    
     /**
-     * 
+     * Research profile. Automatically assigned if teacher is a professor.
      */
     private Researcher researchProfile;
+    
     /**
-     * 
+     * Sum of all ratings given to this teacher.
+     */
+    private double ratingSum;
+    
+    /**
+     * Number of ratings received by this teacher.
+     */
+    private int ratingCount;
+    
+    /**
+     * Returns the average rating of this teacher.
+     * Returns 0 if no ratings have been given yet.
+     * @return average rating as double
      */
     public double getRating() {
-        // TODO implement here
-        return 0;
+        return ratingCount == 0 ? 0 : ratingSum / ratingCount;
     }
+
     /**
-     * 
+     * Adds a rating score to this teacher.
+     * @param score the rating score to add
+     */
+    public void addRating(double score) {
+        this.ratingSum += score;
+        this.ratingCount++;
+    }
+    
+    /**
+     * Returns the school this teacher belongs to.
+     * @return school of the teacher
      */
     public School getSchool() {
         return this.school;
     }
+    
     /**
-     * 
+     * Returns the type/title of this teacher.
+     * @return teacher type
      */
     public TeacherType getTeacherType() {
         return this.teacherType;
     }
+    
     /**
-     * 
+     * Returns the research profile of this teacher.
+     * Only professors have a research profile by default.
+     * @return research profile or null if not a researcher
+     */
+    public Researcher getResearchProfile() {
+        return this.researchProfile;
+    }
+    
+    /**
+     * Returns whether this teacher is a researcher.
+     * Professors are always researchers.
+     * @return true if teacher is a researcher
+     */
+    public boolean isResearcher() {
+        return this.teacherType == TeacherType.PROFESSOR
+                || this.researchProfile != null;
+    }
+    
+    /**
+     * Sets the research profile of this teacher.
+     * Any teacher can optionally be a researcher.
+     * @param researchProfile the research profile to assign
+     */
+    public void setResearchProfile(Researcher researchProfile) {
+        this.researchProfile = researchProfile;
+    }
+    
+    /**
+     * Sets the type/title of this teacher.
+     * If set to PROFESSOR, research profile is automatically assigned.
+     * @param teacherType the new teacher type
      */
     void setTeacherType(TeacherType teacherType) {
         this.teacherType = teacherType;
+        if (teacherType == TeacherType.PROFESSOR && this.researchProfile == null) {
+            this.researchProfile = new Researcher();
+        }
     }
-    
+   
+    /**
+     * Sets the school of this teacher.
+     * @param school the school to assign
+     */
     void setSchool(School school) {
         this.school = school;
     }
     
+    /**
+     * Returns string representation of this teacher
+     * including school and type.
+     * @return string representation
+     */
     @Override
     public String toString() {
         return super.toString() + "School: " + school + ", Type: " + teacherType + "\n";
     }
     
+    /**
+     * Compares this teacher to another object by id.
+     * @param obj the object to compare to
+     * @return true if ids are equal
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
@@ -73,6 +167,10 @@ public class Teacher extends Employee {
         return this.getId() == other.getId();
     }
     
+    /**
+     * Returns hash code based on teacher id.
+     * @return hash code
+     */
     @Override
     public int hashCode() {
         return Integer.hashCode(getId());
