@@ -3,47 +3,56 @@ import java.io.*;
 import java.util.*;
 
 /**
- * employee in university system
+ *
+ * Represents an employee in the university system.
  */
 public class Employee extends User {
+
     /**
-     * default constructor
+     * Default constructor
      */
     Employee() {
-    	super();
+        super();
     }
+
     /**
-     * constructor with all fields
+     * Constructor that initializes employee with all fields.
      */
     Employee(String firstname, String surname, String password, String username, DepartmentType department) {
         super(firstname, surname, password, username);
         this.department = department;
     }
+
     /**
-     * department where this employee works
+     * Department where this employee works.
      */
     private DepartmentType department;
+
     /**
-     * returns the department of this employee
+     * Returns the department of this employee.
      */
     DepartmentType getDepartment() {
         return this.department;
     }
+
     /**
-     * sets the department of this employee
+     * Sets the department of this employee.
      */
     void setDepartment(DepartmentType department) {
         this.department = department;
     }
+
     /**
-     * returns string representation of employee
+     * Returns string representation of this employee
+     * including department information.
      */
     @Override
     public String toString() {
         return super.toString() + "Department: " + department + "\n";
     }
-     /**
-     * compares employees by id
+
+    /**
+     * Compares this employee to another object by id.
      */
     @Override
     public boolean equals(Object obj) {
@@ -52,8 +61,9 @@ public class Employee extends User {
         Employee other = (Employee) obj;
         return this.getId() == other.getId();
     }
+
     /**
-     * returns hash code based on id
+     * Returns hash code based on employee id.
      */
     @Override
     public int hashCode() {
