@@ -1,12 +1,13 @@
 package university_system;
 
-/**
- *
- * Thrown when an enrollment record
- * cannot be found in the system.
- */
 import java.io.Serializable;
-public class EnrollmentNotFoundException extends Exception implements Serializable {
+
+/**
+ * Thrown when an enrollment record is not found.
+ * This is part of AcademicException hierarchy.
+ */
+public class EnrollmentNotFoundException extends AcademicException implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     public EnrollmentNotFoundException() {
         super("Enrollment not found");

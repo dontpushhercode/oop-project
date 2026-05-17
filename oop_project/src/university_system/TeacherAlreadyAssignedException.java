@@ -1,12 +1,13 @@
 package university_system;
 
-/**
- *
- * Thrown when a teacher is already assigned
- * to a course or section.
- */
 import java.io.Serializable;
-public class TeacherAlreadyAssignedException extends Exception implements Serializable {
+
+/**
+ * Thrown when attempting to assign a teacher to a course when already assigned.
+ * This is part of CourseException hierarchy.
+ */
+public class TeacherAlreadyAssignedException extends CourseException implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     public TeacherAlreadyAssignedException() {
         super("Teacher is already assigned");

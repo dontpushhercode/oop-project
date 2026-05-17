@@ -1,12 +1,13 @@
 package university_system;
 
-/**
- *
- * Thrown when a request cannot be found
- * in the system.
- */
 import java.io.Serializable;
-public class RequestNotFoundException extends Exception implements Serializable {
+
+/**
+ * Thrown when a request is not found in the system.
+ * This is part of RequestException hierarchy.
+ */
+public class RequestNotFoundException extends RequestException implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     public RequestNotFoundException() {
         super("Request not found");

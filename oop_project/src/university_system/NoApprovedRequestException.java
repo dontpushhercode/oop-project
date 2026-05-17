@@ -1,12 +1,13 @@
 package university_system;
 
-/**
- *
- * Thrown when a student tries to enroll in a course
- * without an approved registration request.
- */
 import java.io.Serializable;
-public class NoApprovedRequestException extends Exception implements Serializable {
+
+/**
+ * Thrown when a student attempts an action that requires an approved request.
+ * This is part of RequestException hierarchy.
+ */
+public class NoApprovedRequestException extends RequestException implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     public NoApprovedRequestException() {
         super("No approved registration request for this course");

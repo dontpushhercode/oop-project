@@ -1,12 +1,13 @@
 package university_system;
 
-/**
- *
- * Thrown when a student tries to exceed
- * the maximum allowed credits of 21.
- */
 import java.io.Serializable;
-public class CreditLimitExceededException extends Exception implements Serializable {
+
+/**
+ * Thrown when a student attempts to enroll in courses that would exceed their credit limit.
+ * This is part of AcademicException hierarchy.
+ */
+public class CreditLimitExceededException extends AcademicException implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     public CreditLimitExceededException() {
         super("Credit limit exceeded. Maximum allowed: 21 credits");

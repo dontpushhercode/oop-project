@@ -1,12 +1,13 @@
 package university_system;
 
-/**
- *
- * Thrown when a student tries to submit
- * a duplicate registration request.
- */
 import java.io.Serializable;
-public class AlreadyRequestedException extends Exception implements Serializable {
+
+/**
+ * Thrown when a user attempts to submit a request they have already submitted.
+ * This is part of RequestException hierarchy.
+ */
+public class AlreadyRequestedException extends RequestException implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     public AlreadyRequestedException() {
         super("Registration request already submitted for this course");
