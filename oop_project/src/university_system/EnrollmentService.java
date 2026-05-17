@@ -20,21 +20,20 @@ public class EnrollmentService {
     private final RequestService requestService;
 
     /**
-     * Constructor that initializes the service with database and request service.
+     * Constructor that initializes the service with database.
      */
-    EnrollmentService(Database db, RequestService requestService) {
+    public EnrollmentService(Database db) {
         this.db = db;
-        this.requestService = requestService;
+        this.requestService = new RequestService(db);
     }
 
     /**
      * Assigns a student to a section if approved request exists
      * and student is not already enrolled.
      */
-    public void assign(Student st, Section sec)
-            throws NoApprovedRequestException, AlreadyAssignedException, CreditLimitExceededException, CourseFailLimitException {
-        if (!requestService.hasApprovedRequest(st, sec.getCourse())) {
-            throw new NoApprovedRequestException();
+    void assign(Student st, Section sec) {
+        if (!requestService.getRegistrationRequest(st, sec.getCourse()).isApproved()) {
+            throw new IllegalStateException("No approved registration request for this course!");
         }
         if (isEnrolledInSection(st, sec)) {
             throw new AlreadyAssignedException("Student is already assigned to this section");
@@ -55,7 +54,7 @@ public class EnrollmentService {
      * Withdraws a student from a course.
      * Cannot withdraw from completed or already withdrawn enrollments.
      */
-    public void withdraw(Student st, Course course) throws EnrollmentNotFoundException, InvalidEnrollmentStatusException {
+    void withdraw(Student st, Course course) {
         Enrollment target = findEnrollment(st, course);
         if (target == null) {
             throw new EnrollmentNotFoundException();

@@ -37,7 +37,7 @@ public class CourseService {
      */
     public Course createCourse(Manager manager, String code, String name, String description, School school, int credits) throws NoPermissionException {
         checkPermission(manager);
-        Course course = new Course(code, name, description, school, credits);
+        Course course = new Course(code, name, credits, description, school);
         db.createCourse(course);
         return course;
     }
@@ -104,7 +104,7 @@ public class CourseService {
     public void addInstructor(Manager manager, Course course, Teacher teacher) throws NoPermissionException, AlreadyAssignedException {
         checkPermission(manager);
         Course c = db.getCourse(course.getId());
-        for (Teacher t : c.getCoordinators()) {
+        for (Teacher t : c.getInstructors()) {
             if (t.equals(teacher)) {
                 throw new AlreadyAssignedException("Teacher already assigned to this course");
             }
@@ -130,7 +130,7 @@ public class CourseService {
     public void dropInstructor(Manager manager, Course course, Teacher teacher) throws NoPermissionException, CourseStateException {
         checkPermission(manager);
         Course c = db.getCourse(course.getId());
-        for (Teacher t : c.getCoordinators()) {
+        for (Teacher t : c.getInstructors()) {
             if (t.equals(teacher)) {
                 c.dropInstructor(teacher);
                 return;

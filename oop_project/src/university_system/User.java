@@ -1,17 +1,12 @@
 package university_system;
 import java.io.*;
 import java.util.*;
-
 /**
  *
- * Represents a user in the university system.
  */
 public abstract class User implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    /**
-     * Auto-incremented counter for generating unique ids.
-     */
     private static int counter = 0;
 
     /**
@@ -19,6 +14,9 @@ public abstract class User implements Serializable {
      */
     private int id;
 
+    /**
+     * Initializer block that assigns unique id to every user.
+     */
     {
         this.id = ++counter;
     }
@@ -29,9 +27,6 @@ public abstract class User implements Serializable {
     User() {
     }
 
-    /**
-     * Constructor that initializes user with all fields.
-     */
     User(String firstName, String surName, String username, String password) {
         this.firstName = firstName;
         this.surName = surName;
@@ -39,128 +34,111 @@ public abstract class User implements Serializable {
         this.password = password;
         this.isLoggedIn = false;
     }
-
+    /**
+     *
+     */
+    private int id;
     /**
      * Username used for authentication.
      */
     private String username;
-
     /**
      * Password used for authentication.
      */
     private String password;
-
     /**
-     * First name of this user.
+     *
      */
     private String firstName;
-
     /**
-     * Last name of this user.
+     *
      */
     private String surName;
-
     /**
-     * Indicates whether this user is currently logged in.
+     *
      */
     private Boolean isLoggedIn;
-
     /**
-     * Research profile associated with this user.
+     *
      */
     private Researcher researchProfile;
-
     /**
-     * Returns the unique id of this user.
+     *
      */
     int getId() {
         return this.id;
     }
-
     /**
-     * Keeps generated user ids unique after deserialization.
-     */
-    static void syncCounter(int maxId) {
-        counter = Math.max(counter, maxId);
-    }
-
-    /**
-     * Returns the username of this user.
+     *
      */
     String getUserName() {
         return this.username;
     }
-
     /**
-     * Returns the full name of this user.
+     *
      */
     String getFullName() {
         return this.firstName + " " + this.surName;
     }
-
     /**
-     * Checks if the provided password matches this user's password.
+     *
      */
-    boolean checkPassword(String password) {
-        return this.password.equals(password);
+    void login(String password) {
+    	if(this.password.equals(password)) {
+    		this.isLoggedIn = true;
+    	}
+    	else {
+    		throw new IllegalArgumentException("Wrong password!");
+    	}
     }
-
     /**
-     * Logs in this user.
-     */
-    void login() {
-        this.isLoggedIn = true;
-    }
-
-    /**
-     * Logs out this user.
+     *
      */
     void logout() {
         this.isLoggedIn = false;
     }
 
     /**
-     * Sets the password of this user.
+     *
      */
-    private void setPassword(String password) {
-        this.password = password;
+    void setPassword(String password, String newPassword) {
+    	if(this.password == password) {
+    		this.password = password;
+    	}
+    	else {
+    		throw new IllegalArgumentException("Wrong password!");
+    	}
     }
-
     /**
-     * Sets the first name of this user.
+     *
      */
     void setFirstName(String firstName) {
         this.firstName = firstName;
     }
-
     /**
-     * Sets the last name of this user.
+     *
      */
     void setSurName(String surName) {
         this.surName = surName;
     }
-
     /**
-     * Sets the username of this user.
+     *
      */
     void setUsername(String username) {
         this.username = username;
     }
-
     /**
-     * Sets the research profile of this user.
+     *
      */
     void setResearchProfile(Researcher researchProfile) {
         this.researchProfile = researchProfile;
     }
-
     /**
-     * Returns the research profile of this user.
+     *
      */
-    Researcher getResearchProfile() {
-        return this.researchProfile;
+    boolean isResearcher() {
+        return this.researchProfile != null;
     }
-
     /**
      * Removes the research profile of this user.
      */
@@ -169,24 +147,17 @@ public abstract class User implements Serializable {
     }
 
     /**
-     * Returns whether this user is currently logged in.
+     *
      */
     Boolean getIsLoggedIn() {
         return this.isLoggedIn;
     }
 
-    /**
-     * Returns string representation of this user
-     * including full name and id.
-     */
     @Override
     public String toString() {
         return this.firstName + " " + this.surName + ", id: " + this.id + "\n";
     }
 
-    /**
-     * Compares this user to another object by id.
-     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
@@ -195,9 +166,6 @@ public abstract class User implements Serializable {
         return this.id == other.id;
     }
 
-    /**
-     * Returns hash code based on user id.
-     */
     @Override
     public int hashCode() {
         return Integer.hashCode(id);

@@ -1,17 +1,35 @@
 package university_system;
-import java.io.*;
 import java.util.*;
 
+
 /**
- * Represents a research project with members and a supervisor.
+ * 
  */
 public class ResearchProject implements Serializable {
     private static final long serialVersionUID = 1L;
 
+
+	/**
+	 * Represents a research project in the university system.
+	 *
+	 */
+    public ResearchProject(String projectName, ArrayList<Researcher> members) {
+    	this.projectName = projectName;
+    	this.members = new ArrayList<Researcher>(members);
+    	this.papers = new ArrayList<ResearchPaper>();
+    }
+    
     /**
-     * Default constructor
+     * Creates a research project with a single member.
+     *
+     * @param projectName name of project
+     * @param member initial researcher
      */
-    public ResearchProject() {
+    public ResearchProject(String projectName, Researcher member) {
+    	this.projectName = projectName;
+    	this.members = new ArrayList<Researcher>();
+    	this.papers = new ArrayList<ResearchPaper>();
+    	addMember(member);
     }
 
     /**
@@ -29,44 +47,72 @@ public class ResearchProject implements Serializable {
      */
     private String projectName;
 
-    List<Researcher> getMembers() {
-        return this.members == null ? new ArrayList<>() : new ArrayList<>(this.members);
-    }
-
 
     /**
-     * 
+     * Returns project papers.
      */
-    void addPaper() {
-        // TODO implement here
+    List<ResearchPaper> getPapers(){
+    	return new ArrayList<>(papers);
     }
-
+    
     /**
-     * 
+     * Returns project name.
      */
-    void deletePaper() {
-        // TODO implement here
+    public String getProjectName() {
+        return projectName;
     }
-
+    
     /**
-     * 
+     * Adds a research paper to the project.
      */
-    void addMember() {
-        // TODO implement here
-    }
-
-    /**
-     * 
-     */
-    void deleteMember() {
-        // TODO implement here
+    void addPaper(ResearchPaper paper) {
+    	if(papers.contains(paper)) {
+    		throw new IllegalArgumentException("Paper already exists in project");
+    	}
+        this.papers.add(paper);
     }
 
     /**
-     * 
+     * Removes a research paper from the project.
      */
-    void renameProject() {
-        // TODO implement here
+    void deletePaper(ResearchPaper paper) {
+    	if(!papers.contains(paper)) {
+    		throw new IllegalArgumentException("Paper not found in project");
+    	}
+        this.papers.remove(paper);
+    }
+
+    /**
+     * Adds a researcher to the project.
+     */
+    void addMember(Researcher member) {
+        if(member==null) {
+        	throw new IllegalArgumentException("Member must be a researcher");
+        }
+        if(members.contains(member)) {
+        	throw new IllegalArgumentException("Member already exists");
+        }
+        this.members.add(member);
+    }
+
+    /**
+     * Removes a researcher from the project.
+     */
+    void deleteMember(Researcher member) {
+        if(!members.contains(member)) {
+        	throw new IllegalArgumentException("Member not found");
+        }
+        if(members.size()==1) {
+        	throw new IllegalStateException("Project must have at least one member");
+        }
+        this.members.remove(member);
+    }
+
+    /**
+     * Renames the project.
+     */
+    void renameProject(String name) {
+        this.projectName = name;
     }
 
 }

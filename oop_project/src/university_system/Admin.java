@@ -1,5 +1,6 @@
 package university_system;
-import java.io.Serializable;
+import java.io.*;
+import java.util.*;
 
 /**
  * Represents an administrator in the university system.

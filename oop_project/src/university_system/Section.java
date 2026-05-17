@@ -1,112 +1,111 @@
 package university_system;
-import java.io.*;
 import java.util.*;
 
 /**
- * 
+ * Represents a course section in the university system.
+ *
+ * A section connects a course with a semester, teacher and list of lessons.
+ * Each section has a unique ID that is generated automatically.
  */
-import java.io.Serializable;
-public class Section extends Course implements Serializable {
-    private static final long serialVersionUID = 1L;
+public class Section extends Course {
 
     /**
      * Default constructor
      */
     public Section() {
-        this.lessons = new ArrayList<>();
-    }
-
-    Section(Course course, Semester semester) {
-        this.course = course;
-        this.semester = semester;
-        this.lessons = new ArrayList<>();
     }
 
     /**
-     * 
+     * Course associated with this section.
      */
     private Course course;
 
     /**
-     * 
+     * List of lessons in this section.
      */
     private List<Lesson> lessons;
 
     /**
-     * 
+     * Teacher assigned to this section.
      */
     private Teacher teacher;
 
     /**
-     * 
+     * Semester when this section is offered.
      */
     private Semester semester;
 
-
-
-
-
+ 
     /**
-     * 
+     * Assigns a teacher to this section.
+     *
+     * @param teacher the teacher to assign
      */
-    void setTeacher(Teacher teacher) {
-        this.teacher = teacher;
+    void setTeacher() {
+        // TODO implement here
     }
 
     /**
      * 
      */
-    void addLesson(Lesson lesson) {
-        this.lessons.add(lesson);
+    void addLesson() {
+        // TODO implement here
+    }
+
+    /**
+     * Removes a lesson from this section.
+     *
+     * @param lesson the lesson to remove
+     * @throws IllegalArgumentException if lesson is not found in this section
+     */
+    void dropLesson() {
+        // TODO implement here
+    }
+
+    /**
+     * Updates the course of this section.
+     *
+     * @param course the new course
+     */
+    void setCourse() {
+        // TODO implement here
     }
 
     /**
      * 
      */
-    void dropLesson(Lesson lesson) {
-        this.lessons.remove(lesson);
+    void setSemester() {
+        // TODO implement here
     }
 
     /**
-     * 
-     */
-    void setCourse(Course course) {
-        this.course = course;
-    }
-
-    /**
-     * 
-     */
-    void setSemester(Semester semester) {
-        this.semester = semester;
-    }
-
-    /**
-     * 
+     * Returns the course of this section.
+     *
+     * @return the course of this section
      */
     Course getCourse() {
-        return this.course;
+    	return this.course;
     }
 
     /**
      * 
      */
-    Teacher getTeacher() {
-        return this.teacher;
+    public void getTeacher() {
+        // TODO implement here
     }
 
     /**
      * 
      */
-    Semester getSemester() {
-        return this.semester;
+    public void getSemester() {
+        // TODO implement here
     }
 
     /**
      * 
      */
-    List<Lesson> getLessons() {
-        return this.lessons;
+    public void getLessons() {
+        // TODO implement here
     }
 
 }
