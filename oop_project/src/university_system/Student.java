@@ -72,6 +72,7 @@ public class Student extends User {
     int getYear() {
         return this.year;
     }
+    
     /**
      * Returns the school the student belongs to.
      * @return school

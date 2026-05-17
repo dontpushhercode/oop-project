@@ -153,6 +153,7 @@ public abstract class User {
     void setSurName(String surName) {
         this.surName = surName;
     }
+    
     /**
      * Sets the username of this user.
      * @param username the username to set

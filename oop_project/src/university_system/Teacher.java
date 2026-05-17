@@ -70,7 +70,7 @@ public class Teacher extends Employee {
      * Adds a rating score to this teacher.
      * @param score the rating score to add
      */
-    public void addRating(double score) {
+    void addRating(double score) {
         this.ratingSum += score;
         this.ratingCount++;
     }
