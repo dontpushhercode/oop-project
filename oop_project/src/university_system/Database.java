@@ -668,6 +668,54 @@ public class Database {
 	    }
 	    users.add(teacher);
     }
+    
+    /**
+     * Adds a student to the database or updates
+     * an existing student with the same id.
+     *
+     * @param student student to store
+     */
+    void createStudent(Student student) {
+    	for (int i = 0; i < users.size(); i++) {
+	        if (users.get(i).equals(student)) {
+	            users.set(i, student);
+	            return;
+	        }
+	    }
+	    users.add(student);
+    }
+    
+    /**
+     * Adds a employee to the database or updates
+     * an existing employee with the same id.
+     *
+     * @param employee employee to store
+     */
+    void createEmployee(Employee employee) {
+    	for (int i = 0; i < users.size(); i++) {
+	        if (users.get(i).equals(employee)) {
+	            users.set(i, employee);
+	            return;
+	        }
+	    }
+	    users.add(employee);
+    }
+    
+    /**
+     * Adds a manager to the database or updates
+     * an existing manager with the same id.
+     *
+     * @param manager manager to store
+     */
+    void createManager(Manager manager) {
+    	for (int i = 0; i < users.size(); i++) {
+	        if (users.get(i).equals(manager)) {
+	            users.set(i, manager);
+	            return;
+	        }
+	    }
+	    users.add(manager);
+    }
 
     /**
      * Adds an enrollment to the database or updates an existing
@@ -795,5 +843,19 @@ public class Database {
 			}
 		}
     	logs.add(log);
+    }
+    
+    /**
+     * Deletes user if presented in database.
+     * 
+     * @param user user
+     */
+    void deleteUser(User user) {
+    	if(this.users.contains(user)) {
+    		this.users.remove(user);
+    	}
+    	else {
+    		throw new IllegalArgumentException("User does not exist!");
+    	}
     }
 }
