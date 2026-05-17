@@ -19,7 +19,7 @@ public class Student extends User {
     Student(String firstName, String surName, String username,
                    String password, int year, School school) {
         super(firstName, surName, username, password);
-        this.year = year;
+        setYear(year);
         this.school = school;
         this.failCount = 0;
     }

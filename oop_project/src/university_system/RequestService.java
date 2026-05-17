@@ -127,6 +127,7 @@ public class RequestService {
         }
         return null;
     }
+    
 
     /**
      * Checks if a student has an approved registration request for a course.

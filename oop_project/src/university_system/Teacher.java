@@ -27,15 +27,15 @@ public class Teacher extends Employee {
      */
 
 	Teacher(String firstName, String surName, String username,
-	               String password, TeacherType teacherType, School school) {
-	    super();
+	        String password, TeacherType teacherType, School school) {
+	    super(firstName, surName, password, username, DepartmentType.EDUCATION); 
 	    this.teacherType = teacherType;
 	    this.school = school;
 	    this.ratingSum = 0;
-        this.ratingCount = 0;
-        if (teacherType == TeacherType.PROFESSOR) {
-            this.researchProfile = new Researcher();
-        }
+	    this.ratingCount = 0;
+	    if (teacherType == TeacherType.PROFESSOR) {
+	        this.researchProfile = new Researcher();
+	    }
 	}
 	
     /**
@@ -58,8 +58,11 @@ public class Teacher extends Employee {
      * @return average rating as double
      */
     private double ratingCount;
+    
     /**
-     * 
+     * Returns the average rating of this teacher.
+     * Returns 0 if no ratings have been given yet.
+     * @return average rating as double
      */
     double getRating() {
     	 return ratingCount == 0?0:ratingSum/ratingCount;
@@ -128,6 +131,7 @@ public class Teacher extends Employee {
         if (teacherType == TeacherType.PROFESSOR && this.researchProfile == null) {
             this.researchProfile = new Researcher();
         }
+        
     }
    
     /**
