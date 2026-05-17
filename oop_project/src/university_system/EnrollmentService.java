@@ -20,11 +20,11 @@ public class EnrollmentService {
     private final RequestService requestService;
 
     /**
-     * Constructor that initializes the service with database and request service.
+     * Constructor that initializes the service with database.
      */
-    EnrollmentService(Database db, RequestService requestService) {
+    public EnrollmentService(Database db) {
         this.db = db;
-        this.requestService = requestService;
+        this.requestService = new RequestService(db);
     }
 
     /**

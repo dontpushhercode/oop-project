@@ -1,5 +1,4 @@
 package university_system;
-import java.io.*;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -239,8 +238,10 @@ public class Database {
     List<ResearchPaper> getFilteredPapers(Researcher researcher) {
         List<ResearchPaper> filtered = new ArrayList<ResearchPaper>();
         for(ResearchPaper p:papers) {
-        	if(p.getAuthor().equals(researcher)) {
-        		filtered.add(p);
+        	for(Researcher r:p.getAuthors()) {
+        		if(r.equals(researcher)) {
+        			filtered.add(p);
+        		}
         	}
         }
         return filtered;
@@ -255,9 +256,9 @@ public class Database {
     List<ResearchProject> getFilteredProjects(Researcher researcher) {
         List<ResearchProject> filtered = new ArrayList<ResearchProject>();
         for(ResearchProject p:projects) {
-        	List<User> members = p.getMembers();
-        	for(User u:members) {
-        		if(u.getResearchProfile().equals(researcher)) {
+        	List<Researcher> members = p.getMembers();
+        	for(Researcher r:members) {
+        		if(r.equals(researcher)) {
         			filtered.add(p);
         		}
         	}

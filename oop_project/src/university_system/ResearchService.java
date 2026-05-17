@@ -26,7 +26,7 @@ public class ResearchService {
     	 if (database == null) {
              throw new IllegalArgumentException("Database cannot be null");
          }
-    	this.database = database	
+    	this.database = database;	
     }
 
     /**

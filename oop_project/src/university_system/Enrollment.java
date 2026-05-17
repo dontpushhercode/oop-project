@@ -1,5 +1,4 @@
 package university_system;
-import java.io.*;
 import java.util.*;
 
 /**
@@ -166,7 +165,7 @@ public class Enrollment {
     @Override
     public String toString() {
         return "Enrollment: Student: " + this.student.getFullName()
-                + ", Section: " + this.section.getCourseName()
+                + ", Section: " + this.section.getCourse().getCourseName()
                 + ", Mark: " + this.mark.getTotalPoints()
                 + ", Status: " + this.status;
     }

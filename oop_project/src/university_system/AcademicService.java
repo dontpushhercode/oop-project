@@ -1,6 +1,4 @@
 package university_system;
-import java.io.*;
-import java.util.*;
 
 /**
  * AcademicService is a service class responsible 
