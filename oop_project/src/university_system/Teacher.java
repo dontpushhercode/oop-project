@@ -92,16 +92,6 @@ public class Teacher extends Employee {
     }
     
     /**
-     * Returns whether this teacher is a researcher.
-     * Professors are always researchers.
-     * @return true if teacher is a researcher
-     */
-    @Override
-    boolean isResearcher() {
-        return this.teacherType == TeacherType.PROFESSOR || super.isResearcher();
-    }
-    
-    /**
      * Sets the type/title of this teacher.
      * If set to PROFESSOR, research profile is automatically assigned.
      * @param teacherType the new teacher type

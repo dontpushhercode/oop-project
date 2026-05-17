@@ -97,15 +97,6 @@ public class Student extends User {
         return this.failCount;
     }
     
-    /**
-     * Returns whether this student is a researcher.
-     * 4th year students are always researchers.
-     * @return true if student is a researcher
-     */
-    @Override
-    boolean isResearcher() {
-        return this.year == 4 || super.isResearcher();
-    }
 
     /**
      * Sets the academic year of the student.
