@@ -1,11 +1,14 @@
 package university_system;
 
+import java.io.Serializable;
+
 /**
  *
  * Represents a student's mark in a course
  * in the university system.
  */
-public class Mark {
+public class Mark implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     /**
      * Auto-incremented counter for generating unique ids.

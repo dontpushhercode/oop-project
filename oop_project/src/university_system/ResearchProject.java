@@ -3,9 +3,10 @@ import java.io.*;
 import java.util.*;
 
 /**
- * 
+ * Represents a research project with members and a supervisor.
  */
-public class ResearchProject {
+public class ResearchProject implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     /**
      * Default constructor

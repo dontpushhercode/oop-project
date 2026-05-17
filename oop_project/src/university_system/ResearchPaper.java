@@ -1,4 +1,5 @@
 package university_system;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -8,7 +9,8 @@ import java.util.*;
  * Stores bibliographic information such as title,
  * author, publication year, citation count, and DOI.
  */
-public class ResearchPaper {
+public class ResearchPaper implements Serializable {
+    private static final long serialVersionUID = 1L;
 	
 	/**
 	 * Creates a research paper with bibliographic information.

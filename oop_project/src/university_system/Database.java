@@ -11,7 +11,8 @@ import java.util.*;
  *
  * Implemented as a singleton.
  */
-public class Database {
+public class Database implements Serializable {
+	private static final long serialVersionUID = 1L;
 	
 	/**
 	 * Singleton database instance.
@@ -806,28 +807,66 @@ public class Database {
 
     /**
     * Saves the current database state to a file.
+    * Throws UniversityException if save operation fails.
+    * 
+    * @param filename path to save the database file
+    * @throws UniversityException if save operation fails
     */
     void saveToFile(String filename) {
         try (ObjectOutputStream oos = new ObjectOutputStream(
                 new FileOutputStream(filename))) {
             oos.writeObject(this);
-            System.out.println("Database saved to " + filename);
+            System.out.println("Database saved successfully to " + filename);
         } catch (IOException e) {
+            System.err.println("ERROR: Failed to save database - " + e.getMessage());
             e.printStackTrace();
+            throw new UniversityException("Failed to save database to " + filename, e);
         }
     }
 
     /**
      * Loads database state from a file.
-    * Returns new empty database if file not found.
-    */
+     * Returns new empty database if file not found.
+     * Throws UniversityException if file is corrupted or inaccessible.
+     * 
+     * @param filename path to the database file
+     * @return loaded database or new empty database if file doesn't exist
+     * @throws UniversityException if file is corrupted or cannot be read
+     */
     static Database loadFromFile(String filename) {
-        try (ObjectInputStream ois = new ObjectInputStream(
-                new FileInputStream(filename))) {
-            return (Database) ois.readObject();
-        } catch (IOException | ClassNotFoundException e) {
+        File file = new File(filename);
+        
+        // File doesn't exist - this is OK, start fresh
+        if (!file.exists()) {
             System.out.println("No saved data found, starting fresh.");
             return new Database();
+        }
+        
+        // File exists but may be corrupted or inaccessible
+        try (ObjectInputStream ois = new ObjectInputStream(
+                new FileInputStream(filename))) {
+            Database loadedDb = (Database) ois.readObject();
+            
+            if (loadedDb == null) {
+                throw new UniversityException("Database file is corrupted (deserialized to null)");
+            }
+            
+            System.out.println("Database loaded successfully from " + filename);
+            return loadedDb;
+            
+        } catch (FileNotFoundException e) {
+            System.err.println("ERROR: Cannot access database file - " + e.getMessage());
+            throw new UniversityException("Cannot read database file: " + filename, e);
+            
+        } catch (IOException e) {
+            System.err.println("ERROR: Database file is corrupted or unreadable - " + e.getMessage());
+            e.printStackTrace();
+            throw new UniversityException("Database file is corrupted: " + filename, e);
+            
+        } catch (ClassNotFoundException e) {
+            System.err.println("ERROR: Database structure has changed - " + e.getMessage());
+            System.err.println("This database file is incompatible with the current version");
+            throw new UniversityException("Database version mismatch or class not found: " + e.getMessage(), e);
         }
     }
 }

@@ -3,9 +3,10 @@ import java.io.*;
 import java.util.*;
 
 /**
- * 
+ * Represents a researcher profile with research papers and projects.
  */
-public class Researcher {
+public class Researcher implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     /**
      * Default constructor

@@ -8,7 +8,8 @@ import java.util.*;
  * Each enrollment uniquely connects a student to a section
  * and stores academic progress information.
  */
-public class Enrollment {
+public class Enrollment implements Serializable {
+    private static final long serialVersionUID = 1L;
 	
 	{
 		this.id=++counter;

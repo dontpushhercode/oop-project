@@ -5,9 +5,10 @@ import java.time.LocalTime;
 import java.util.*;
 
 /**
- * 
+ * Represents a lesson or class session in a course section.
  */
-public class Lesson {
+public class Lesson implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     /**
      * Default constructor

@@ -3,9 +3,10 @@ import java.io.*;
 import java.util.*;
 
 /**
- * 
+ * Represents a student's academic transcript.
  */
-public class Transcript {
+public class Transcript implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     /**
      * Default constructor
