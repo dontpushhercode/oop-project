@@ -40,10 +40,10 @@ public class Database {
 	 * @return database instance
 	 */
     public static Database getDb() {
-    	if(db==null) {
-    		db = new Database();
-    	}
-    	return db;
+        if (db == null) {
+            db = loadFromFile("data.ser");
+        }
+        return db;
     }
 
     /**
@@ -423,6 +423,13 @@ public class Database {
     List<Course> getCourses(){
     	return this.courses;
     }
+
+    /**
+    * Returns all users stored in the system.
+    */
+    List<User> getUsers() {
+        return this.users;
+    }
     
     /**
      * Returns all enrollments stored in the system.
@@ -795,5 +802,32 @@ public class Database {
 			}
 		}
     	logs.add(log);
+    }
+
+    /**
+    * Saves the current database state to a file.
+    */
+    void saveToFile(String filename) {
+        try (ObjectOutputStream oos = new ObjectOutputStream(
+                new FileOutputStream(filename))) {
+            oos.writeObject(this);
+            System.out.println("Database saved to " + filename);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Loads database state from a file.
+    * Returns new empty database if file not found.
+    */
+    static Database loadFromFile(String filename) {
+        try (ObjectInputStream ois = new ObjectInputStream(
+                new FileInputStream(filename))) {
+            return (Database) ois.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            System.out.println("No saved data found, starting fresh.");
+            return new Database();
+        }
     }
 }

@@ -5,7 +5,8 @@ import java.util.*;
 /**
  * 
  */
-public class Section extends Course {
+import java.io.Serializable;
+public class Section extends Course implements Serializable {
 
     /**
      * Default constructor

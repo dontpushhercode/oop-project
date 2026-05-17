@@ -4,7 +4,8 @@ import java.util.*;
 /**
  * 
  */
-public class Teacher extends Employee {
+import java.io.Serializable;
+public class Teacher extends Employee implements Serializable {
     /**
      * Default constructor
      */

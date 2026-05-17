@@ -5,7 +5,8 @@ package university_system;
  * Thrown when a researcher with h-index below 3
  * is assigned as a research supervisor.
  */
-public class LowHIndexException extends Exception {
+import java.io.Serializable;
+public class LowHIndexException extends Exception implements Serializable {
 
     public LowHIndexException() {
         super("Supervisor h-index is too low. Minimum required: 3");

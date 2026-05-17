@@ -5,7 +5,7 @@ import java.util.*;
 /**
  * 
  */
-public class Course {
+public class Course implements Serializable {
 	
 	private static int counter = 0;
 	

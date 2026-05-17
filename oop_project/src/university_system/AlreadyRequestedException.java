@@ -5,7 +5,8 @@ package university_system;
  * Thrown when a student tries to submit
  * a duplicate registration request.
  */
-public class AlreadyRequestedException extends Exception {
+import java.io.Serializable;
+public class AlreadyRequestedException extends Exception implements Serializable {
 
     public AlreadyRequestedException() {
         super("Registration request already submitted for this course");

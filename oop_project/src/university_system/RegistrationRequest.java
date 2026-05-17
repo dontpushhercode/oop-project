@@ -7,7 +7,8 @@ import java.util.*;
  * Represents a course registration request submitted
  * by a student in the university system.
  */
-public class RegistrationRequest extends Request {
+import java.io.Serializable;
+public class RegistrationRequest extends Request implements Serializable {
 
     /**
      * Default constructor

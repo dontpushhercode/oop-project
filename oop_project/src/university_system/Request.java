@@ -6,7 +6,7 @@ import java.time.LocalDate;
  * Abstract base class representing a request
  * in the university system.
  */
-public abstract class Request {
+public abstract class Request implements Serializable {
 
     /**
      * Auto-incremented counter for generating unique ids.

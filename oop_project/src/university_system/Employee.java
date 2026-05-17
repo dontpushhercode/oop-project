@@ -6,7 +6,8 @@ import java.util.*;
  *
  * Represents an employee in the university system.
  */
-public class Employee extends User {
+import java.io.Serializable;
+public class Employee extends User implements Serializable {
 
     /**
      * Default constructor
