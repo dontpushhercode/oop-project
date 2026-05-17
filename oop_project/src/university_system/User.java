@@ -7,6 +7,7 @@ import java.util.*;
  * Represents a user in the university system.
  */
 public abstract class User implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     /**
      * Auto-incremented counter for generating unique ids.
@@ -74,6 +75,13 @@ public abstract class User implements Serializable {
      */
     int getId() {
         return this.id;
+    }
+
+    /**
+     * Keeps generated user ids unique after deserialization.
+     */
+    static void syncCounter(int maxId) {
+        counter = Math.max(counter, maxId);
     }
 
     /**

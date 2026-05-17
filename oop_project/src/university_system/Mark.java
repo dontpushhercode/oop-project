@@ -34,6 +34,20 @@ public class Mark implements Serializable {
     }
 
     /**
+     * Returns the mark identifier.
+     */
+    int getId() {
+        return this.id;
+    }
+
+    /**
+     * Keeps generated mark ids unique after deserialization.
+     */
+    static void syncCounter(int maxId) {
+        counter = Math.max(counter, maxId);
+    }
+
+    /**
      * Score for the first attestation.
      */
     private double firstAttestation;

@@ -1,3 +1,5 @@
+package university_system;
+
 import java.io.Serializable;
 
 /**

@@ -73,6 +73,13 @@ public class Enrollment implements Serializable {
     int getId() {
     	return this.id;
     }
+
+    /**
+     * Keeps generated enrollment ids unique after deserialization.
+     */
+    static void syncCounter(int maxId) {
+        counter = Math.max(counter, maxId);
+    }
     
     /**
      * Returns the enrolled student.

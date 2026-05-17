@@ -7,11 +7,19 @@ import java.util.*;
  */
 import java.io.Serializable;
 public class Section extends Course implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     /**
      * Default constructor
      */
     public Section() {
+        this.lessons = new ArrayList<>();
+    }
+
+    Section(Course course, Semester semester) {
+        this.course = course;
+        this.semester = semester;
+        this.lessons = new ArrayList<>();
     }
 
     /**
@@ -41,36 +49,36 @@ public class Section extends Course implements Serializable {
     /**
      * 
      */
-    void setTeacher() {
-        // TODO implement here
+    void setTeacher(Teacher teacher) {
+        this.teacher = teacher;
     }
 
     /**
      * 
      */
-    void addLesson() {
-        // TODO implement here
+    void addLesson(Lesson lesson) {
+        this.lessons.add(lesson);
     }
 
     /**
      * 
      */
-    void dropLesson() {
-        // TODO implement here
+    void dropLesson(Lesson lesson) {
+        this.lessons.remove(lesson);
     }
 
     /**
      * 
      */
-    void setCourse() {
-        // TODO implement here
+    void setCourse(Course course) {
+        this.course = course;
     }
 
     /**
      * 
      */
-    void setSemester() {
-        // TODO implement here
+    void setSemester(Semester semester) {
+        this.semester = semester;
     }
 
     /**
@@ -83,22 +91,22 @@ public class Section extends Course implements Serializable {
     /**
      * 
      */
-    public void getTeacher() {
-        // TODO implement here
+    Teacher getTeacher() {
+        return this.teacher;
     }
 
     /**
      * 
      */
-    public void getSemester() {
-        // TODO implement here
+    Semester getSemester() {
+        return this.semester;
     }
 
     /**
      * 
      */
-    public void getLessons() {
-        // TODO implement here
+    List<Lesson> getLessons() {
+        return this.lessons;
     }
 
 }

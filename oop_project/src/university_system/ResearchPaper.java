@@ -126,6 +126,13 @@ public class ResearchPaper implements Serializable {
 	int getId() {
 		return id;
 	}
+
+    /**
+     * Keeps generated paper ids unique after deserialization.
+     */
+    static void syncCounter(int maxId) {
+        counter = Math.max(counter, maxId);
+    }
 	
 	/**
 	 * Returns research journal name.

@@ -28,8 +28,16 @@ public class Transcript implements Serializable {
     /**
      * 
      */
-    public void getGpa() {
-        // TODO implement here
+    double getGpa() {
+        if (enrollments == null || enrollments.isEmpty()) {
+            return 0.0;
+        }
+
+        double total = 0.0;
+        for (Enrollment enrollment : enrollments) {
+            total += enrollment.getMark().getGpa();
+        }
+        return total / enrollments.size();
     }
 
 }

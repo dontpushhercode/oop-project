@@ -29,6 +29,10 @@ public class ResearchProject implements Serializable {
      */
     private String projectName;
 
+    List<Researcher> getMembers() {
+        return this.members == null ? new ArrayList<>() : new ArrayList<>(this.members);
+    }
+
 
     /**
      * 

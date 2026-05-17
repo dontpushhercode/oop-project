@@ -6,7 +6,8 @@ import java.util.*;
  * 
  */
 public class Course implements Serializable {
-	
+    private static final long serialVersionUID = 1L;
+		
 	private static int counter = 0;
 	
 	{
@@ -21,14 +22,18 @@ public class Course implements Serializable {
         this.prerequisites = new ArrayList<>();
     }
 
-    Course(String code, String name, int credits, String description, School school) {
-        this.code = code;
-        this.name = name;
-        this.credits = credits;
-        this.description = description;
-        this.school = school;
-        this.instructors = new ArrayList<>();
-        this.prerequisites = new ArrayList<>();
+	    Course(String code, String name, int credits, String description, School school) {
+	        this.code = code;
+	        this.name = name;
+	        this.credits = credits;
+	        this.description = description;
+	        this.school = school;
+	        this.instructors = new ArrayList<>();
+	        this.prerequisites = new ArrayList<>();
+	    }
+
+    Course(String code, String name, String description, School school, int credits) {
+        this(code, name, credits, description, school);
     }
     
     Course(String code, String name, int credits, String description, School school,
@@ -84,8 +89,15 @@ public class Course implements Serializable {
      * 
      */
     
-    int getId() {
-        return this.id;
+	int getId() {
+	        return this.id;
+	    }
+
+    /**
+     * Keeps generated course ids unique after deserialization.
+     */
+    static void syncCounter(int maxId) {
+        counter = Math.max(counter, maxId);
     }
     
     String getCourseCode() {
@@ -104,6 +116,10 @@ public class Course implements Serializable {
      */
     int getCourseCredits() {
     	return this.credits;
+    }
+
+    int getCredits() {
+        return this.credits;
     }
 
     /**
@@ -125,6 +141,10 @@ public class Course implements Serializable {
      */
     List<Teacher> getInstructors() {
     	return this.instructors;
+    }
+
+    List<Teacher> getCoordinators() {
+        return this.instructors;
     }
 
     /**

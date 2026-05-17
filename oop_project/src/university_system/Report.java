@@ -1,5 +1,6 @@
 package university_system;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
 /**
@@ -8,7 +9,8 @@ import java.time.LocalDate;
  * A report contains statistical information
  * about students, courses, or enrollments.
  */
-public class Report implements Comparable<Report>{
+public class Report implements Comparable<Report>, Serializable {
+    private static final long serialVersionUID = 1L;
 	
 	/**
      * Auto-incremented unique identifier.
@@ -65,6 +67,13 @@ public class Report implements Comparable<Report>{
      */
     int getId() {
         return id;
+    }
+
+    /**
+     * Keeps generated report ids unique after deserialization.
+     */
+    static void syncCounter(int maxId) {
+        counter = Math.max(counter, maxId);
     }
     
     /**

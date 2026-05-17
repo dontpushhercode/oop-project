@@ -1,5 +1,8 @@
 package university_system;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -240,7 +243,7 @@ public class Database implements Serializable {
     List<ResearchPaper> getFilteredPapers(Researcher researcher) {
         List<ResearchPaper> filtered = new ArrayList<ResearchPaper>();
         for(ResearchPaper p:papers) {
-        	if(p.getAuthor().equals(researcher)) {
+        	if(p.hasAuthor(researcher)) {
         		filtered.add(p);
         	}
         }
@@ -256,9 +259,9 @@ public class Database implements Serializable {
     List<ResearchProject> getFilteredProjects(Researcher researcher) {
         List<ResearchProject> filtered = new ArrayList<ResearchProject>();
         for(ResearchProject p:projects) {
-        	List<User> members = p.getMembers();
-        	for(User u:members) {
-        		if(u.getResearchProfile().equals(researcher)) {
+        	List<Researcher> members = p.getMembers();
+        	for(Researcher member:members) {
+        		if(member.equals(researcher)) {
         			filtered.add(p);
         		}
         	}
@@ -678,6 +681,30 @@ public class Database implements Serializable {
     }
 
     /**
+     * Adds any user subtype to the database or updates an existing user.
+     *
+     * @param user user to store
+     */
+    void createUser(User user) {
+        for (int i = 0; i < users.size(); i++) {
+            if (users.get(i).equals(user)) {
+                users.set(i, user);
+                return;
+            }
+        }
+        users.add(user);
+    }
+
+    /**
+     * Removes a user from the database.
+     *
+     * @param user user to remove
+     */
+    void deleteUser(User user) {
+        users.remove(user);
+    }
+
+    /**
      * Adds an enrollment to the database or updates an existing
      * enrollment with the same identifier.
      *
@@ -813,9 +840,13 @@ public class Database implements Serializable {
     * @throws UniversityException if save operation fails
     */
     void saveToFile(String filename) {
+        Path target = Path.of(filename);
+        Path temp = target.resolveSibling(target.getFileName() + ".tmp");
+
         try (ObjectOutputStream oos = new ObjectOutputStream(
-                new FileOutputStream(filename))) {
+                new FileOutputStream(temp.toFile()))) {
             oos.writeObject(this);
+            Files.move(temp, target, StandardCopyOption.REPLACE_EXISTING);
             System.out.println("Database saved successfully to " + filename);
         } catch (IOException e) {
             System.err.println("ERROR: Failed to save database - " + e.getMessage());
@@ -850,6 +881,8 @@ public class Database implements Serializable {
             if (loadedDb == null) {
                 throw new UniversityException("Database file is corrupted (deserialized to null)");
             }
+
+            loadedDb.repairAfterLoad();
             
             System.out.println("Database loaded successfully from " + filename);
             return loadedDb;
@@ -868,5 +901,90 @@ public class Database implements Serializable {
             System.err.println("This database file is incompatible with the current version");
             throw new UniversityException("Database version mismatch or class not found: " + e.getMessage(), e);
         }
+    }
+
+    /**
+     * Restores runtime-only state that Java serialization does not persist.
+     */
+    private void repairAfterLoad() {
+        initializeMissingCollections();
+        restoreCounters();
+    }
+
+    /**
+     * Keeps older serialized files usable if new collections were added later.
+     */
+    private void initializeMissingCollections() {
+        if (users == null) users = new ArrayList<>();
+        if (courses == null) courses = new ArrayList<>();
+        if (sections == null) sections = new ArrayList<>();
+        if (enrollments == null) enrollments = new ArrayList<>();
+        if (transcripts == null) transcripts = new ArrayList<>();
+        if (employeeRequests == null) employeeRequests = new ArrayList<>();
+        if (registrationRequests == null) registrationRequests = new ArrayList<>();
+        if (papers == null) papers = new ArrayList<>();
+        if (projects == null) projects = new ArrayList<>();
+        if (logs == null) logs = new ArrayList<>();
+    }
+
+    /**
+     * Static counters are not serialized, so they must be derived from loaded data.
+     */
+    private void restoreCounters() {
+        int maxUserId = 0;
+        for (User user : users) {
+            if (user != null) {
+                maxUserId = Math.max(maxUserId, user.getId());
+            }
+        }
+        User.syncCounter(maxUserId);
+
+        int maxCourseId = 0;
+        for (Course course : courses) {
+            if (course != null) {
+                maxCourseId = Math.max(maxCourseId, course.getId());
+            }
+        }
+        for (Section section : sections) {
+            if (section != null) {
+                maxCourseId = Math.max(maxCourseId, section.getId());
+            }
+        }
+        Course.syncCounter(maxCourseId);
+
+        int maxEnrollmentId = 0;
+        int maxMarkId = 0;
+        for (Enrollment enrollment : enrollments) {
+            if (enrollment != null) {
+                maxEnrollmentId = Math.max(maxEnrollmentId, enrollment.getId());
+                Mark mark = enrollment.getMark();
+                if (mark != null) {
+                    maxMarkId = Math.max(maxMarkId, mark.getId());
+                }
+            }
+        }
+        Enrollment.syncCounter(maxEnrollmentId);
+        Mark.syncCounter(maxMarkId);
+
+        int maxRequestId = 0;
+        for (EmployeeRequest request : employeeRequests) {
+            if (request != null) {
+                maxRequestId = Math.max(maxRequestId, request.getId());
+            }
+        }
+        for (RegistrationRequest request : registrationRequests) {
+            if (request != null) {
+                maxRequestId = Math.max(maxRequestId, request.getId());
+            }
+        }
+        Request.syncCounter(maxRequestId);
+
+        int maxPaperId = 0;
+        for (ResearchPaper paper : papers) {
+            if (paper != null) {
+                maxPaperId = Math.max(maxPaperId, paper.getId());
+            }
+        }
+        ResearchPaper.syncCounter(maxPaperId);
     }
 }

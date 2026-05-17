@@ -16,6 +16,13 @@ public class Lesson implements Serializable {
     public Lesson() {
     }
 
+    Lesson(LessonType type, DayOfWeek day, LocalTime startTime, LocalTime endTime) {
+        this.type = type;
+        this.day = day;
+        this.startTime = startTime;
+        this.endTime = endTime;
+    }
+
     /**
      * 
      */
