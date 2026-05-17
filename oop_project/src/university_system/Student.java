@@ -21,7 +21,6 @@ public class Student extends User {
         super(firstName, surName, username, password);
         this.year = year;
         this.school = school;
-        this.credits = 0;
         this.failCount = 0;
     }
     
@@ -101,14 +100,6 @@ public class Student extends User {
     public Researcher getResearchProfile() {
         return this.researchProfile;
     }
-    
-    /**
-     * Returns total enrolled credits of the student.
-     * @return number of credits
-     */
-    public int getCredits() {
-        return this.credits;
-    }
 
     /**
      * Returns number of times student has failed a course.
@@ -181,18 +172,6 @@ public class Student extends User {
         this.researchSupervisor = researchSupervisor;
     }
     
-    /**
-     * Adds credits to student's total enrolled credits.
-     * Throws exception if total would exceed 21.
-     * @param amount number of credits to add
-     * @throws IllegalStateException if credits would exceed 21
-     */
-    void addCredits(int amount) {
-        if (this.credits + amount > 21) {
-            throw new IllegalStateException("Cannot exceed 21 credits");
-        }
-        this.credits += amount;
-    }
 
     /**
      * Registers a course failure for this student.
