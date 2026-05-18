@@ -51,7 +51,7 @@ public class Database implements Serializable {
     /**
      * Loads database state from a serialized file.
      */
-    private static Database loadFromFile(String fileName) {
+    static Database loadFromFile(String fileName) {
         try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(fileName))) {
             Object object = in.readObject();
             if (object instanceof Database) {
@@ -919,5 +919,15 @@ public class Database implements Serializable {
 			}
 		}
     	logs.add(log);
+    }
+    
+    void createResearcher(Researcher researcher) {
+    	for(int i=0;i<researchers.size();i++) {
+    		if(researchers.get(i).equals(researcher)) {
+    			researchers.set(i,  researcher);
+    			return;
+    		}
+    	}
+    	researchers.add(researcher);
     }
 }

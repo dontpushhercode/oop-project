@@ -23,7 +23,8 @@ public class AdminMenu {
             System.out.println("1. Create user and assign role");
             System.out.println("2. View all users");
             System.out.println("3. Delete user");
-            System.out.println("4. View logs");
+            System.out.println("4. Change user info");
+            System.out.println("5. View logs");
             System.out.println("0. Logout");
             System.out.print("Choose option: ");
 
@@ -31,7 +32,8 @@ public class AdminMenu {
                 case "1" -> addUser();
                 case "2" -> viewAllUsers();
                 case "3" -> deleteUser();
-                case "4" -> viewLogs();
+                case "4" -> changeInfo();
+                case "5" -> viewLogs();
                 case "0" -> {
                     admin.logout();
                     return;
@@ -66,9 +68,6 @@ public class AdminMenu {
                     School school = readEnum("School", School.class);
                     TeacherType teacherType = readEnum("Teacher type", TeacherType.class);
                     created = userService.createTeacher(firstName, surname, password, username, school, teacherType);
-                    if (created.getResearchProfile() != null && !db.getResearchers().contains(created.getResearchProfile())) {
-                        db.getResearchers().add(created.getResearchProfile());
-                    }
                 }
                 case "3" -> {
                     ManagerType managerType = readEnum("Manager type", ManagerType.class);
@@ -90,27 +89,30 @@ public class AdminMenu {
     }
 
     private void viewAllUsers() {
-        List<User> users = db.getUsers();
+        List<User> users = userService.getUsers();
         if (users.isEmpty()) {
             System.out.println("No users.");
             return;
         }
         for (User user : users) {
-            System.out.println(user.getId() + ". " + user.getFullName() + " | " + user.getClass().getSimpleName()
-                    + " | username: " + user.getUserName());
+            System.out.println(user.getId() + " | " + user);
         }
     }
 
     private void deleteUser() {
         viewAllUsers();
         int id = readInt("User id to delete: ");
-        User user = db.getUser(id);
+        User user = userService.getUser(id);
         if (user == null) {
             System.out.println("User not found.");
             return;
         }
+        if (id == 1) {
+        	System.out.println("Admin can not be deleted.");
+        	return;
+        }
         userService.deleteUser(user);
-        System.out.println("Deleted: " + user.getFullName());
+        System.out.println("Deleted: " + user);
     }
 
     private void viewLogs() {
@@ -139,5 +141,49 @@ public class AdminMenu {
             throw new IllegalArgumentException("Invalid " + label.toLowerCase());
         }
         return values[index];
+    }
+    
+    private void changeInfo() {
+        viewAllUsers();
+
+        int id = readInt("User id to edit: ");
+        User user = userService.getUser(id);
+
+        if (user == null) {
+            System.out.println("User not found.");
+            return;
+        }
+
+        System.out.println("\nEditing user: " + user.getFullName());
+        System.out.println("1. First name");
+        System.out.println("2. Surname");
+        System.out.println("3. Username");
+        System.out.print("Choose field: ");
+
+        String choice = scanner.nextLine().trim();
+
+        switch (choice) {
+            case "1" -> {
+                System.out.print("New first name: ");
+                String value = scanner.nextLine().trim();
+                user.setFirstName(value);
+            }
+            case "2" -> {
+                System.out.print("New surname: ");
+                String value = scanner.nextLine().trim();
+                user.setSurName(value);
+            }
+            case "3" -> {
+                System.out.print("New username: ");
+                String value = scanner.nextLine().trim();
+                user.setUserName(value);
+            }
+            default -> {
+                System.out.println("Invalid option.");
+                return;
+            }
+        }
+
+        System.out.println("User updated: " + user.getFullName());
     }
 }

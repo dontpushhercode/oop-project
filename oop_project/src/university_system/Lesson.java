@@ -58,6 +58,10 @@ public class Lesson implements Serializable {
         return this.id;
     }
     
+    LessonType getLessonType() {
+    	return this.type;
+    }
+    
     /**
      * Updates the start and end time of the lesson.
      *

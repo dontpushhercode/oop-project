@@ -10,6 +10,11 @@ package university_system;
  * -allowing students to rate teachers after completing a course.
  */
 public class AcademicService {
+	
+	private void log(String actor, String action) {
+	    db.createLog(new Log(actor, action));
+	}
+	
 	/**
      * Database object is used to access and manage university data.
      */
@@ -36,6 +41,7 @@ public class AcademicService {
      */
  
     Transcript getTranscript(Student st) {
+    	log(st.toString(), "Requested transcript");
     	return new Transcript(st);
     }
     
@@ -62,9 +68,6 @@ public class AcademicService {
      * @throws IllegalStateException if the student has withdrawn from the section
      * @throws IllegalStateException if the course is already completed
      */
-    
-
-    
     void putMark(Teacher teacher, Student student, Section sec, Mark mark) {
     	Section dbSection = db.getSection(sec.getId());
     	
@@ -94,6 +97,12 @@ public class AcademicService {
 	        throw new IllegalStateException("Course already completed!");
 	    }
 	    target.setMark(mark);
+	    
+	    log(teacher.getFullName(), 
+	            "Put mark " + mark + " for student " + student.toString()
+	            + " in section " + sec.getId());
+	    
+	    db.saveToFile("data.ser");
 	}
 
     /**
@@ -133,6 +142,13 @@ public class AcademicService {
 		   throw new IllegalStateException("You can only rate after completing the course!");
 		}
 		t.addRating(score);
+		
+		log(student.getFullName(),
+		        "Rated teacher " + teacher.toString()
+		        + " for course " + course.toString()
+		        + " with score " + score);
+		
+		db.saveToFile("data.ser");
     }
 
 }

@@ -11,7 +11,6 @@ import java.util.Scanner;
 public class ResearcherMenu {
     private final Researcher researcher;
     private final Scanner scanner;
-    private final Database db = Database.getDb();
     private final ResearchService researchService = OfficeRegister.getResearchService();
 
     public ResearcherMenu(Researcher researcher, Scanner scanner) {
@@ -55,7 +54,7 @@ public class ResearcherMenu {
     }
 
     private void viewMyPapers() {
-        List<ResearchPaper> papers = researcher.getResearchPapers();
+        List<ResearchPaper> papers = researchService.getPapers(researcher);
         if (papers.isEmpty()) {
             System.out.println("No papers.");
             return;
@@ -66,7 +65,7 @@ public class ResearcherMenu {
     }
 
     private void viewMyProjects() {
-        List<ResearchProject> projects = researcher.getResearchProjects();
+        List<ResearchProject> projects = researchService.getProjects(researcher);
         if (projects.isEmpty()) {
             System.out.println("No projects.");
             return;
@@ -88,7 +87,6 @@ public class ResearcherMenu {
         ResearchProject project = chooseProject();
         if (project == null) return;
         researchService.addMember(project, researcher);
-        researcher.addResearchProject(project);
         System.out.println("Joined project: " + project.getProjectName());
     }
 
@@ -99,11 +97,7 @@ public class ResearcherMenu {
         String journal = scanner.nextLine().trim();
         int pages = readInt("Pages: ");
 
-        ResearchPaper paper = new ResearchPaper(title, researcher, LocalDate.now(), pages, journal);
-        researcher.addResearchPaper(paper);
-        if (!db.getPapers().contains(paper)) {
-            db.getPapers().add(paper);
-        }
+        ResearchPaper paper = researchService.createPaper(title, researcher, LocalDate.now(), pages, journal);
         System.out.println("Created paper: " + paper.getTitle());
     }
 
@@ -128,28 +122,28 @@ public class ResearcherMenu {
             System.out.println("Invalid sort option.");
             return;
         }
-        db.getPapers().stream().sorted(comparator).forEach(System.out::println);
+        researchService.getPapers().stream().sorted(comparator).forEach(System.out::println);
     }
 
     private ResearchProject chooseProject() {
-        if (db.getProjects().isEmpty()) {
+        if (researchService.getProjects().isEmpty()) {
             System.out.println("No projects.");
             return null;
         }
-        for (int i = 0; i < db.getProjects().size(); i++) {
-            ResearchProject project = db.getProjects().get(i);
+        for (int i = 0; i < researchService.getProjects().size(); i++) {
+            ResearchProject project = researchService.getProject(i);
             System.out.println((i + 1) + ". " + project.getProjectName());
         }
         int index = readInt("Choose project: ") - 1;
-        if (index < 0 || index >= db.getProjects().size()) {
+        if (index < 0 || index >= researchService.getProjects().size()) {
             System.out.println("Invalid project.");
             return null;
         }
-        return db.getProjects().get(index);
+        return researchService.getProject(index);
     }
 
     private ResearchProject chooseMyProject() {
-        List<ResearchProject> projects = researcher.getResearchProjects();
+        List<ResearchProject> projects = researchService.getProjects(researcher);
         if (projects.isEmpty()) {
             System.out.println("No projects.");
             return null;
@@ -166,7 +160,7 @@ public class ResearcherMenu {
     }
 
     private ResearchPaper chooseMyPaper() {
-        List<ResearchPaper> papers = researcher.getResearchPapers();
+        List<ResearchPaper> papers = researchService.getPapers(researcher);
         if (papers.isEmpty()) {
             System.out.println("No papers.");
             return null;

@@ -9,6 +9,10 @@ import java.util.*;
  */
 public class EnrollmentService {
 
+	private void log(String actor, String action) {
+	    db.createLog(new Log(actor, action));
+	}
+	
     /**
      * Database instance used for data access.
      */
@@ -56,6 +60,10 @@ public class EnrollmentService {
         }
         
         db.createEnrollment(new Enrollment(st, sec));
+        
+        log(student.getFullName(), " assigned to section of the course: "+section.getCourse().getCourseCode());
+        
+        db.saveToFile("data.ser");
     }
 
     /**
@@ -75,6 +83,10 @@ public class EnrollmentService {
             throw new InvalidEnrollmentStatusException("Cannot withdraw from completed or withdrawn course");
         }
         target.withdraw();
+        
+        log(student.getFullName(), " withdrawed from course: "+ course.getCourseCode());
+        
+        db.saveToFile("data.ser");
     }
 
     /**
@@ -91,6 +103,13 @@ public class EnrollmentService {
         return new ArrayList<>(db.getFilteredEnrollments(teacher, course, status));
     }
 
+    /**
+     * Returns enrollments filtered by section
+     */
+    public List<Enrollment> getSectionEnrollments(Section section) {
+    	return new ArrayList<>(db.getFilteredEnrollments(section));
+    }
+    
     /**
      * Returns total credits the student is currently enrolled in.
      */

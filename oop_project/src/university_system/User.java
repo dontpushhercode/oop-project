@@ -8,6 +8,10 @@ public abstract class User implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private static int counter = 0;
+    
+    public static void setCounter(int value) {
+        counter = value;
+    }
 
     /**
      * Initializer block that assigns unique id to every user.
@@ -22,10 +26,10 @@ public abstract class User implements Serializable {
     User() {
     }
 
-    User(String firstName, String surName, String username, String password) {
+    User(String firstName, String surName, String userName, String password) {
         this.firstName = firstName;
         this.surName = surName;
-        this.username = username;
+        this.userName = userName;
         this.password = password;
         this.isLoggedIn = false;
     }
@@ -36,7 +40,7 @@ public abstract class User implements Serializable {
     /**
      * Username used for authentication.
      */
-    private String username;
+    private String userName;
     /**
      * Password used for authentication.
      */
@@ -67,7 +71,7 @@ public abstract class User implements Serializable {
      *
      */
     String getUserName() {
-        return this.username;
+        return this.userName;
     }
     /**
      *
@@ -104,8 +108,8 @@ public abstract class User implements Serializable {
      *
      */
     void setPassword(String password, String newPassword) {
-    	if(this.password == password) {
-    		this.password = password;
+    	if(this.password.equals(password)) {
+    		this.password = newPassword;
     	}
     	else {
     		throw new IllegalArgumentException("Wrong password!");
@@ -126,8 +130,8 @@ public abstract class User implements Serializable {
     /**
      *
      */
-    void setUsername(String username) {
-        this.username = username;
+    void setUserName(String username) {
+        this.userName = username;
     }
     /**
      *

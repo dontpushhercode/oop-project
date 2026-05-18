@@ -7,6 +7,10 @@ import java.util.List;
  */
 public class RequestService {
 
+	private void log(String actor, String action) {
+	    database.createLog(new Log(actor, action));
+	}
+	
     /**
      * Database instance used for data access.
      */
@@ -39,7 +43,12 @@ public class RequestService {
      */
     public RegistrationRequest createRegistrationRequest(Manager manager, Student student, Course course) {
         checkRegistrationPermission(manager);
-        return createRegistrationRequest(student, course);
+        RegistrationRequest request = createRegistrationRequest(student, course);
+        
+        log(manager.getFullName(), " created registration request for: "+student.toString()+" , course: "+course.getCourseCode());
+        
+        database.saveToFile("data.ser");
+        return request;
     }
 
     /**
@@ -54,6 +63,10 @@ public class RequestService {
         }
         RegistrationRequest regReq = new RegistrationRequest(student, course);
         database.createRegistrationRequest(regReq);
+        
+        log(student.getFullName(), " created registration request for course: "+course.getCourseCode());
+        
+        database.saveToFile("data.ser");
         return regReq;
     }
 
@@ -63,6 +76,10 @@ public class RequestService {
     public EmployeeRequest createEmployeeRequest(Employee employee, String content) {
         EmployeeRequest request = new EmployeeRequest(employee, content);
         database.createEmployeeRequest(request);
+        
+        log(employee.getFullName(), " created employee request");
+        
+        database.saveToFile("data.ser");
         return request;
     }
     
@@ -112,10 +129,10 @@ public class RequestService {
     /**
      * 
      */
-    public Request getRequestInfo(Manager manager, Request request)
+    public Request getRequestInfo(Manager manager, int id)
             throws NoPermissionException {
         checkPermission(manager);
-        return database.getRequest(request.getId());
+        return database.getRequest(id);
     }
     
     public RegistrationRequest getRegistrationRequest(Student student, Course course) {
@@ -155,9 +172,10 @@ public class RequestService {
             throw new RequestNotFoundException();
         }
         r.setStatus(status);
-        if (status == RequestStatus.APPROVED) {
-            r.setApproved();
-        }
+        
+        log(manager.getFullName(), " updated status of request " + request.getId()+" to: "+status);
+        
+        database.saveToFile("data.ser");
     }
 
     /**
@@ -174,6 +192,10 @@ public class RequestService {
             throw new InvalidRequestStatusException("Only pending requests can be cancelled");
         }
         r.setStatus(RequestStatus.REJECTED);
+        
+        log(manager.getFullName(), " rejected request " + request.getId());
+        
+        database.saveToFile("data.ser");
     }
 
     /**

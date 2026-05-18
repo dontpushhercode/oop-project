@@ -7,6 +7,10 @@ import java.util.*;
  * in the university system.
  */
 public class UserService {
+	
+	private void log(String actor, String action) {
+	    db.createLog(new Log(actor, action));
+	}
 
     /**
      * Database instance used for data access.
@@ -47,6 +51,10 @@ public class UserService {
     public Student createStudent(String firstname, String surname, String password, String username, int year, School school) {
         Student student = new Student(firstname, surname, username, password, year, school);
         db.createUser(student);
+        
+        log(student.getFullName() + " id: "+student.getId(), " created");
+        
+        db.saveToFile("data.ser");
         return student;
     }
 
@@ -57,6 +65,10 @@ public class UserService {
     public Teacher createTeacher(String firstname, String surname, String password, String username, School school, TeacherType teacherType) {
         Teacher teacher = new Teacher(firstname, surname, username, password, teacherType, school);
         db.createUser(teacher);
+        
+        log(teacher.getFullName() + " id: "+teacher.getId(), " created");
+        
+        db.saveToFile("data.ser");
         return teacher;
     }
 
@@ -66,6 +78,10 @@ public class UserService {
     public Manager createManager(String firstname, String surname, String password, String username, ManagerType type) {
         Manager manager = new Manager(firstname, surname, username, password, type);
         db.createUser(manager);
+        
+        log(manager.getFullName() + " id: "+manager.getId(), " created");
+        
+        db.saveToFile("data.ser");
         return manager;
     }
 
@@ -75,6 +91,10 @@ public class UserService {
     public Employee createEmployee(String firstname, String surname, String password, String username, DepartmentType department) {
         Employee employee = new Employee(firstname, surname, username, password, department);
         db.createUser(employee);
+        
+        log(employee.getFullName() + " id: "+employee.getId(), " created");
+        
+        db.saveToFile("data.ser");
         return employee;
     }
     
@@ -84,6 +104,10 @@ public class UserService {
     public Admin createAdmin(String firstname, String surname, String password, String username) {
         Admin admin = new Admin(firstname, surname, username, password);
         db.createUser(admin);
+        
+        log(admin.getFullName() + " id: "+admin.getId(), " created");
+        
+        db.saveToFile("data.ser");
         return admin;
     }
 
@@ -94,6 +118,10 @@ public class UserService {
         User u = db.getUser(user.getId());
         u.setFirstName(firstname);
         u.setSurName(surname);
+        
+        log(user.getFullName() + " id: "+user.getId(), " info changed");
+        
+        db.saveToFile("data.ser");
     }
 
     /**
@@ -101,6 +129,10 @@ public class UserService {
      */
     public void deleteUser(User user) {
         db.getUsers().remove(user);
+        
+        log(user.getFullName() + " id: "+user.getId(), " deleted");
+        
+        db.saveToFile("data.ser");
     }
 
     /**
@@ -129,5 +161,21 @@ public class UserService {
      */
     public List<Employee> getEmployees() {
         return db.getEmployees();
+    }
+    
+    /**
+     * Returns all users in the database.
+     */
+    public List<User> getUsers(){
+    	return this.db.getUsers();
+    }
+    
+    /**
+     * Returns user with provided id.
+     * 
+     * @param id user id
+     */
+    public User getUser(int id) {
+    	return this.db.getUser(id);
     }
 }

@@ -10,6 +10,10 @@ import java.util.*;
  * and lessons in the university system.
  */
 public class CourseService {
+	
+	private void log(String actor, String action) {
+	    db.createLog(new Log(actor, action));
+	}
 
     /**
      * Database instance used for data access.
@@ -42,14 +46,18 @@ public class CourseService {
         checkPermission(manager);
         Course course = new Course(code, name, credits, description, school);
         db.createCourse(course);
+        
+        log(manager.getFullName(), "Created course: " + code);
+        
+        db.saveToFile("data.ser");
         return course;
     }
 
     /**
      * Returns a course from the database by id.
      */
-    public Course getCourse(Course course) {
-        return db.getCourse(course.getId());
+    public Course getCourse(int id) {
+        return db.getCourse(id);
     }
 
     /**
@@ -59,14 +67,18 @@ public class CourseService {
         checkPermission(manager);
         Section section = new Section(course, semester);
         db.createSection(section);
+        
+        log(manager.getFullName(), "Created section for course " + course.getCourseCode());
+        
+        db.saveToFile("data.ser");
         return section;
     }
 
     /**
      * Returns a section from the database by id.
      */
-    public Section getSection(Section section) {
-        return db.getSection(section.getId());
+    public Section getSection(int id) {
+        return db.getSection(id);
     }
 
     /**
@@ -74,6 +86,10 @@ public class CourseService {
      */
     public Lesson createLesson(Manager manager, LessonType type, DayOfWeek day, LocalTime startTime, LocalTime endTime) throws NoPermissionException {
         checkPermission(manager);
+        db.saveToFile("data.ser");
+        
+        log(manager.getFullName(), "Created lesson: " + type + " on " + day);
+        
         return new Lesson(type, day, startTime, endTime);
     }
 
@@ -90,7 +106,22 @@ public class CourseService {
     public List<Section> getSections(Teacher teacher) {
         return new ArrayList<>(db.getFilteredSections(teacher));
     }
-
+    
+    /**
+     * Returns all courses in the system.
+     */
+    public List<Course> getCourses(){
+    	return new ArrayList<>(db.getCourses());
+    }
+    
+    /**
+     * Returns all sections in the system.
+     * @return
+     */
+    public List<Section> getSections(){
+    	return new ArrayList<>(db.getSections());
+    }
+    
     /**
      * Updates the name and description of a course.
      */
@@ -99,6 +130,10 @@ public class CourseService {
         Course c = db.getCourse(course.getId());
         c.setName(name);
         c.setDescription(description);
+        
+        log(manager.getFullName(), "Updated course: " + course.getCourseCode());
+        
+        db.saveToFile("data.ser");
     }
 
     /**
@@ -113,6 +148,10 @@ public class CourseService {
             }
         }
         c.addInstructor(teacher);
+        
+        log(manager.getFullName(), "Added instructor: " + teacher.toString()+" to course: " + course.getCourseCode());
+        
+        db.saveToFile("data.ser");
     }
 
     /**
@@ -125,6 +164,10 @@ public class CourseService {
             throw new AlreadyAssignedException("Teacher already assigned to this section");
         }
         s.setTeacher(teacher);
+        
+        log(manager.getFullName(), "Added teacher: " + teacher.toString() + " to section of the course: " + sec.getCourse().getCourseCode());
+        
+        db.saveToFile("data.ser");
     }
 
     /**
@@ -136,6 +179,10 @@ public class CourseService {
         for (Teacher t : c.getInstructors()) {
             if (t.equals(teacher)) {
                 c.dropInstructor(teacher);
+                
+                log(manager.getFullName(), "Dropped instructor: " + teacher.toString()+" from course: "+course.getCourseCode());
+                
+                db.saveToFile("data.ser");
                 return;
             }
         }
@@ -152,6 +199,10 @@ public class CourseService {
             throw new CourseStateException("No teacher assigned to this section");
         }
         s.setTeacher(null);
+        
+        log(manager.getFullName(), "Dropped teacher from section of course: " + sec.getCourse().getCourseCode());
+        
+        db.saveToFile("data.ser");
     }
 
     /**
@@ -166,6 +217,10 @@ public class CourseService {
             }
         }
         s.addLesson(lesson);
+        
+        log(manager.getFullName(), "Added lesson: " + lesson.getLessonType()+" to the course: "+sec.getCourse().getCourseCode());
+        
+        db.saveToFile("data.ser");
     }
 
     /**
@@ -177,6 +232,10 @@ public class CourseService {
         for (Lesson l : s.getLessons()) {
             if (l.equals(lesson)) {
                 s.dropLesson(lesson);
+                
+                log(manager.getFullName(), "Dropped lesson: " + lesson.getLessonType() + " from course: "+sec.getCourse().getCourseCode());
+                
+                db.saveToFile("data.ser");
                 return;
             }
         }

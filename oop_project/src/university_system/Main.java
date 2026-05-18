@@ -10,13 +10,27 @@ public class Main {
 
     public static void main(String[] args) {
         Database db = Database.getDb();
+        
+        db.loadFromFile(DATA_FILE);
         seedDefaultsIfEmpty(db);
 
+        int maxId = db.getUsers().stream()
+                .mapToInt(User::getId)
+                .max()
+                .orElse(0);
+
+        User.setCounter(maxId);
+
         try (Scanner scanner = new Scanner(System.in)) {
-            System.out.println("=== University System ===");
-            User user = AuthService.login(scanner);
-            if (user != null) {
+
+            while (true) {
+                System.out.println("\n=== University System ===");
+                User user = AuthService.login(scanner);
+                if (user == null) {
+                    continue;
+                }
                 dispatch(user, scanner);
+                System.out.println("\nReturned to main login...\n");
             }
         } finally {
             db.saveToFile(DATA_FILE);
