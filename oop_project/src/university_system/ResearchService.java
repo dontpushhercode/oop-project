@@ -141,7 +141,7 @@ public class ResearchService {
         }
 
         if (researcher == null) {
-            throw new IllegalArgumentException("Researcher cannot be null");
+        	throw new NotAResearcherException();
         }
 
         ResearchProject p = database.getProject(project.getId());
@@ -274,7 +274,7 @@ public class ResearchService {
         }
         
         if(supervisor.getHIndex()<3) {
-        	throw new IllegalArgumentException("Supervisor's h-index must be greater than 3!");
+        	throw new LowHIndexException("Supervisor must have h-index >= 3");
         }
 
         Student st = database.getStudent(student.getId());
@@ -331,5 +331,59 @@ public class ResearchService {
      */
     public List<ResearchProject> getProjects(){
     	return database.getProjects();
+    }
+    
+    /**
+     * Prints research papers of all researchers in the university.
+     *
+     * Papers are sorted according to the given comparator.
+     *
+     * @param comparator comparator used for sorting papers
+     * @throws IllegalArgumentException if comparator is null
+     */
+    void printAllResearchPapers(Comparator<ResearchPaper> comparator) {
+        if (comparator == null) {
+            throw new IllegalArgumentException("Comparator cannot be null");
+        }
+
+        List<ResearchPaper> allPapers = new ArrayList<>();
+
+        for (Researcher researcher : database.getResearchers()) {
+            allPapers.addAll(researcher.getResearchPapers());
+        }
+
+        allPapers.sort(comparator);
+
+        for (ResearchPaper paper : allPapers) {
+            System.out.println(paper);
+        }
+    }
+    
+    /**
+     * Returns the top cited researcher of a given year among all schools.
+     *
+     * @param year publication year
+     * @return researcher with the highest citation count in that year
+     */
+    Researcher getTopCitedResearcherOfYear(int year) {
+        Researcher topResearcher = null;
+        int maxCitations = -1;
+
+        for (Researcher researcher : database.getResearchers()) {
+            int totalCitations = 0;
+
+            for (ResearchPaper paper : researcher.getResearchPapers()) {
+                if (paper.getPublicationDate().getYear() == year) {
+                    totalCitations += paper.getCitationNumber();
+                }
+            }
+
+            if (totalCitations > maxCitations) {
+                maxCitations = totalCitations;
+                topResearcher = researcher;
+            }
+        }
+
+        return topResearcher;
     }
 }
