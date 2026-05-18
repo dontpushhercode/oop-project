@@ -105,6 +105,7 @@ public class StudentMenu {
         if (course == null) return;
         RegistrationRequest request = requestService.createRegistrationRequest(student, course);
         System.out.println("Created request id " + request.getId()+" | " + request.toString());
+        printRetakeInfo(student, course);
     }
 
     private void viewEnrollments() {
@@ -115,6 +116,7 @@ public class StudentMenu {
         }
         for (Enrollment enrollment : enrollments) {
             System.out.println(enrollment);
+            printRetakeInfo(enrollment.getStudent(), enrollment.getSection().getCourse());
         }
     }
 
@@ -172,6 +174,12 @@ public class StudentMenu {
         }
         System.out.println("Teacher not found.");
         return null;
+    }
+    
+    private void printRetakeInfo(Student student, Course course) {
+    	int failedAttempts = enrollmentService.getFailedAttempts(student, course);
+    	System.out.println("Retake: " + (failedAttempts > 0 ? "yes" : "no")
+    	        + " | failed attempts: " + failedAttempts);
     }
 
     private int readInt(String prompt) {

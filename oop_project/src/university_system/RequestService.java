@@ -167,6 +167,11 @@ public class RequestService {
         }
         r.setStatus(status);
         
+        // Set isApproved flag when status is APPROVED
+        if (status == RequestStatus.APPROVED) {
+            r.setApproved();
+        }
+        
         log(manager.getFullName(), " updated status of request " + request.getId()+" to: "+status);
         
         database.saveToFile("data.ser");

@@ -11,25 +11,56 @@ public class Main {
     public static void main(String[] args) {
         Database db = Database.getDb();
         
-        db.loadFromFile(DATA_FILE);
-        seedDefaultsIfEmpty(db);
         syncCounters(db);
 
         try (Scanner scanner = new Scanner(System.in)) {
+            bootstrapAdminIfEmpty(db, scanner);
 
             while (true) {
                 System.out.println("\n=== University System ===");
-                User user = AuthService.login(scanner);
-                if (user == null) {
-                    continue;
+                System.out.println("1. Login");
+                System.out.println("0. Exit");
+                System.out.print("Choose: ");
+                
+                String choice = scanner.nextLine().trim();
+                if (choice.equals("0")) {
+                    break;  // Exit the program
+                } else if (choice.equals("1")) {
+                    User user = AuthService.login(scanner);
+                    if (user == null) {
+                        System.out.println("Login failed after multiple attempts.");
+                        continue;
+                    }
+                    dispatch(user, scanner);
+                    System.out.println("\nReturned to main menu...\n");
+                } else {
+                    System.out.println("Invalid option.");
                 }
-                dispatch(user, scanner);
-                System.out.println("\nReturned to main login...\n");
             }
         } finally {
             db.saveToFile(DATA_FILE);
             System.out.println("Data saved. Goodbye!");
         }
+    }
+    
+    private static void bootstrapAdminIfEmpty(Database db, Scanner scanner) {
+        if (!db.getUsers().isEmpty()) {
+            return;
+        }
+
+        System.out.println("No users found. Create the first admin account.");
+        System.out.print("First name: ");
+        String firstName = scanner.nextLine().trim();
+        System.out.print("Surname: ");
+        String surname = scanner.nextLine().trim();
+        System.out.print("Username: ");
+        String username = scanner.nextLine().trim();
+        System.out.print("Password: ");
+        String password = scanner.nextLine().trim();
+
+        OfficeRegister.getUserService().createAdmin(firstName, surname, password, username);
+        db.saveToFile(DATA_FILE);
+        System.out.println("Admin account created. Please log in.");
     }
 
     private static void dispatch(User user, Scanner scanner) {
@@ -85,21 +116,6 @@ public class Main {
         }
     }
 
-    private static void seedDefaultsIfEmpty(Database db) {
-        if (!db.getUsers().isEmpty()) {
-            return;
-        }
-
-        UserService users = OfficeRegister.getUserService();
-        Admin admin = users.createAdmin("System", "Admin", "admin", "admin");
-
-        System.out.println("Seeded users:");
-        System.out.println("admin/admin");
-        System.out.println("Use the admin account to create all other users and assign roles.");
-
-        admin.logout();
-    }
-    
     private static void syncCounters(Database db) {
 
         int maxUserId = db.getUsers().stream()

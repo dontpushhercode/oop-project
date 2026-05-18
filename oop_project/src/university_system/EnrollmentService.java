@@ -43,7 +43,8 @@ public class EnrollmentService {
     	Student st = db.getStudent(student.getId());
     	Section sec = db.getSection(section.getId());
     	
-        if (!requestService.getRegistrationRequest(st, sec.getCourse()).isApproved()) {
+        RegistrationRequest regRequest = requestService.getRegistrationRequest(st, sec.getCourse());
+        if (regRequest == null || !regRequest.isApproved()) {
             throw new IllegalStateException("No approved registration request for this course!");
         }
         if (isEnrolledInSection(st, sec)) {
@@ -55,7 +56,7 @@ public class EnrollmentService {
         if (getTotalCredits(st) + sec.getCourse().getCredits() > 21) {
             throw new CreditLimitExceededException();
         }
-        if (getFailCount(st, sec.getCourse()) >= 3) {
+        if (getFailedAttempts(st, sec.getCourse()) >= 3) {
             throw new CourseFailLimitException();
         }
         
@@ -126,16 +127,25 @@ public class EnrollmentService {
     /**
      * Returns how many times the student has failed the given course.
      */
-    private int getFailCount(Student st, Course course) {
+    public int getFailedAttempts(Student student, Course course) {
+    	Student st = db.getStudent(student.getId());
+    	Course c = db.getCourse(course.getId());
         int count = 0;
         for (Enrollment e : db.getFilteredEnrollments(st)) {
-            if (e.getSection().getCourse().equals(course) &&
+            if (e.getSection().getCourse().equals(c) &&
                 e.getStatus() == EnrollmentStatus.COMPLETED &&
                 e.getMark().getLiteralGrade().equals("F")) {
                 count++;
             }
         }
         return count;
+    }
+    
+    /**
+     * Returns true if the student has already failed this course before.
+     */
+    public boolean isRetake(Student student, Course course) {
+    	return getFailedAttempts(student, course) > 0;
     }
 
     /**
