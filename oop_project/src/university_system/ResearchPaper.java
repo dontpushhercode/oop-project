@@ -11,6 +11,10 @@ import java.util.*;
  */
 public class ResearchPaper implements Serializable {
     private static final long serialVersionUID = 1L;
+    
+    public static void setCounter(int value) {
+        counter = value;
+    }
 	
 	{
 		this.id = ++counter;
@@ -40,6 +44,7 @@ public class ResearchPaper implements Serializable {
     	this.publicationDate = publicationDate;
     	this.pages = pages;
     	this.journal = journal;
+    	generateDoi();
     	
     	addAuthor(author);
     }

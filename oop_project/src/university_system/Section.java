@@ -10,6 +10,10 @@ import java.util.*;
  */
 public class Section implements Serializable {
     private static final long serialVersionUID = 1L;
+    
+    public static void setCounter(int value) {
+        counter = value;
+    }
 	
 	 /**
      * Static counter used to generate unique section IDs.

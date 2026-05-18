@@ -176,7 +176,7 @@ public class AdminMenu {
             case "3" -> {
                 System.out.print("New username: ");
                 String value = scanner.nextLine().trim();
-                user.setUserName(value);
+                user.setUsername(value);
             }
             default -> {
                 System.out.println("Invalid option.");

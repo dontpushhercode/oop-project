@@ -13,16 +13,6 @@ public class Report implements Comparable<Report>, Serializable {
     private static final long serialVersionUID = 1L;
 	
 	/**
-     * Auto-incremented unique identifier.
-     */
-    private static int counter = 0;
-
-    /**
-     * Unique id of the report.
-     */
-    private int id;
-
-	/**
      * Type of the report.
      */
     private ReportType reportType;
@@ -41,10 +31,6 @@ public class Report implements Comparable<Report>, Serializable {
      * Text content of the report.
      */
     private String content;
-    
-    {
-        this.id = ++counter;
-    }
 
     /**
      * Creates a report with specified type and author.
@@ -58,22 +44,6 @@ public class Report implements Comparable<Report>, Serializable {
         this.reportType = reportType;
         this.createdBy = createdBy;
         this.createdAt = LocalDate.now();
-    }
-
-    /**
-     * Returns the unique id of this report.
-     * 
-     * @return report id
-     */
-    int getId() {
-        return id;
-    }
-
-    /**
-     * Keeps generated report ids unique after deserialization.
-     */
-    static void syncCounter(int maxId) {
-        counter = Math.max(counter, maxId);
     }
     
     /**
@@ -142,31 +112,7 @@ public class Report implements Comparable<Report>, Serializable {
     public int compareTo(Report other) {
         return other.createdAt.compareTo(this.createdAt);
     }
-    
-    /**
-     * Checks equality based on report id.
-     * 
-     * @param obj object to compare
-     * @return true if objects have the same id
-     */
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Report report = (Report) o;
-        return id == report.id;
-    }
-    
-    /**
-     * Returns hash code based on report id.
-     *
-     * @return hash code value
-     */
-    @Override
-    public int hashCode() {
-        return Integer.hashCode(this.id);
-    }
-    
+   
     /**
      * Returns string representation of this report.
      * including id, type and creator and date.
@@ -176,7 +122,6 @@ public class Report implements Comparable<Report>, Serializable {
     @Override
     public String toString() {
         return "Report{" +
-                "id=" + id +
                 ", type=" + reportType.toString() +
                 ", createdAt=" + createdAt.toString() +
                 ", createdBy=" + createdBy.toString() +

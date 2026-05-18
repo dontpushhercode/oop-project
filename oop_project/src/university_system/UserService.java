@@ -30,7 +30,7 @@ public class UserService {
      */
     public User login(String username, String password) throws AuthenticationException {
         for (User u : db.getUsers()) {
-            if (u.getUserName().equals(username) && u.checkPassword(password)) {
+            if (u.getUsername().equals(username) && u.checkPassword(password)) {
                 u.login();
                 return u;
             }

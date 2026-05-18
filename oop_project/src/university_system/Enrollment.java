@@ -11,6 +11,10 @@ import java.util.*;
 public class Enrollment implements Serializable {
     private static final long serialVersionUID = 1L;
 	
+    public static void setCounter(int value) {
+        counter = value;
+    }
+    
 	{
 		this.id=++counter;
 	}

@@ -26,10 +26,10 @@ public abstract class User implements Serializable {
     User() {
     }
 
-    User(String firstName, String surName, String userName, String password) {
+    User(String firstName, String surName, String username, String password) {
         this.firstName = firstName;
         this.surName = surName;
-        this.userName = userName;
+        this.username = username;
         this.password = password;
         this.isLoggedIn = false;
     }
@@ -40,7 +40,7 @@ public abstract class User implements Serializable {
     /**
      * Username used for authentication.
      */
-    private String userName;
+    private String username;
     /**
      * Password used for authentication.
      */
@@ -70,8 +70,8 @@ public abstract class User implements Serializable {
     /**
      *
      */
-    String getUserName() {
-        return this.userName;
+    String getUsername() {
+        return this.username;
     }
     /**
      *
@@ -130,8 +130,8 @@ public abstract class User implements Serializable {
     /**
      *
      */
-    void setUserName(String username) {
-        this.userName = username;
+    void setUsername(String username) {
+        this.username = username;
     }
     /**
      *

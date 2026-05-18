@@ -86,11 +86,14 @@ public class CourseService {
      */
     public Lesson createLesson(Manager manager, LessonType type, DayOfWeek day, LocalTime startTime, LocalTime endTime) throws NoPermissionException {
         checkPermission(manager);
+        Lesson lesson = new Lesson(type, day, startTime, endTime);
+        
+        db.createLesson(lesson);
         db.saveToFile("data.ser");
         
         log(manager.getFullName(), "Created lesson: " + type + " on " + day);
         
-        return new Lesson(type, day, startTime, endTime);
+        return lesson;
     }
 
     /**

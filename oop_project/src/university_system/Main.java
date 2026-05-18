@@ -13,13 +13,7 @@ public class Main {
         
         db.loadFromFile(DATA_FILE);
         seedDefaultsIfEmpty(db);
-
-        int maxId = db.getUsers().stream()
-                .mapToInt(User::getId)
-                .max()
-                .orElse(0);
-
-        User.setCounter(maxId);
+        syncCounters(db);
 
         try (Scanner scanner = new Scanner(System.in)) {
 
@@ -104,5 +98,56 @@ public class Main {
         System.out.println("Use the admin account to create all other users and assign roles.");
 
         admin.logout();
+    }
+    
+    private static void syncCounters(Database db) {
+
+        int maxUserId = db.getUsers().stream()
+                .mapToInt(User::getId)
+                .max()
+                .orElse(0);
+        User.setCounter(maxUserId);
+
+        int maxPaperId = db.getPapers().stream()
+                .mapToInt(ResearchPaper::getId)
+                .max()
+                .orElse(0);
+        ResearchPaper.setCounter(maxPaperId);
+
+        int maxProjectId = db.getProjects().stream()
+                .mapToInt(ResearchProject::getId)
+                .max()
+                .orElse(0);
+        ResearchProject.setCounter(maxProjectId);
+
+        int maxCourseId = db.getCourses().stream()
+                .mapToInt(Course::getId)
+                .max()
+                .orElse(0);
+        Course.setCounter(maxCourseId);
+
+        int maxEnrollmentId = db.getEnrollments().stream()
+                .mapToInt(Enrollment::getId)
+                .max()
+                .orElse(0);
+        Enrollment.setCounter(maxEnrollmentId);
+        
+        int maxLessonId = db.getLessons().stream()
+                .mapToInt(Lesson::getId)
+                .max()
+                .orElse(0);
+        Lesson.setCounter(maxLessonId);
+
+        int maxRequestId = db.getRequests().stream()
+                .mapToInt(Request::getId)
+                .max()
+                .orElse(0);
+        Request.setCounter(maxRequestId);
+
+        int maxSectionId = db.getSections().stream()
+                .mapToInt(Section::getId)
+                .max()
+                .orElse(0);
+        Section.setCounter(maxSectionId);
     }
 }

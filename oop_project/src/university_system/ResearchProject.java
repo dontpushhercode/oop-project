@@ -8,6 +8,10 @@ import java.io.Serializable;
  */
 public class ResearchProject implements Serializable {
     private static final long serialVersionUID = 1L;
+    
+    public static void setCounter(int value) {
+        counter = value;
+    }
 
 	private static int counter = 0;
 	

@@ -34,6 +34,7 @@ public class Database implements Serializable {
 		papers = new ArrayList<>();
 		projects = new ArrayList<>();
 		logs = new ArrayList<>();
+		lessons = new ArrayList<>();
 	}
 
 	/**
@@ -128,6 +129,11 @@ public class Database implements Serializable {
      * System activity logs.
      */
     private ArrayList<Log> logs;
+    
+    /**
+     * Lessons stored in the system.
+     */
+    private ArrayList<Lesson> lessons;
 
     /**
      * Returns enrollments associated with a student.
@@ -480,6 +486,15 @@ public class Database implements Serializable {
      */
     List<Enrollment> getEnrollments(){
     	return this.enrollments;
+    }
+
+    /**
+     * Returns all lessons stored in the system.
+     * 
+     * @return list of lessons
+     */
+    List<Lesson> getLessons(){
+    	return this.lessons;
     }
     
     /**
@@ -929,5 +944,15 @@ public class Database implements Serializable {
     		}
     	}
     	researchers.add(researcher);
+    }
+    
+    void createLesson(Lesson lesson) {
+    	for(int i=0;i<lessons.size();i++) {
+    		if(lessons.get(i).equals(lesson)) {
+    			lessons.set(i,  lesson);
+    			return;
+    		}
+    	}
+    	lessons.add(lesson);
     }
 }

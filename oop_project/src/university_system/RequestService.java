@@ -27,13 +27,7 @@ public class RequestService {
     }
 
     private void checkPermission(Manager manager) {
-        if (manager == null || manager.getManagerType() != ManagerType.ADMINISTRATIVE) {
-            throw new NoPermissionException();
-        }
-    }
-    
-    private void checkRegistrationPermission(Manager manager) {
-        if (manager == null || manager.getManagerType() != ManagerType.OR) {
+        if (manager == null || (manager.getManagerType() != ManagerType.OR && manager.getManagerType()!= ManagerType.ADMINISTRATIVE)) {
             throw new NoPermissionException();
         }
     }
@@ -42,7 +36,7 @@ public class RequestService {
      * 
      */
     public RegistrationRequest createRegistrationRequest(Manager manager, Student student, Course course) {
-        checkRegistrationPermission(manager);
+        checkPermission(manager);
         RegistrationRequest request = createRegistrationRequest(student, course);
         
         log(manager.getFullName(), " created registration request for: "+student.toString()+" , course: "+course.getCourseCode());
@@ -163,7 +157,7 @@ public class RequestService {
     public void setStatus(Manager manager, Request request, RequestStatus status)
             throws NoPermissionException, RequestNotFoundException {
         if (request instanceof RegistrationRequest) {
-            checkRegistrationPermission(manager);
+            checkPermission(manager);
         } else {
             checkPermission(manager);
         }
