@@ -11,11 +11,12 @@ import java.util.Scanner;
 public class ManagerMenu {
     private final Manager manager;
     private final Scanner scanner;
-    private final Database db = Database.getDb();
     private final CourseService courseService = OfficeRegister.getCourseService();
     private final RequestService requestService = OfficeRegister.getRequestService();
     private final EnrollmentService enrollmentService = OfficeRegister.getEnrollmentService();
     private final ReportService reportService = OfficeRegister.getReportService();
+    private final UserService userService = OfficeRegister.getUserService();
+    
 
     public ManagerMenu(Manager manager, Scanner scanner) {
         this.manager = manager;
@@ -192,7 +193,7 @@ public class ManagerMenu {
     }
 
     private void viewRegistrationRequests() {
-        List<RegistrationRequest> requests = db.getFilteredRegistrationRequests(RequestStatus.PENDING);
+        List<RegistrationRequest> requests = requestService.getPendingRegistrationRequests(manager);
         if (requests.isEmpty()) {
             System.out.println("No pending registration requests.");
             return;
@@ -214,7 +215,7 @@ public class ManagerMenu {
     }
     
     private void viewEmployeeRequests() {
-        List<EmployeeRequest> requests = db.getFilteredEmployeeRequests(RequestStatus.PENDING);
+        List<EmployeeRequest> requests = requestService.getPendingEmployeeRequests(manager);
         if (requests.isEmpty()) {
             System.out.println("No pending employee requests.");
             return;
@@ -242,6 +243,7 @@ public class ManagerMenu {
         Student student = chooseStudent();
         Section section = chooseSection();
         if (student == null || section == null) return;
+        printRetakeInfo(student, section.getCourse());
         enrollmentService.assign(student, section);
         System.out.println("Student assigned to " + section.getCourse().getCourseName());
     }
@@ -253,22 +255,22 @@ public class ManagerMenu {
     }
 
     private void viewCourses() {
-        if (db.getCourses().isEmpty()) {
+        if (courseService.getCourses().isEmpty()) {
             System.out.println("No courses.");
             return;
         }
-        for (Course course : db.getCourses()) {
+        for (Course course : courseService.getCourses()) {
             System.out.println(course.getId() + ". " + course.getCourseCode() + " " + course.getCourseName()
                     + " | credits: " + course.getCredits() + " | school: " + course.getSchool());
         }
     }
 
     private void viewSections() {
-        if (db.getSections().isEmpty()) {
+        if (courseService.getSections().isEmpty()) {
             System.out.println("No sections.");
             return;
         }
-        for (Section section : db.getSections()) {
+        for (Section section : courseService.getSections()) {
             String teacher = section.getTeacher() == null ? "no teacher" : section.getTeacher().getFullName();
             System.out.println(section.getId() + ". " + section.getCourse().getCourseName()
                     + " | " + section.getSemester() + " | " + teacher);
@@ -276,7 +278,7 @@ public class ManagerMenu {
     }
 
     private void viewStudents() {
-        List<Student> students = db.getStudents();
+        List<Student> students = userService.getStudents();
         if (students.isEmpty()) {
             System.out.println("No students.");
             return;
@@ -288,7 +290,7 @@ public class ManagerMenu {
     }
 
     private void viewTeachers() {
-        List<Teacher> teachers = db.getTeachers();
+        List<Teacher> teachers = userService.getTeachers();
         if (teachers.isEmpty()) {
             System.out.println("No teachers.");
             return;
@@ -300,7 +302,7 @@ public class ManagerMenu {
     }
     
     private void viewEmployees() {
-        List<Employee> employees = db.getEmployees();
+        List<Employee> employees = userService.getEmployees();
         if (employees.isEmpty()) {
             System.out.println("No employees.");
             return;
@@ -314,7 +316,9 @@ public class ManagerMenu {
     private void printRequest(RegistrationRequest request) {
         System.out.println(request.getId() + ". " + request.getStudent().getFullName()
                 + " -> " + request.getCourse().getCourseName()
-                + " | status: " + request.getStatus());
+                + " | status: " + request.getStatus()
+                + " | retake: " + (enrollmentService.isRetake(request.getStudent(), request.getCourse()) ? "yes" : "no")
+                + " | failed attempts: " + enrollmentService.getFailedAttempts(request.getStudent(), request.getCourse()));
     }
     
     private void printEmployeeRequest(EmployeeRequest request) {
@@ -325,7 +329,7 @@ public class ManagerMenu {
     }
 
     private RegistrationRequest chooseRegistrationRequest() {
-        List<RegistrationRequest> requests = db.getFilteredRegistrationRequests(RequestStatus.PENDING);
+        List<RegistrationRequest> requests = requestService.getPendingRegistrationRequests(manager);
         for (RegistrationRequest request : requests) {
             printRequest(request);
         }
@@ -340,7 +344,7 @@ public class ManagerMenu {
     }
     
     private EmployeeRequest chooseEmployeeRequest() {
-        List<EmployeeRequest> requests = db.getFilteredEmployeeRequests(RequestStatus.PENDING);
+        List<EmployeeRequest> requests = requestService.getPendingEmployeeRequests(manager);
         for (EmployeeRequest request : requests) {
             printEmployeeRequest(request);
         }
@@ -353,11 +357,17 @@ public class ManagerMenu {
         System.out.println("Request not found.");
         return null;
     }
+    
+    private void printRetakeInfo(Student student, Course course) {
+    	int failedAttempts = enrollmentService.getFailedAttempts(student, course);
+    	System.out.println("Retake: " + (failedAttempts > 0 ? "yes" : "no")
+    	        + " | failed attempts: " + failedAttempts);
+    }
 
     private Course chooseCourse() {
         viewCourses();
         int id = readInt("Course id: ");
-        Course course = db.getCourse(id);
+        Course course = courseService.getCourse(id);
         if (course == null) {
             System.out.println("Course not found.");
         }
@@ -365,17 +375,17 @@ public class ManagerMenu {
     }
 
     private Section chooseSection() {
-        if (db.getSections().isEmpty()) {
+        if (courseService.getSections().isEmpty()) {
             System.out.println("No sections.");
             return null;
         }
-        for (Section section : db.getSections()) {
+        for (Section section : courseService.getSections()) {
             String teacher = section.getTeacher() == null ? "no teacher" : section.getTeacher().getFullName();
             System.out.println(section.getId() + ". " + section.getCourse().getCourseName()
                     + " | " + section.getSemester() + " | " + teacher);
         }
         int id = readInt("Section id: ");
-        Section section = db.getSection(id);
+        Section section = courseService.getSection(id);
         if (section == null) {
             System.out.println("Section not found.");
         }
@@ -383,7 +393,7 @@ public class ManagerMenu {
     }
 
     private Teacher chooseTeacher() {
-        List<Teacher> teachers = db.getTeachers();
+        List<Teacher> teachers = userService.getTeachers();
         if (teachers.isEmpty()) {
             System.out.println("No teachers.");
             return null;
@@ -402,7 +412,7 @@ public class ManagerMenu {
     }
 
     private Student chooseStudent() {
-        List<Student> students = db.getStudents();
+        List<Student> students = userService.getStudents();
         if (students.isEmpty()) {
             System.out.println("No students.");
             return null;

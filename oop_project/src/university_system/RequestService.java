@@ -1,12 +1,16 @@
 package university_system;
-import java.io.*;
-import java.util.*;
-import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 
  */
 public class RequestService {
 
+	private void log(String actor, String action) {
+	    database.createLog(new Log(actor, action));
+	}
+	
     /**
      * Database instance used for data access.
      */
@@ -16,17 +20,14 @@ public class RequestService {
      * Default constructor
      */
     public RequestService(Database database) {
+    	if (database == null) {
+    	    throw new IllegalArgumentException("Database cannot be null");
+    	}
         this.database = database;
     }
 
     private void checkPermission(Manager manager) {
-        if (manager == null || manager.getManagerType() != ManagerType.ADMINISTRATIVE) {
-            throw new NoPermissionException();
-        }
-    }
-    
-    private void checkRegistrationPermission(Manager manager) {
-        if (manager == null || manager.getManagerType() != ManagerType.OR) {
+        if (manager == null || (manager.getManagerType() != ManagerType.OR && manager.getManagerType()!= ManagerType.ADMINISTRATIVE)) {
             throw new NoPermissionException();
         }
     }
@@ -35,8 +36,13 @@ public class RequestService {
      * 
      */
     public RegistrationRequest createRegistrationRequest(Manager manager, Student student, Course course) {
-        checkRegistrationPermission(manager);
-        return createRegistrationRequest(student, course);
+        checkPermission(manager);
+        RegistrationRequest request = createRegistrationRequest(student, course);
+        
+        log(manager.getFullName(), " created registration request for: "+student.toString()+" , course: "+course.getCourseCode());
+        
+        database.saveToFile("data.ser");
+        return request;
     }
 
     /**
@@ -51,6 +57,10 @@ public class RequestService {
         }
         RegistrationRequest regReq = new RegistrationRequest(student, course);
         database.createRegistrationRequest(regReq);
+        
+        log(student.getFullName(), " created registration request for course: "+course.getCourseCode());
+        
+        database.saveToFile("data.ser");
         return regReq;
     }
 
@@ -60,23 +70,29 @@ public class RequestService {
     public EmployeeRequest createEmployeeRequest(Employee employee, String content) {
         EmployeeRequest request = new EmployeeRequest(employee, content);
         database.createEmployeeRequest(request);
+        
+        log(employee.getFullName(), " created employee request");
+        
+        database.saveToFile("data.ser");
         return request;
     }
     
     /**
      * 
      */
-    public List<RegistrationRequest> getRegistrationRequests(Manager manager, RequestStatus status) {
-        checkRegistrationPermission(manager);
-        return database.getFilteredRegistrationRequests(status);
+    public List<RegistrationRequest> getRegistrationRequests(
+            Manager manager, RequestStatus status) {
+        checkPermission(manager);
+        return new ArrayList<>(database.getFilteredRegistrationRequests(status));
     }
 
     /**
      * 
      */
-    public List<RegistrationRequest> getRegistrationRequests(Manager manager, Student student, RequestStatus status) {
-        checkRegistrationPermission(manager);
-        return database.getFilteredRegistrationRequests(student, status);
+    public List<RegistrationRequest> getRegistrationRequests(
+            Manager manager, Student student, RequestStatus status) {
+        checkPermission(manager);
+        return new ArrayList<>(database.getFilteredRegistrationRequests(student, status));
     }
 
     /**
@@ -84,7 +100,7 @@ public class RequestService {
      */
     public List<EmployeeRequest> getEmployeeRequests(Manager manager, RequestStatus status) {
         checkPermission(manager);
-        return database.getFilteredEmployeeRequests(status);
+        return new ArrayList<>(database.getFilteredEmployeeRequests(status));
     }
 
     /**
@@ -92,7 +108,7 @@ public class RequestService {
      */
     public List<EmployeeRequest> getEmployeeRequests(Manager manager, Employee employee, RequestStatus status) {
         checkPermission(manager);
-        return database.getFilteredEmployeeRequests(employee, status);
+        return new ArrayList<>(database.getFilteredEmployeeRequests(employee, status));
     }
 
     /**
@@ -101,16 +117,16 @@ public class RequestService {
     public List<Request> getRequests(Manager manager, RequestStatus status)
             throws NoPermissionException {
         checkPermission(manager);
-        return database.getFilteredRequests(status);
+        return new ArrayList<>(database.getFilteredRequests(status));
     }
 
     /**
      * 
      */
-    public Request getRequestInfo(Manager manager, Request request)
+    public Request getRequestInfo(Manager manager, int id)
             throws NoPermissionException {
         checkPermission(manager);
-        return database.getRequest(request.getId());
+        return database.getRequest(id);
     }
     
     public RegistrationRequest getRegistrationRequest(Student student, Course course) {
@@ -141,7 +157,7 @@ public class RequestService {
     public void setStatus(Manager manager, Request request, RequestStatus status)
             throws NoPermissionException, RequestNotFoundException {
         if (request instanceof RegistrationRequest) {
-            checkRegistrationPermission(manager);
+            checkPermission(manager);
         } else {
             checkPermission(manager);
         }
@@ -150,9 +166,15 @@ public class RequestService {
             throw new RequestNotFoundException();
         }
         r.setStatus(status);
+        
+        // Set isApproved flag when status is APPROVED
         if (status == RequestStatus.APPROVED) {
             r.setApproved();
         }
+        
+        log(manager.getFullName(), " updated status of request " + request.getId()+" to: "+status);
+        
+        database.saveToFile("data.ser");
     }
 
     /**
@@ -169,15 +191,18 @@ public class RequestService {
             throw new InvalidRequestStatusException("Only pending requests can be cancelled");
         }
         r.setStatus(RequestStatus.REJECTED);
+        
+        log(manager.getFullName(), " rejected request " + request.getId());
+        
+        database.saveToFile("data.ser");
     }
 
     /**
      * 
      */
-    public List<RegistrationRequest> getPendingRegistrationRequests(Manager manager)
-            throws NoPermissionException {
-        checkRegistrationPermission(manager);
-        return database.getFilteredRegistrationRequests(RequestStatus.PENDING);
+    public List<RegistrationRequest> getPendingRegistrationRequests(Manager manager) {
+        checkPermission(manager);
+        return new ArrayList<>(database.getFilteredRegistrationRequests(RequestStatus.PENDING));
     }
 
     /**
@@ -186,6 +211,6 @@ public class RequestService {
     public List<EmployeeRequest> getPendingEmployeeRequests(Manager manager)
             throws NoPermissionException {
         checkPermission(manager);
-        return database.getFilteredEmployeeRequests(RequestStatus.PENDING);
+        return new ArrayList<>(database.getFilteredEmployeeRequests(RequestStatus.PENDING));
     }
 }

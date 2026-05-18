@@ -10,6 +10,11 @@ package university_system;
  * -allowing students to rate teachers after completing a course.
  */
 public class AcademicService {
+	
+	private void log(String actor, String action) {
+	    db.createLog(new Log(actor, action));
+	}
+	
 	/**
      * Database object is used to access and manage university data.
      */
@@ -22,6 +27,9 @@ public class AcademicService {
      * 
      */
     AcademicService(Database db) {
+    	if (db == null) {
+    	    throw new IllegalArgumentException("Database cannot be null");
+    	}
     	this.db = db;
     }
 
@@ -33,6 +41,7 @@ public class AcademicService {
      */
  
     Transcript getTranscript(Student st) {
+    	log(st.toString(), "Requested transcript");
     	return new Transcript(st);
     }
     
@@ -59,9 +68,6 @@ public class AcademicService {
      * @throws IllegalStateException if the student has withdrawn from the section
      * @throws IllegalStateException if the course is already completed
      */
-    
-
-    
     void putMark(Teacher teacher, Student student, Section sec, Mark mark) {
     	Section dbSection = db.getSection(sec.getId());
     	
@@ -91,6 +97,12 @@ public class AcademicService {
 	        throw new IllegalStateException("Course already completed!");
 	    }
 	    target.setMark(mark);
+	    
+	    log(teacher.getFullName(), 
+	            "Put mark " + mark + " for student " + student.toString()
+	            + " in section " + sec.getId());
+	    
+	    db.saveToFile("data.ser");
 	}
 
     /**
@@ -121,7 +133,11 @@ public class AcademicService {
     	
 		boolean completed = false;
 			for (Enrollment e : db.getFilteredEnrollments(student)) {
-				if (e.getSection().getCourse().equals(course) && e.getSection().getTeacher().equals(teacher) && e.getStatus() == EnrollmentStatus.COMPLETED) {
+				Teacher sectionTeacher = e.getSection().getTeacher();
+				if (e.getSection().getCourse().equals(course)
+						&& sectionTeacher != null
+						&& sectionTeacher.equals(teacher)
+						&& e.getStatus() == EnrollmentStatus.COMPLETED) {
 					completed = true;
 		            break;
 		        }
@@ -130,6 +146,13 @@ public class AcademicService {
 		   throw new IllegalStateException("You can only rate after completing the course!");
 		}
 		t.addRating(score);
+		
+		log(student.getFullName(),
+		        "Rated teacher " + teacher.toString()
+		        + " for course " + course.toString()
+		        + " with score " + score);
+		
+		db.saveToFile("data.ser");
     }
 
 }

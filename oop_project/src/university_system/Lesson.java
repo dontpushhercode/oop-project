@@ -9,6 +9,14 @@ import java.util.*;
  */
 public class Lesson implements Serializable {
     private static final long serialVersionUID = 1L;
+    
+    public static void setCounter(int value) {
+        counter = value;
+    }
+    
+    {
+    	this.id=++counter;
+    }
 
     /**
      * Default constructor
@@ -44,10 +52,8 @@ public class Lesson implements Serializable {
     private LocalTime endTime;
 
     private static int counter = 0;
+    
     private int id;
-    { this.id = ++counter; }
-
-
 
     /**
      * Returns the lesson ID.
@@ -56,6 +62,10 @@ public class Lesson implements Serializable {
      */
     int getId() {
         return this.id;
+    }
+    
+    LessonType getLessonType() {
+    	return this.type;
     }
     
     /**

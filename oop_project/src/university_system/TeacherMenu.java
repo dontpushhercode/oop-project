@@ -9,8 +9,9 @@ import java.util.Scanner;
 public class TeacherMenu {
     private final Teacher teacher;
     private final Scanner scanner;
-    private final Database db = Database.getDb();
     private final AcademicService academicService = OfficeRegister.getAcademicService();
+    private final CourseService courseService = OfficeRegister.getCourseService();
+    private final EnrollmentService enrollmentService = OfficeRegister.getEnrollmentService();
 
     public TeacherMenu(Teacher teacher, Scanner scanner) {
         this.teacher = teacher;
@@ -48,29 +49,27 @@ public class TeacherMenu {
     }
 
     private void viewMySections() {
-        List<Section> sections = db.getFilteredSections(teacher);
+    	List<Section> sections = courseService.getSections(teacher);
         if (sections.isEmpty()) {
             System.out.println("No assigned sections.");
             return;
         }
         for (Section section : sections) {
-            System.out.println(section.getId() + ". " + section.getCourse().getCourseName()
-                    + " | " + section.getSemester());
+            System.out.println(section.getId() + " | " + section);
         }
     }
 
     private void viewStudents() {
         Section section = chooseMySection();
         if (section == null) return;
-        List<Enrollment> enrollments = db.getFilteredEnrollments(section);
+        List<Enrollment> enrollments = enrollmentService.getTeacherCourseEnrollments(teacher, section.getCourse(), EnrollmentStatus.ACTIVE);
         if (enrollments.isEmpty()) {
             System.out.println("No students in this section.");
             return;
         }
         for (Enrollment enrollment : enrollments) {
-            System.out.println(enrollment.getStudent().getId() + ". " + enrollment.getStudent().getFullName()
-                    + " | " + enrollment.getStatus()
-                    + " | total: " + enrollment.getMark().getTotalPoints());
+            System.out.println(enrollment.getStudent().getId() + " | " + enrollment.getStudent()+ 
+                    " | total: " + enrollment.getMark().getTotalPoints());
         }
     }
 
@@ -91,7 +90,7 @@ public class TeacherMenu {
         Section section = chooseMySection();
         Student student = chooseStudent(section);
         if (section == null || student == null) return;
-        for (Enrollment enrollment : db.getFilteredEnrollments(student)) {
+        for (Enrollment enrollment : enrollmentService.getStudentEnrollments(student)) {
             if (enrollment.getSection().equals(section)) {
                 enrollment.completeCourse();
                 if (enrollment.getMark().getLiteralGrade().equals("F")) {
@@ -107,7 +106,7 @@ public class TeacherMenu {
     private Section chooseMySection() {
         viewMySections();
         int id = readInt("Section id: ");
-        Section section = db.getSection(id);
+        Section section = courseService.getSection(id);
         if (section == null || !teacher.equals(section.getTeacher())) {
             System.out.println("Section not found for this teacher.");
             return null;
@@ -117,9 +116,9 @@ public class TeacherMenu {
 
     private Student chooseStudent(Section section) {
         if (section == null) return null;
-        List<Enrollment> enrollments = db.getFilteredEnrollments(section);
+        List<Enrollment> enrollments = enrollmentService.getSectionEnrollments(section);
         for (Enrollment enrollment : enrollments) {
-            System.out.println(enrollment.getStudent().getId() + ". " + enrollment.getStudent().getFullName());
+            System.out.println(enrollment.getStudent());
         }
         int id = readInt("Student id: ");
         for (Enrollment enrollment : enrollments) {

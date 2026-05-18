@@ -9,6 +9,10 @@ package university_system;
  */
 public class ReportService {
 
+	private void log(String actor, String action) {
+	    db.createLog(new Log(actor, action));
+	}
+	
 	/**
      * Reference to the system database used for retrieving data.
      */
@@ -38,6 +42,9 @@ public class ReportService {
         Report report = new Report(ReportType.ACADEMIC_PERFORMANCE, manager);
         String content = buildAcademicStats();
         report.setContent(content);
+        
+        log(manager.getFullName(), " generated academic report");
+        
         return report;
     }
 
@@ -56,6 +63,9 @@ public class ReportService {
         Report report = new Report(ReportType.COURSE_PERFORMANCE, manager);
         String content = "Total courses: " + db.getCourses().size();
         report.setContent(content);
+        
+        log(manager.getFullName(), " generated course report");
+        
         return report;
     }
     
@@ -79,6 +89,8 @@ public class ReportService {
         Report report = new Report(ReportType.ENROLLMENT, manager);
         report.setContent(content);
 
+        log(manager.getFullName(), " generated enrollment report");
+        
         return report;
     }
 

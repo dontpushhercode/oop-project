@@ -9,20 +9,7 @@ import java.io.Serializable;
  */
 public class Mark implements Serializable {
     private static final long serialVersionUID = 1L;
-
-    /**
-     * Auto-incremented counter for generating unique ids.
-     */
-    private static int counter = 0;
-
-    /**
-     * Unique id of this mark.
-     */
-    private int id;
-
-    {
-        this.id = ++counter;
-    }
+   
 
     /**
      * Default constructor that initializes all scores to zero.
@@ -31,20 +18,6 @@ public class Mark implements Serializable {
         this.firstAttestation = 0;
         this.secondAttestation = 0;
         this.finalExam = 0;
-    }
-
-    /**
-     * Returns the mark identifier.
-     */
-    int getId() {
-        return this.id;
-    }
-
-    /**
-     * Keeps generated mark ids unique after deserialization.
-     */
-    static void syncCounter(int maxId) {
-        counter = Math.max(counter, maxId);
     }
 
     /**
@@ -132,25 +105,6 @@ public class Mark implements Serializable {
      */
     @Override
     public String toString() {
-        return "Mark id: " + this.id + ", total: " + getTotalPoints() + " (" + getLiteralGrade() + ")" + "\n";
-    }
-
-    /**
-     * Compares this mark to another object by id.
-     */
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-        Mark other = (Mark) obj;
-        return this.id == other.id;
-    }
-
-    /**
-     * Returns hash code based on mark id.
-     */
-    @Override
-    public int hashCode() {
-        return Integer.hashCode(this.id);
+        return "Mark total: " + getTotalPoints() + " (" + getLiteralGrade() + ")" + "\n";
     }
 }

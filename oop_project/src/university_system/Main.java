@@ -10,18 +10,57 @@ public class Main {
 
     public static void main(String[] args) {
         Database db = Database.getDb();
-        seedDefaultsIfEmpty(db);
+        
+        syncCounters(db);
 
         try (Scanner scanner = new Scanner(System.in)) {
-            System.out.println("=== University System ===");
-            User user = AuthService.login(scanner);
-            if (user != null) {
-                dispatch(user, scanner);
+            bootstrapAdminIfEmpty(db, scanner);
+
+            while (true) {
+                System.out.println("\n=== University System ===");
+                System.out.println("1. Login");
+                System.out.println("0. Exit");
+                System.out.print("Choose: ");
+                
+                String choice = scanner.nextLine().trim();
+                if (choice.equals("0")) {
+                    break;  // Exit the program
+                } else if (choice.equals("1")) {
+                    User user = AuthService.login(scanner);
+                    if (user == null) {
+                        System.out.println("Login failed after multiple attempts.");
+                        continue;
+                    }
+                    dispatch(user, scanner);
+                    System.out.println("\nReturned to main menu...\n");
+                } else {
+                    System.out.println("Invalid option.");
+                }
             }
         } finally {
             db.saveToFile(DATA_FILE);
             System.out.println("Data saved. Goodbye!");
         }
+    }
+    
+    private static void bootstrapAdminIfEmpty(Database db, Scanner scanner) {
+        if (!db.getUsers().isEmpty()) {
+            return;
+        }
+
+        System.out.println("No users found. Create the first admin account.");
+        System.out.print("First name: ");
+        String firstName = scanner.nextLine().trim();
+        System.out.print("Surname: ");
+        String surname = scanner.nextLine().trim();
+        System.out.print("Username: ");
+        String username = scanner.nextLine().trim();
+        System.out.print("Password: ");
+        String password = scanner.nextLine().trim();
+
+        OfficeRegister.getUserService().createAdmin(firstName, surname, password, username);
+        db.saveToFile(DATA_FILE);
+        System.out.println("Admin account created. Please log in.");
     }
 
     private static void dispatch(User user, Scanner scanner) {
@@ -77,18 +116,54 @@ public class Main {
         }
     }
 
-    private static void seedDefaultsIfEmpty(Database db) {
-        if (!db.getUsers().isEmpty()) {
-            return;
-        }
+    private static void syncCounters(Database db) {
 
-        UserService users = OfficeRegister.getUserService();
-        Admin admin = users.createAdmin("System", "Admin", "admin", "admin");
+        int maxUserId = db.getUsers().stream()
+                .mapToInt(User::getId)
+                .max()
+                .orElse(0);
+        User.setCounter(maxUserId);
 
-        System.out.println("Seeded users:");
-        System.out.println("admin/admin");
-        System.out.println("Use the admin account to create all other users and assign roles.");
+        int maxPaperId = db.getPapers().stream()
+                .mapToInt(ResearchPaper::getId)
+                .max()
+                .orElse(0);
+        ResearchPaper.setCounter(maxPaperId);
 
-        admin.logout();
+        int maxProjectId = db.getProjects().stream()
+                .mapToInt(ResearchProject::getId)
+                .max()
+                .orElse(0);
+        ResearchProject.setCounter(maxProjectId);
+
+        int maxCourseId = db.getCourses().stream()
+                .mapToInt(Course::getId)
+                .max()
+                .orElse(0);
+        Course.setCounter(maxCourseId);
+
+        int maxEnrollmentId = db.getEnrollments().stream()
+                .mapToInt(Enrollment::getId)
+                .max()
+                .orElse(0);
+        Enrollment.setCounter(maxEnrollmentId);
+        
+        int maxLessonId = db.getLessons().stream()
+                .mapToInt(Lesson::getId)
+                .max()
+                .orElse(0);
+        Lesson.setCounter(maxLessonId);
+
+        int maxRequestId = db.getRequests().stream()
+                .mapToInt(Request::getId)
+                .max()
+                .orElse(0);
+        Request.setCounter(maxRequestId);
+
+        int maxSectionId = db.getSections().stream()
+                .mapToInt(Section::getId)
+                .max()
+                .orElse(0);
+        Section.setCounter(maxSectionId);
     }
 }

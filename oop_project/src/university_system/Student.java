@@ -159,25 +159,4 @@ public class Student extends User implements Serializable {
         return super.toString() + "School: " + school + ", Year: " + year + "\n";
     }
     
-    /**
-     * Compares this student to another object by id.
-     * @param obj the object to compare to
-     * @return true if ids are equal
-     */
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-        Student other = (Student) obj;
-        return this.getId() == other.getId();
-    }
-    
-    /**
-     * Returns hash code based on student id.
-     * @return hash code
-     */
-    @Override
-    public int hashCode() {
-        return Integer.hashCode(getId());
-    }
 }

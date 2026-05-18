@@ -34,6 +34,7 @@ public class Database implements Serializable {
 		papers = new ArrayList<>();
 		projects = new ArrayList<>();
 		logs = new ArrayList<>();
+		lessons = new ArrayList<>();
 	}
 
 	/**
@@ -51,7 +52,7 @@ public class Database implements Serializable {
     /**
      * Loads database state from a serialized file.
      */
-    private static Database loadFromFile(String fileName) {
+    static Database loadFromFile(String fileName) {
         try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(fileName))) {
             Object object = in.readObject();
             if (object instanceof Database) {
@@ -128,6 +129,11 @@ public class Database implements Serializable {
      * System activity logs.
      */
     private ArrayList<Log> logs;
+    
+    /**
+     * Lessons stored in the system.
+     */
+    private ArrayList<Lesson> lessons;
 
     /**
      * Returns enrollments associated with a student.
@@ -186,11 +192,12 @@ public class Database implements Serializable {
      * @param status enrollment status
      * @return filtered enrollments
      */
-    List<Enrollment> getFilteredEnrollments(Teacher teacher, Course course, EnrollmentStatus status){
+	List<Enrollment> getFilteredEnrollments(Teacher teacher, Course course, EnrollmentStatus status){
 		List<Enrollment> courseEnrollments = getFilteredEnrollments(course);
 		List<Enrollment> filtered = new ArrayList<Enrollment>();
 		for(Enrollment e:courseEnrollments) {
-			if(e.getSection().getTeacher().equals(teacher) && e.getStatus()==status) {
+			Teacher sectionTeacher = e.getSection().getTeacher();
+			if(sectionTeacher != null && sectionTeacher.equals(teacher) && e.getStatus()==status) {
 				filtered.add(e);
 			}
 		}
@@ -207,7 +214,9 @@ public class Database implements Serializable {
 		List<Section> sections = getFilteredSections(course);
 		List<Teacher> filtered = new ArrayList<Teacher>();
 		for(Section s:sections) {
-			filtered.add(s.getTeacher());
+			if (s.getTeacher() != null) {
+				filtered.add(s.getTeacher());
+			}
 		}
 		return filtered;
 	}
@@ -221,7 +230,7 @@ public class Database implements Serializable {
     List<Section> getFilteredSections(Teacher teacher){
 		List<Section> filtered = new ArrayList<Section>();
 		for(Section s:sections) {
-			if(s.getTeacher().equals(teacher)) {
+			if(teacher.equals(s.getTeacher())) {
 				filtered.add(s);
 			}
 		}
@@ -252,11 +261,12 @@ public class Database implements Serializable {
      */
     List<Course> getFilteredCourses(Teacher teacher){
 		List<Course> filtered = new ArrayList<Course>();
-		for(Course c:filtered) {
+		for(Course c:courses) {
 			List<Teacher> coordinators = c.getInstructors();
 			for(Teacher t:coordinators) {
 				if(t.equals(teacher)) {
 					filtered.add(c);
+					break;
 				}
 			}
 		}
@@ -480,6 +490,15 @@ public class Database implements Serializable {
      */
     List<Enrollment> getEnrollments(){
     	return this.enrollments;
+    }
+
+    /**
+     * Returns all lessons stored in the system.
+     * 
+     * @return list of lessons
+     */
+    List<Lesson> getLessons(){
+    	return this.lessons;
     }
     
     /**
@@ -919,5 +938,25 @@ public class Database implements Serializable {
 			}
 		}
     	logs.add(log);
+    }
+    
+    void createResearcher(Researcher researcher) {
+    	for(int i=0;i<researchers.size();i++) {
+    		if(researchers.get(i).equals(researcher)) {
+    			researchers.set(i,  researcher);
+    			return;
+    		}
+    	}
+    	researchers.add(researcher);
+    }
+    
+    void createLesson(Lesson lesson) {
+    	for(int i=0;i<lessons.size();i++) {
+    		if(lessons.get(i).equals(lesson)) {
+    			lessons.set(i,  lesson);
+    			return;
+    		}
+    	}
+    	lessons.add(lesson);
     }
 }

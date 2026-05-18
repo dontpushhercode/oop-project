@@ -9,6 +9,10 @@ import java.time.LocalDate;
  */
 public abstract class Request implements Serializable {
     private static final long serialVersionUID = 1L;
+    
+    public static void setCounter(int value) {
+        counter = value;
+    }
 
     /**
      * Auto-incremented counter for generating unique ids.

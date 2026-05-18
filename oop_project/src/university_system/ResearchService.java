@@ -1,4 +1,5 @@
 package university_system;
+import java.time.LocalDate;
 import java.util.*;
 
 /**
@@ -8,6 +9,10 @@ import java.util.*;
  * project members and research papers.
  */
 public class ResearchService {
+	
+	private void log(String actor, String action) {
+	    database.createLog(new Log(actor, action));
+	}
 	
 	/**
      * Database used to store and access research data.
@@ -38,19 +43,25 @@ public class ResearchService {
      * @throws IllegalStateException if the user already has a research profile
      */
     public void createResearchProfile(User user) {
-    	if (user == null) {
-             throw new IllegalArgumentException("User cannot be null");
-         }
-    	Researcher existing = getResearchProfile(user);
-
-        if (existing != null) {
-            throw new IllegalStateException("User already has a research profile");
+        if (user == null) {
+            throw new IllegalArgumentException("User cannot be null");
         }
 
         User u = database.getUser(user.getId());
-        
+
+        if (u.getResearchProfile() != null) {
+            throw new IllegalStateException("User already has a research profile");
+        }
+
         Researcher researcher = new Researcher(u);
+
         u.setResearchProfile(researcher);
+
+        database.createResearcher(researcher);
+        
+        log(user.getFullName(), " created research profile");
+        
+        database.saveToFile("data.ser");
     }
 
 
@@ -74,6 +85,10 @@ public class ResearchService {
         
         User u = database.getUser(user.getId());
         u.deleteResearchProfile();
+        
+        log(user.getFullName(), " removed research profile");
+        
+        database.saveToFile("data.ser");
     }
 
     /**
@@ -103,8 +118,12 @@ public class ResearchService {
     	    throw new IllegalArgumentException("Project name cannot be empty");
     	}
         ResearchProject project = new ResearchProject(projectName);
-        database.createProject(project);
         addMember(project, researcher);
+        database.createProject(project);
+        database.saveToFile("data.ser");
+        
+        log(researcher.getUser().getFullName(), " created research project: "+projectName);
+        
         return project;
     }
 
@@ -122,7 +141,7 @@ public class ResearchService {
         }
 
         if (researcher == null) {
-            throw new IllegalArgumentException("Researcher cannot be null");
+        	throw new NotAResearcherException();
         }
 
         ResearchProject p = database.getProject(project.getId());
@@ -131,6 +150,9 @@ public class ResearchService {
         }
         
         researcher.addResearchProject(p);
+        
+        log(researcher.getUser().getFullName(), " joined research project: "+project.getProjectName());
+        database.saveToFile("data.ser");
     }
 
 
@@ -156,6 +178,10 @@ public class ResearchService {
     		throw new IllegalStateException("Researcher is not a member of this project");
     	}
     	p.deleteMember(researcher);
+    	
+    	log(researcher.getUser().getFullName(), " disjoined research project: "+project.getProjectName());
+    	
+    	database.saveToFile("data.ser");
     }
 
     /**
@@ -181,6 +207,30 @@ public class ResearchService {
         }
         p.addPaper(paper);
         database.createPaper(paper);
+        
+        log(project.getProjectName(), " , paper added: "+paper.getTitle());
+        
+        database.saveToFile("data.ser");
+    }
+    
+    /**
+     * Creates research paper.
+     * @param title title of paper
+     * @param author author of paper
+     * @param publicationDate publication date of paper
+     * @param pages number of pages
+     * @param journal publication journal
+     * @return
+     */
+    public ResearchPaper createPaper(String title, Researcher author, LocalDate publicationDate, int pages, String journal) {
+    	ResearchPaper paper = new ResearchPaper(title, author, publicationDate, pages, journal);
+    	author.addResearchPaper(paper);
+    	database.createPaper(paper);
+    	
+    	log(author.getUser().getFullName(), " created research paper: "+paper.getTitle());
+    	
+    	database.saveToFile("data.ser");
+    	return paper;
     }
 
     /**
@@ -224,11 +274,15 @@ public class ResearchService {
         }
         
         if(supervisor.getHIndex()<3) {
-        	throw new IllegalArgumentException("Supervisor's h-index must be greater than 3!");
+        	throw new LowHIndexException("Supervisor must have h-index >= 3");
         }
 
         Student st = database.getStudent(student.getId());
         st.setResearchSupervisor(supervisor);
+        
+        log(supervisor.getUser().getFullName(), " supervising: "+student.getFullName());
+        
+        database.saveToFile("data.ser");
     }
 
     /**
@@ -236,33 +290,100 @@ public class ResearchService {
      *
      * @return list of all researchers
      */
-    List<Researcher> getResearchers() {
+    public List<Researcher> getResearchers() {
     	return database.getResearchers();
     }
 
     /**
-     * Returns researchers filtered by keyword.
-     *
-     * The method searches by user information.
-     *
-     * @param keyword the search keyword
-     * @return list of filtered researchers
-     * @throws IllegalArgumentException if keyword is null
+     * Returns research papers authored by researcher.
+     * @param researcher
+     * @return list of papers
      */
-     List<Researcher> getFilteredResearchers(String keyword) {
-    	 if (keyword == null) {
-             throw new IllegalArgumentException("Keyword cannot be null");
-         }
+    public List<ResearchPaper> getPapers(Researcher researcher){
+    	return database.getFilteredPapers(researcher);
+    }
+    
+    public List<ResearchPaper> getPapers(){
+    	return database.getPapers();
+    }
+    
+    /**
+     * Returns projects related to this researcher
+     * @param researcher
+     * @return list of projects
+     */
+    public List<ResearchProject> getProjects(Researcher researcher){
+    	return database.getFilteredProjects(researcher);
+    }
+    
+    /**
+     * Returns research project by identificator.
+     * @param id research project id
+     * @return research project
+     */
+    public ResearchProject getProject(int id) {
+    	return database.getProject(id);
+    }
+    
+    /**
+     * Return all research projects in the system.
+     * @return list of research projects
+     */
+    public List<ResearchProject> getProjects(){
+    	return database.getProjects();
+    }
+    
+    /**
+     * Prints research papers of all researchers in the university.
+     *
+     * Papers are sorted according to the given comparator.
+     *
+     * @param comparator comparator used for sorting papers
+     * @throws IllegalArgumentException if comparator is null
+     */
+    void printAllResearchPapers(Comparator<ResearchPaper> comparator) {
+        if (comparator == null) {
+            throw new IllegalArgumentException("Comparator cannot be null");
+        }
 
-         List<Researcher> result = new ArrayList<>();
+        List<ResearchPaper> allPapers = new ArrayList<>();
 
-         for (Researcher researcher : database.getResearchers()) {
-             String info = researcher.getUserInfo();
+        for (Researcher researcher : database.getResearchers()) {
+            allPapers.addAll(researcher.getResearchPapers());
+        }
 
-             if (info != null && info.toLowerCase().contains(keyword.toLowerCase())) {
-                 result.add(researcher);
-             }
-       }
-         return result;
-     }
+        allPapers.sort(comparator);
+
+        for (ResearchPaper paper : allPapers) {
+            System.out.println(paper);
+        }
+    }
+    
+    /**
+     * Returns the top cited researcher of a given year among all schools.
+     *
+     * @param year publication year
+     * @return researcher with the highest citation count in that year
+     */
+    Researcher getTopCitedResearcherOfYear(int year) {
+        Researcher topResearcher = null;
+        int maxCitations = -1;
+
+        for (Researcher researcher : database.getResearchers()) {
+            int totalCitations = 0;
+
+            for (ResearchPaper paper : researcher.getResearchPapers()) {
+                if (paper.getPublicationDate().getYear() == year) {
+                    totalCitations += paper.getCitationNumber();
+                }
+            }
+
+            if (totalCitations > maxCitations) {
+                maxCitations = totalCitations;
+                topResearcher = researcher;
+            }
+        }
+
+        return topResearcher;
+    }
 }
