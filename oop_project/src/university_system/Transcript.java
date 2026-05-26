@@ -45,7 +45,7 @@ public class Transcript implements Serializable {
         int count = 0;
         for (Enrollment enrollment : getEnrollments()) {
             if (enrollment.getStatus() == EnrollmentStatus.COMPLETED) {
-                total += enrollment.getMark().getTotalPoints();
+                total += enrollment.getMark().getGpa();
                 count++;
             }
         }

@@ -105,6 +105,7 @@ public class StudentMenu {
         if (course == null) return;
         RegistrationRequest request = requestService.createRegistrationRequest(student, course);
         System.out.println("Created request " + request.getId()+" | " + course.getCourseCode());
+
     }
 
     private void viewEnrollments() {
@@ -173,6 +174,7 @@ public class StudentMenu {
         System.out.println("Teacher not found.");
         return null;
     }
+    
 
     private int readInt(String prompt) {
         System.out.print(prompt);

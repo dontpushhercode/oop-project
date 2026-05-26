@@ -41,11 +41,16 @@ public class EnrollmentService {
             throw new IllegalStateException("No approved registration request for this course!");
         }
         
+        if (getTotalCredits(st) + sec.getCourse().getCredits() > 21) {
+            throw new CreditLimitExceededException();
+        }
+        
         if (isEnrolledInSection(st, sec)) {
             throw new AlreadyAssignedException("Student is already assigned to this section");
         }
         
         if (isEnrolledInCourse(st, sec.getCourse())) {
+
         	Enrollment e = findEnrollment(st, sec.getCourse(), EnrollmentStatus.ACTIVE);
         	this.db.getEnrollments().remove(e);
         	Enrollment newEnr = new Enrollment(st, section);
@@ -134,6 +139,22 @@ public class EnrollmentService {
         }
         return count;
     }
+    
+    
+    public List<Enrollment> getFailedAttempts(Student student, Course course) {
+    	List<Enrollment> enrollments = new ArrayList<>();
+    	Student st = db.getStudent(student.getId());
+    	Course c = db.getCourse(course.getId());
+    	for (Enrollment e : db.getFilteredEnrollments(st)) {
+            if (e.getSection().getCourse().equals(c) &&
+                e.getStatus() == EnrollmentStatus.COMPLETED &&
+                e.getMark().getLiteralGrade().equals("F")) {
+            		enrollments.add(e);
+            }
+    	}
+    	return enrollments;
+    }
+    
 
     /**
      * Checks if the student is already enrolled in the given section.

@@ -247,6 +247,7 @@ public class ManagerMenu {
         Student student = chooseStudent();
         Section section = chooseSection();
         if (student == null || section == null) return;
+        printRetakeInfo(student, section.getCourse());
         enrollmentService.assign(student, section);
         System.out.println("Student assigned to " + section.getCourse().getCourseName());
     }
@@ -319,7 +320,8 @@ public class ManagerMenu {
     private void printRequest(RegistrationRequest request) {
         System.out.println(request.getId() + ". " + request.getStudent().getFullName()
                 + " -> " + request.getCourse().getCourseName()
-                + " | status: " + request.getStatus());
+                + " | status: " + request.getStatus()
+                + " | failed attempts: " + enrollmentService.getFailedAttempts(request.getStudent(), request.getCourse()));
     }
     
     private void printEmployeeRequest(EmployeeRequest request) {
@@ -357,6 +359,12 @@ public class ManagerMenu {
         }
         System.out.println("Request not found.");
         return null;
+    }
+    
+    private void printRetakeInfo(Student student, Course course) {
+    	int failedAttempts = enrollmentService.getFailedAttempts(student, course).size();
+    	System.out.println("Retake: " + (failedAttempts > 0 ? "yes" : "no")
+    	        + " | failed attempts: " + failedAttempts);
     }
 
     private Course chooseCourse() {

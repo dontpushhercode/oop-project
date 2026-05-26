@@ -192,11 +192,12 @@ public class Database implements Serializable {
      * @param status enrollment status
      * @return filtered enrollments
      */
-    List<Enrollment> getFilteredEnrollments(Teacher teacher, Course course, EnrollmentStatus status){
+	List<Enrollment> getFilteredEnrollments(Teacher teacher, Course course, EnrollmentStatus status){
 		List<Enrollment> courseEnrollments = getFilteredEnrollments(course);
 		List<Enrollment> filtered = new ArrayList<Enrollment>();
 		for(Enrollment e:courseEnrollments) {
-			if(e.getSection().getTeacher().equals(teacher) && e.getStatus()==status) {
+			Teacher sectionTeacher = e.getSection().getTeacher();
+			if(sectionTeacher != null && sectionTeacher.equals(teacher) && e.getStatus()==status) {
 				filtered.add(e);
 			}
 		}
@@ -213,7 +214,9 @@ public class Database implements Serializable {
 		List<Section> sections = getFilteredSections(course);
 		List<Teacher> filtered = new ArrayList<Teacher>();
 		for(Section s:sections) {
-			filtered.add(s.getTeacher());
+			if (s.getTeacher() != null) {
+				filtered.add(s.getTeacher());
+			}
 		}
 		return filtered;
 	}
@@ -258,11 +261,12 @@ public class Database implements Serializable {
      */
     List<Course> getFilteredCourses(Teacher teacher){
 		List<Course> filtered = new ArrayList<Course>();
-		for(Course c:filtered) {
+		for(Course c:courses) {
 			List<Teacher> coordinators = c.getInstructors();
 			for(Teacher t:coordinators) {
 				if(t.equals(teacher)) {
 					filtered.add(c);
+					break;
 				}
 			}
 		}

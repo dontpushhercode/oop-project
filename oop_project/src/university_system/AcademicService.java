@@ -133,7 +133,11 @@ public class AcademicService {
     	
 		boolean completed = false;
 			for (Enrollment e : db.getFilteredEnrollments(student)) {
-				if (e.getSection().getCourse().equals(course) && e.getSection().getTeacher().equals(teacher) && e.getStatus() == EnrollmentStatus.COMPLETED) {
+				Teacher sectionTeacher = e.getSection().getTeacher();
+				if (e.getSection().getCourse().equals(course)
+						&& sectionTeacher != null
+						&& sectionTeacher.equals(teacher)
+						&& e.getStatus() == EnrollmentStatus.COMPLETED) {
 					completed = true;
 		            break;
 		        }
