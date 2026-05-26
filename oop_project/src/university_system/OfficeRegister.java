@@ -28,14 +28,14 @@ public class OfficeRegister {
     private static final CourseService courseService = new CourseService(db);
 
     /**
-     * Request service responsible for handling system and registration requests.
-     */
-    private static final RequestService requestService = new RequestService(db);
-
-    /**
      * Enrollment service responsible for managing student enrollments.
      */
     private static final EnrollmentService enrollmentService = new EnrollmentService(db);
+    
+    /**
+     * Request service responsible for handling system and registration requests.
+     */
+    private static final RequestService requestService = new RequestService(db, enrollmentService);
 
     /**
      * Academic service responsible for academic operations and grading logic.

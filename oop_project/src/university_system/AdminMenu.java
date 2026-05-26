@@ -51,8 +51,6 @@ public class AdminMenu {
         String firstName = scanner.nextLine().trim();
         System.out.print("Surname: ");
         String surname = scanner.nextLine().trim();
-        System.out.print("Username: ");
-        String username = scanner.nextLine().trim();
         System.out.print("Password: ");
         String password = scanner.nextLine().trim();
 
@@ -62,20 +60,20 @@ public class AdminMenu {
                 case "1" -> {
                     int year = readInt("Year (1-4): ");
                     School school = readEnum("School", School.class);
-                    created = userService.createStudent(firstName, surname, password, username, year, school);
+                    created = userService.createStudent(firstName, surname, password, year, school);
                 }
                 case "2" -> {
                     School school = readEnum("School", School.class);
                     TeacherType teacherType = readEnum("Teacher type", TeacherType.class);
-                    created = userService.createTeacher(firstName, surname, password, username, school, teacherType);
+                    created = userService.createTeacher(firstName, surname, password, school, teacherType);
                 }
                 case "3" -> {
                     ManagerType managerType = readEnum("Manager type", ManagerType.class);
-                    created = userService.createManager(firstName, surname, password, username, managerType);
+                    created = userService.createManager(firstName, surname, password, managerType);
                 }
                 case "4" -> {
                     DepartmentType department = readEnum("Department", DepartmentType.class);
-                    created = userService.createEmployee(firstName, surname, password, username, department);
+                    created = userService.createEmployee(firstName, surname, password, department);
                 }
                 default -> {
                     System.out.println("Unknown role.");

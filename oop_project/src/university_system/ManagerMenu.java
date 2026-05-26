@@ -209,9 +209,13 @@ public class ManagerMenu {
         System.out.println("1. Approve");
         System.out.println("2. Reject");
         String choice = scanner.nextLine().trim();
-        RequestStatus status = choice.equals("1") ? RequestStatus.APPROVED : RequestStatus.REJECTED;
-        requestService.setStatus(manager, request, status);
-        System.out.println("Request updated to " + status);
+        if(choice.equals("1")) {
+        	requestService.approveRequest(manager, request);
+        } else {
+        	requestService.cancelRequest(manager, request);
+        }
+        
+        System.out.println("Request updated");
     }
     
     private void viewEmployeeRequests() {
@@ -231,12 +235,12 @@ public class ManagerMenu {
         System.out.println("1. Approve");
         System.out.println("2. Reject");
         String choice = scanner.nextLine().trim();
-        RequestStatus status = choice.equals("1") ? RequestStatus.APPROVED : RequestStatus.REJECTED;
-        requestService.setStatus(manager, request, status);
-        if (status == RequestStatus.APPROVED) {
-            request.setSign(manager);
+        if (choice.equals("1")) {
+        	requestService.approveRequest(manager, request);
+        } else {
+        	requestService.cancelRequest(manager, request);
         }
-        System.out.println("Employee request updated to " + status);
+        System.out.println("Employee request updated");
     }
 
     private void assignStudent() {

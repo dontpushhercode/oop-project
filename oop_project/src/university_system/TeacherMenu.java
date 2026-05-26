@@ -68,12 +68,18 @@ public class TeacherMenu {
             return;
         }
         for (Enrollment enrollment : enrollments) {
-            System.out.println(enrollment.getStudent().getId() + " | " + enrollment.getStudent()+ 
+            System.out.println(enrollment.getStudent().getId() + " | " + enrollment.getStudent().getFullName()+ 
                     " | total: " + enrollment.getMark().getTotalPoints());
         }
     }
 
     private void putMark() {
+    	List<Section> sections = courseService.getSections(teacher);
+        if (sections.isEmpty()) {
+            System.out.println("No assigned sections.");
+            return;
+        }
+    	
         Section section = chooseMySection();
         Student student = chooseStudent(section);
         if (section == null || student == null) return;
@@ -93,9 +99,6 @@ public class TeacherMenu {
         for (Enrollment enrollment : enrollmentService.getStudentEnrollments(student)) {
             if (enrollment.getSection().equals(section)) {
                 enrollment.completeCourse();
-                if (enrollment.getMark().getLiteralGrade().equals("F")) {
-                    student.addFail();
-                }
                 System.out.println("Enrollment completed.");
                 return;
             }
@@ -118,7 +121,7 @@ public class TeacherMenu {
         if (section == null) return null;
         List<Enrollment> enrollments = enrollmentService.getSectionEnrollments(section);
         for (Enrollment enrollment : enrollments) {
-            System.out.println(enrollment.getStudent());
+            System.out.println(enrollment.getStudent().getId() + "| " + enrollment.getStudent().getFullName());
         }
         int id = readInt("Student id: ");
         for (Enrollment enrollment : enrollments) {

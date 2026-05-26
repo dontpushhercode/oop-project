@@ -209,10 +209,6 @@ public class Course implements Serializable {
     	return this.instructors;
     }
 
-    List<Teacher> getCoordinators() {
-        return this.instructors;
-    }
-
     /**
      * Returns the list of prerequisite courses.
      *
@@ -274,11 +270,6 @@ public class Course implements Serializable {
      * @throws IllegalArgumentException if the teacher is already assigned to this course
      */
     void addInstructor(Teacher teacher) {
-    	
-    	 if (this.instructors.contains(teacher)) {
-    	        throw new IllegalArgumentException("Teacher is already assigned to this course");
-    	    }
-    	 
     	 this.instructors.add(teacher);
     }
 
@@ -289,11 +280,6 @@ public class Course implements Serializable {
      * @throws IllegalArgumentException if the teacher is not assigned to this course
      */
     void dropInstructor(Teacher teacher) {
-    	
-    	 if (!this.instructors.contains(teacher)) {
-    	        throw new IllegalArgumentException("Teacher is not assigned to this course");
-    	    }
-    	 
     	 this.instructors.remove(teacher);
     }
 
@@ -303,12 +289,7 @@ public class Course implements Serializable {
      * @param course the prerequisite course to add
      * @throws IllegalArgumentException if prerequisite already exists
      */
-    void addPrerequisite(Course course) {
-    	
-    	if (this.prerequisites.contains(course)) {
-            throw new IllegalArgumentException("Prerequisite already exists");
-        }
-    	
+    void addPrerequisite(Course course) {	
     	 this.prerequisites.add(course);
     }
 
@@ -318,12 +299,7 @@ public class Course implements Serializable {
      * @param course the prerequisite course to remove
      * @throws IllegalArgumentException if the prerequisite course is not found
      */
-    void dropPrerequisite(Course course) {
-    	
-    	if (!this.prerequisites.contains(course)) {
-            throw new IllegalArgumentException("Prerequisite course not found");
-        }
-    	
+    void dropPrerequisite(Course course) {	
     	 this.prerequisites.remove(course);
     }
     

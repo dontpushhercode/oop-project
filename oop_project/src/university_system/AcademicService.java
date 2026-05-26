@@ -41,7 +41,7 @@ public class AcademicService {
      */
  
     Transcript getTranscript(Student st) {
-    	log(st.toString(), "Requested transcript");
+    	log(st.getUsername(), " requested transcript");
     	return new Transcript(st);
     }
     
@@ -98,8 +98,8 @@ public class AcademicService {
 	    }
 	    target.setMark(mark);
 	    
-	    log(teacher.getFullName(), 
-	            "Put mark " + mark + " for student " + student.toString()
+	    log(teacher.getUsername(), 
+	            " put mark " + mark + " for student " + student.getUsername()
 	            + " in section " + sec.getId());
 	    
 	    db.saveToFile("data.ser");

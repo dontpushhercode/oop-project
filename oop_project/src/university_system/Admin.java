@@ -12,7 +12,7 @@ public class Admin extends Employee implements Serializable {
         super();
     }
 
-    Admin(String firstname, String surname, String username, String password) {
-        super(firstname, surname, username, password, DepartmentType.ADMINISTRATION);
+    Admin(String firstname, String surname, String password) {
+        super(firstname, surname, password, DepartmentType.ADMINISTRATION);
     }
 }

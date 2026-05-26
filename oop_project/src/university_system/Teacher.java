@@ -25,9 +25,9 @@ public class Teacher extends Employee implements Serializable {
      * @param school school the teacher belongs to
      */
 
-	Teacher(String firstName, String surName, String username,
+	Teacher(String firstName, String surName,
 	        String password, TeacherType teacherType, School school) {
-	    super(firstName, surName, username, password, DepartmentType.EDUCATION); 
+	    super(firstName, surName, password, DepartmentType.EDUCATION); 
 	    this.teacherType = teacherType;
 	    this.school = school;
 	    this.ratingSum = 0;

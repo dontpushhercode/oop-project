@@ -116,9 +116,6 @@ public class Section implements Serializable {
      * @throws IllegalArgumentException if lesson already exists in this section
      */
     void addLesson(Lesson lesson) {
-    	if (this.lessons.contains(lesson)) {
-            throw new IllegalArgumentException("Lesson already exists in this section");
-        }
     	this.lessons.add(lesson);
     }
 
@@ -129,9 +126,6 @@ public class Section implements Serializable {
      * @throws IllegalArgumentException if lesson is not found in this section
      */
     void dropLesson(Lesson lesson) {
-    	if (!this.lessons.contains(lesson)) {
-            throw new IllegalArgumentException("Lesson not found in this section");
-        }
     	this.lessons.remove(lesson);
     }
 

@@ -84,10 +84,6 @@ public class Researcher implements Serializable {
      */
     void setUser(User user) {
         this.user = user;
-
-        if (user != null && user.getResearchProfile() != this) {
-            user.setResearchProfile(this);
-        }
     }
     
     /**
@@ -115,20 +111,18 @@ public class Researcher implements Serializable {
      * 
      */
     void addResearchProject(ResearchProject project) {
-    	if(!researchProjects.contains(project)) {
-    		this.researchProjects.add(project);
-            project.addMember(this);
-    	}
+    	this.researchProjects.add(project);
+    }
+    
+    void removeProject(ResearchProject project) {
+    	this.researchProjects.remove(project);
     }
 
     /**
      * 
      */
     void addResearchPaper(ResearchPaper paper) {
-    	if (!researchPapers.contains(paper)) {
-    	    researchPapers.add(paper);
-    	    paper.addAuthor(this);
-    	}
+    	researchPapers.add(paper);
     }
     
     List<ResearchPaper> getResearchPapers(){

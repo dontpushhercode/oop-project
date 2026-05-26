@@ -17,8 +17,8 @@ public class Employee extends User implements Serializable {
     /**
      * Constructor that initializes employee with all fields.
      */
-    Employee(String firstname, String surname, String username, String password, DepartmentType department) {
-        super(firstname, surname, username, password);
+    Employee(String firstname, String surname, String password, DepartmentType department) {
+        super(firstname, surname, password);
         this.department = department;
     }
 

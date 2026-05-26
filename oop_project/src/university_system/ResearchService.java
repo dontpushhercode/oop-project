@@ -77,14 +77,15 @@ public class ResearchService {
             throw new IllegalArgumentException("User cannot be null");
         }
 
-        Researcher researcher = getResearchProfile(user);
-
-        if (researcher == null) {
+    	User u = database.getUser(user.getId());
+    	
+        if (u.getResearchProfile()==null) {
             throw new IllegalStateException("User does not have a research profile");
         }
         
-        User u = database.getUser(user.getId());
-        u.deleteResearchProfile();
+        Researcher rp = u.getResearchProfile();
+        rp.setUser(null);
+        u.setResearchProfile(null);
         
         log(user.getFullName(), " removed research profile");
         
@@ -117,8 +118,11 @@ public class ResearchService {
     	if (projectName == null || projectName.isBlank()) {
     	    throw new IllegalArgumentException("Project name cannot be empty");
     	}
+    	
         ResearchProject project = new ResearchProject(projectName);
-        addMember(project, researcher);
+        project.addMember(researcher);
+        researcher.addResearchProject(project);
+        
         database.createProject(project);
         database.saveToFile("data.ser");
         
@@ -145,11 +149,13 @@ public class ResearchService {
         }
 
         ResearchProject p = database.getProject(project.getId());
-        if (p.getMembers().contains(researcher)) {
+        
+        if (p.getMembers().contains(researcher) || researcher.getResearchProjects().contains(project)) {
             throw new IllegalStateException("Researcher is already a member of this project");
         }
         
         researcher.addResearchProject(p);
+        p.addMember(researcher);
         
         log(researcher.getUser().getFullName(), " joined research project: "+project.getProjectName());
         database.saveToFile("data.ser");
@@ -177,7 +183,9 @@ public class ResearchService {
     	if (!p.getMembers().contains(researcher)) {
     		throw new IllegalStateException("Researcher is not a member of this project");
     	}
+    	
     	p.deleteMember(researcher);
+    	researcher.removeProject(p);
     	
     	log(researcher.getUser().getFullName(), " disjoined research project: "+project.getProjectName());
     	
@@ -202,13 +210,22 @@ public class ResearchService {
         }
 
         ResearchProject p = database.getProject(project.getId());
+        
         if (p.getPapers().contains(paper)) {
             throw new IllegalStateException("Paper already exists in this project");
         }
-        p.addPaper(paper);
-        database.createPaper(paper);
         
-        log(project.getProjectName(), " , paper added: "+paper.getTitle());
+        p.addPaper(paper);
+        
+        for(Researcher r:paper.getAuthors()) {
+        	try {
+                addMember(p, r);
+            } catch (IllegalStateException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+        
+        log(project.getProjectName(), " , paper added: " + paper.getTitle());
         
         database.saveToFile("data.ser");
     }
@@ -245,7 +262,7 @@ public class ResearchService {
         }
 
     	ResearchProject p = database.getProject(project.getId());
-        return new ArrayList<>(p.getPapers());
+        return p.getPapers();
     }
 
     /**
@@ -346,15 +363,11 @@ public class ResearchService {
             throw new IllegalArgumentException("Comparator cannot be null");
         }
 
-        List<ResearchPaper> allPapers = new ArrayList<>();
+        List<ResearchPaper> papers = database.getPapers();
+        
+        papers.sort(comparator);
 
-        for (Researcher researcher : database.getResearchers()) {
-            allPapers.addAll(researcher.getResearchPapers());
-        }
-
-        allPapers.sort(comparator);
-
-        for (ResearchPaper paper : allPapers) {
+        for (ResearchPaper paper : papers) {
             System.out.println(paper);
         }
     }

@@ -47,7 +47,7 @@ public class CourseService {
         Course course = new Course(code, name, credits, description, school);
         db.createCourse(course);
         
-        log(manager.getFullName(), "Created course: " + code);
+        log(manager.getUsername(), " created course: " + code);
         
         db.saveToFile("data.ser");
         return course;
@@ -68,7 +68,7 @@ public class CourseService {
         Section section = new Section(course, semester);
         db.createSection(section);
         
-        log(manager.getFullName(), "Created section for course " + course.getCourseCode());
+        log(manager.getUsername(), " created section for course " + course.getCourseCode());
         
         db.saveToFile("data.ser");
         return section;
@@ -91,7 +91,7 @@ public class CourseService {
         db.createLesson(lesson);
         db.saveToFile("data.ser");
         
-        log(manager.getFullName(), "Created lesson: " + type + " on " + day);
+        log(manager.getUsername(), "Created lesson: " + type + " on " + day);
         
         return lesson;
     }
@@ -100,21 +100,21 @@ public class CourseService {
      * Returns all courses associated with the given teacher.
      */
     public List<Course> getCourses(Teacher teacher) {
-        return new ArrayList<>(db.getFilteredCourses(teacher));
+        return db.getFilteredCourses(teacher);
     }
 
     /**
      * Returns all sections associated with the given teacher.
      */
     public List<Section> getSections(Teacher teacher) {
-        return new ArrayList<>(db.getFilteredSections(teacher));
+        return db.getFilteredSections(teacher);
     }
     
     /**
      * Returns all courses in the system.
      */
     public List<Course> getCourses(){
-    	return new ArrayList<>(db.getCourses());
+    	return db.getCourses();
     }
     
     /**
@@ -122,7 +122,7 @@ public class CourseService {
      * @return
      */
     public List<Section> getSections(){
-    	return new ArrayList<>(db.getSections());
+    	return db.getSections();
     }
     
     /**
@@ -134,7 +134,7 @@ public class CourseService {
         c.setName(name);
         c.setDescription(description);
         
-        log(manager.getFullName(), "Updated course: " + course.getCourseCode());
+        log(manager.getUsername(), " updated course: " + course.getCourseCode());
         
         db.saveToFile("data.ser");
     }
@@ -152,7 +152,7 @@ public class CourseService {
         }
         c.addInstructor(teacher);
         
-        log(manager.getFullName(), "Added instructor: " + teacher.toString()+" to course: " + course.getCourseCode());
+        log(manager.getUsername(), " added instructor: " + teacher.toString()+" to course: " + course.getCourseCode());
         
         db.saveToFile("data.ser");
     }
@@ -168,7 +168,7 @@ public class CourseService {
         }
         s.setTeacher(teacher);
         
-        log(manager.getFullName(), "Added teacher: " + teacher.toString() + " to section of the course: " + sec.getCourse().getCourseCode());
+        log(manager.getUsername(), "Added teacher: " + teacher.toString() + " to section of the course: " + sec.getCourse().getCourseCode());
         
         db.saveToFile("data.ser");
     }
@@ -183,7 +183,7 @@ public class CourseService {
             if (t.equals(teacher)) {
                 c.dropInstructor(teacher);
                 
-                log(manager.getFullName(), "Dropped instructor: " + teacher.toString()+" from course: "+course.getCourseCode());
+                log(manager.getUsername(), " dropped instructor: " + teacher.toString()+" from course: "+course.getCourseCode());
                 
                 db.saveToFile("data.ser");
                 return;
@@ -203,7 +203,7 @@ public class CourseService {
         }
         s.setTeacher(null);
         
-        log(manager.getFullName(), "Dropped teacher from section of course: " + sec.getCourse().getCourseCode());
+        log(manager.getUsername(), " dropped teacher from section of course: " + sec.getCourse().getCourseCode());
         
         db.saveToFile("data.ser");
     }
@@ -221,7 +221,7 @@ public class CourseService {
         }
         s.addLesson(lesson);
         
-        log(manager.getFullName(), "Added lesson: " + lesson.getLessonType()+" to the course: "+sec.getCourse().getCourseCode());
+        log(manager.getUsername(), " added lesson: " + lesson.getLessonType()+" to the course: "+sec.getCourse().getCourseCode());
         
         db.saveToFile("data.ser");
     }
@@ -236,7 +236,7 @@ public class CourseService {
             if (l.equals(lesson)) {
                 s.dropLesson(lesson);
                 
-                log(manager.getFullName(), "Dropped lesson: " + lesson.getLessonType() + " from course: "+sec.getCourse().getCourseCode());
+                log(manager.getUsername(), " dropped lesson: " + lesson.getLessonType() + " from course: "+sec.getCourse().getCourseCode());
                 
                 db.saveToFile("data.ser");
                 return;

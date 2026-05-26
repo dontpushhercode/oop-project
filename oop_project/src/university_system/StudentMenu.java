@@ -104,7 +104,7 @@ public class StudentMenu {
         Course course = chooseCourse();
         if (course == null) return;
         RegistrationRequest request = requestService.createRegistrationRequest(student, course);
-        System.out.println("Created request id " + request.getId()+" | " + request.toString());
+        System.out.println("Created request " + request.getId()+" | " + course.getCourseCode());
     }
 
     private void viewEnrollments() {

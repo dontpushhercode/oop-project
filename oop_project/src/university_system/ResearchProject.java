@@ -106,9 +106,6 @@ public class ResearchProject implements Serializable {
      * Adds a research paper to the project.
      */
     void addPaper(ResearchPaper paper) {
-    	if(papers.contains(paper)) {
-    		throw new IllegalArgumentException("Paper already exists in project");
-    	}
         this.papers.add(paper);
     }
 
@@ -116,9 +113,6 @@ public class ResearchProject implements Serializable {
      * Removes a research paper from the project.
      */
     void deletePaper(ResearchPaper paper) {
-    	if(!papers.contains(paper)) {
-    		throw new IllegalArgumentException("Paper not found in project");
-    	}
         this.papers.remove(paper);
     }
 
@@ -126,12 +120,6 @@ public class ResearchProject implements Serializable {
      * Adds a researcher to the project.
      */
     void addMember(Researcher member) {
-        if(member==null) {
-        	throw new IllegalArgumentException("Member must be a researcher");
-        }
-        if(members.contains(member)) {
-        	throw new IllegalArgumentException("Member already exists");
-        }
         this.members.add(member);
     }
 
@@ -139,12 +127,6 @@ public class ResearchProject implements Serializable {
      * Removes a researcher from the project.
      */
     void deleteMember(Researcher member) {
-        if(!members.contains(member)) {
-        	throw new IllegalArgumentException("Member not found");
-        }
-        if(members.size()==1) {
-        	throw new IllegalStateException("Project must have at least one member");
-        }
         this.members.remove(member);
     }
 

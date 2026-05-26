@@ -15,12 +15,10 @@ public class Student extends User implements Serializable {
         super();
     }
     
-    Student(String firstName, String surName, String username,
-                   String password, int year, School school) {
-        super(firstName, surName, username, password);
-        setYear(year);
+    Student(String firstName, String surName, String password, int year, School school) {
+        super(firstName, surName, password);
+        this.year = year;
         this.school = school;
-        this.failCount = 0;
     }
     
     /**
@@ -43,12 +41,6 @@ public class Student extends User implements Serializable {
      * Supervisor must have h-index of at least 3.
      */
     private Researcher researchSupervisor;
-    
-    /**
-     * Number of times the student has failed a course.
-     * Cannot exceed 3.
-     */
-    private int failCount;
     
     /**
      * Returns the academic degree of the student.
@@ -83,23 +75,12 @@ public class Student extends User implements Serializable {
     }
 
     /**
-     * Returns number of times student has failed a course.
-     * @return fail count
-     */
-    int getFailCount() {
-        return this.failCount;
-    }
-
-    /**
      * Sets the academic year of the student.
      * If year is set to 4, research profile is automatically assigned.
      * @param year the new academic year
      */
     void setYear(int year) {
         this.year = year;
-        if (year == 4 && getResearchProfile() == null) {
-        	setResearchProfile(new Researcher(this));
-        }
     }
     
     /**
@@ -127,26 +108,7 @@ public class Student extends User implements Serializable {
      * @throws IllegalArgumentException if supervisor h-index is less than 3
      */
     void setResearchSupervisor(Researcher researchSupervisor) {
-        if (this.year != 4) {
-            throw new IllegalStateException("Only 4th year students can have a research supervisor");
-        }
-        if (researchSupervisor.getHIndex() < 3) {
-            throw new IllegalArgumentException("Supervisor h-index must be at least 3");
-        }
         this.researchSupervisor = researchSupervisor;
-    }
-    
-
-    /**
-     * Registers a course failure for this student.
-     * Throws exception if student has already failed 3 times.
-     * @throws IllegalStateException if fail count would exceed 3
-     */
-    void addFail() {
-        if (this.failCount >= 3) {
-            throw new IllegalStateException("Cannot fail more than 3 times");
-        }
-        this.failCount++;
     }
     
     /**

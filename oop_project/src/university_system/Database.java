@@ -227,7 +227,7 @@ public class Database implements Serializable {
     List<Section> getFilteredSections(Teacher teacher){
 		List<Section> filtered = new ArrayList<Section>();
 		for(Section s:sections) {
-			if(s.getTeacher().equals(teacher)) {
+			if(s.getTeacher()!=null && s.getTeacher().equals(teacher)) {
 				filtered.add(s);
 			}
 		}

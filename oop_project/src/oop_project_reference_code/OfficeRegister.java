@@ -12,7 +12,7 @@ public class OfficeRegister {
     private final EnrollmentService enrollmentService;
     private final AcademicService academicService;
     private final CourseService courseService;
-    private final UserService userService;
+//    private final UserService userService;
 
     private OfficeRegister() {
         Database db = Database.getDb();
@@ -20,7 +20,7 @@ public class OfficeRegister {
         this.enrollmentService = new EnrollmentService(db);
         this.academicService = new AcademicService(db);
         this.courseService = new CourseService(db);
-        this.userService = new UserService(db);
+//        this.userService = new UserService(db);
     }
 
     public static OfficeRegister getOfficeRegister() {
@@ -46,8 +46,8 @@ public class OfficeRegister {
         return courseService;
     }
 
-    public UserService getUserService() {
-        return userService;
-    }
+//    public UserService getUserService() {
+//        return userService;
+//    }
     
 }	

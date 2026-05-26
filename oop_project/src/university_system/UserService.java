@@ -8,6 +8,8 @@ import java.util.*;
  */
 public class UserService {
 	
+	private final ResearchService researchService;
+	
 	private void log(String actor, String action) {
 	    db.createLog(new Log(actor, action));
 	}
@@ -21,7 +23,11 @@ public class UserService {
      * Constructor that initializes the service with a database instance.
      */
     UserService(Database db) {
+    	if (db == null) {
+    	    throw new IllegalArgumentException("Database cannot be null");
+    	}
         this.db = db;
+        this.researchService = new ResearchService(db);
     }
 
     /**
@@ -48,11 +54,14 @@ public class UserService {
     /**
      * Creates a new student and saves it to the database.
      */
-    public Student createStudent(String firstname, String surname, String password, String username, int year, School school) {
-        Student student = new Student(firstname, surname, username, password, year, school);
+    public Student createStudent(String firstname, String surname, String password, int year, School school) {
+        Student student = new Student(firstname, surname, password, year, school);
+        if(year == 4) {
+        	researchService.createResearchProfile(student);
+        }
         db.createUser(student);
         
-        log(student.getFullName() + " id: "+student.getId(), " created");
+        log(student.getFullName() + " id: " + student.getId(), " created");
         
         db.saveToFile("data.ser");
         return student;
@@ -62,8 +71,11 @@ public class UserService {
     /**
      * Creates a new teacher and saves it to the database.
      */
-    public Teacher createTeacher(String firstname, String surname, String password, String username, School school, TeacherType teacherType) {
-        Teacher teacher = new Teacher(firstname, surname, username, password, teacherType, school);
+    public Teacher createTeacher(String firstname, String surname, String password, School school, TeacherType teacherType) {
+        Teacher teacher = new Teacher(firstname, surname, password, teacherType, school);
+        if(teacherType == TeacherType.PROFESSOR) {
+        	researchService.createResearchProfile(teacher);
+        }
         db.createUser(teacher);
         
         log(teacher.getFullName() + " id: "+teacher.getId(), " created");
@@ -75,8 +87,8 @@ public class UserService {
     /**
      * Creates a new manager and saves it to the database.
      */
-    public Manager createManager(String firstname, String surname, String password, String username, ManagerType type) {
-        Manager manager = new Manager(firstname, surname, username, password, type);
+    public Manager createManager(String firstname, String surname, String password, ManagerType type) {
+        Manager manager = new Manager(firstname, surname, password, type);
         db.createUser(manager);
         
         log(manager.getFullName() + " id: "+manager.getId(), " created");
@@ -88,8 +100,8 @@ public class UserService {
     /**
      * Creates a new employee and saves it to the database.
      */
-    public Employee createEmployee(String firstname, String surname, String password, String username, DepartmentType department) {
-        Employee employee = new Employee(firstname, surname, username, password, department);
+    public Employee createEmployee(String firstname, String surname, String password, DepartmentType department) {
+        Employee employee = new Employee(firstname, surname, password, department);
         db.createUser(employee);
         
         log(employee.getFullName() + " id: "+employee.getId(), " created");
@@ -101,8 +113,8 @@ public class UserService {
     /**
      * Creates a new admin and saves it to the database.
      */
-    public Admin createAdmin(String firstname, String surname, String password, String username) {
-        Admin admin = new Admin(firstname, surname, username, password);
+    public Admin createAdmin(String firstname, String surname, String password) {
+        Admin admin = new Admin(firstname, surname, password);
         db.createUser(admin);
         
         log(admin.getFullName() + " id: "+admin.getId(), " created");

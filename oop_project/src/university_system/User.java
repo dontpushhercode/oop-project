@@ -26,10 +26,10 @@ public abstract class User implements Serializable {
     User() {
     }
 
-    User(String firstName, String surName, String username, String password) {
+    User(String firstName, String surName, String password) {
         this.firstName = firstName;
         this.surName = surName;
-        this.username = username;
+        this.username = generateUsername(firstName, surName);
         this.password = password;
         this.isLoggedIn = false;
     }
@@ -82,21 +82,10 @@ public abstract class User implements Serializable {
     /**
      *
      */
-    void login(String password) {
-    	if(this.password.equals(password)) {
-    		this.isLoggedIn = true;
-    	}
-    	else {
-    		throw new IllegalArgumentException("Wrong password!");
-    	}
+    void login() {
+    	this.isLoggedIn = true;
     }
     
-    /**
-     *
-     */
-    void login() {
-        this.isLoggedIn = true;
-    }
     /**
      *
      */
@@ -107,13 +96,9 @@ public abstract class User implements Serializable {
     /**
      *
      */
-    void setPassword(String password, String newPassword) {
-    	if(this.password.equals(password)) {
-    		this.password = newPassword;
-    	}
-    	else {
-    		throw new IllegalArgumentException("Wrong password!");
-    	}
+    void setPassword(String newPassword) {
+    	this.password = newPassword;
+
     }
     /**
      *
@@ -157,6 +142,10 @@ public abstract class User implements Serializable {
     void deleteResearchProfile() {
         this.researchProfile = null;
     }
+    
+    private String generateUsername(String firstName, String surName) {
+    	return firstName.toLowerCase().charAt(0)+"_"+surName.toLowerCase()+"_"+this.id;
+    }
 
     /**
      *
@@ -166,7 +155,7 @@ public abstract class User implements Serializable {
     }
 
     boolean checkPassword(String password) {
-    return this.password.equals(password);
+    	return this.password.equals(password);
     }   
 
     @Override

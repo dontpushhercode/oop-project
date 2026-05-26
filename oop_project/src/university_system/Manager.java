@@ -17,8 +17,8 @@ public class Manager extends Employee implements Serializable {
     /**
      * Constructor that initializes manager with all fields.
      */
-    Manager(String firstname, String surname, String username, String password, ManagerType type) {
-        super(firstname, surname, username, password, DepartmentType.MANAGEMENT);
+    Manager(String firstname, String surname, String password, ManagerType type) {
+        super(firstname, surname, password, DepartmentType.MANAGEMENT);
         this.type = type;
     }
 

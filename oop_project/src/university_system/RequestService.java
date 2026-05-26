@@ -1,5 +1,4 @@
 package university_system;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -7,6 +6,8 @@ import java.util.List;
  */
 public class RequestService {
 
+	private EnrollmentService enrollmentService;
+	
 	private void log(String actor, String action) {
 	    database.createLog(new Log(actor, action));
 	}
@@ -19,11 +20,12 @@ public class RequestService {
     /**
      * Default constructor
      */
-    public RequestService(Database database) {
+    public RequestService(Database database, EnrollmentService enrollmentService) {
     	if (database == null) {
     	    throw new IllegalArgumentException("Database cannot be null");
     	}
         this.database = database;
+        this.enrollmentService = enrollmentService;
     }
 
     private void checkPermission(Manager manager) {
@@ -33,28 +35,28 @@ public class RequestService {
     }
 
     /**
-     * 
-     */
-    public RegistrationRequest createRegistrationRequest(Manager manager, Student student, Course course) {
-        checkPermission(manager);
-        RegistrationRequest request = createRegistrationRequest(student, course);
-        
-        log(manager.getFullName(), " created registration request for: "+student.toString()+" , course: "+course.getCourseCode());
-        
-        database.saveToFile("data.ser");
-        return request;
-    }
-
-    /**
      * Creates a registration request from a student.
      */
     public RegistrationRequest createRegistrationRequest(Student student, Course course) {
-
+    	
         for (RegistrationRequest r : database.getFilteredRegistrationRequests(student)) {
             if (r.getCourse().equals(course) && r.getStatus() != RequestStatus.REJECTED) {
                 throw new AlreadyRequestedException();
             }
         }
+        
+        if(enrollmentService.isEnrolledInCourse(student, course)) {
+        	throw new AlreadyAssignedException("Student is already assigned to this course");
+        }
+        
+        if(enrollmentService.getTotalCredits(student) + course.getCredits() >= 21) {
+        	throw new CreditLimitExceededException();
+        }
+        
+        if (enrollmentService.getFailCount(student, course) >= 3) {
+            throw new CourseFailLimitException();
+        }
+        
         RegistrationRequest regReq = new RegistrationRequest(student, course);
         database.createRegistrationRequest(regReq);
         
@@ -83,7 +85,7 @@ public class RequestService {
     public List<RegistrationRequest> getRegistrationRequests(
             Manager manager, RequestStatus status) {
         checkPermission(manager);
-        return new ArrayList<>(database.getFilteredRegistrationRequests(status));
+        return database.getFilteredRegistrationRequests(status);
     }
 
     /**
@@ -92,15 +94,22 @@ public class RequestService {
     public List<RegistrationRequest> getRegistrationRequests(
             Manager manager, Student student, RequestStatus status) {
         checkPermission(manager);
-        return new ArrayList<>(database.getFilteredRegistrationRequests(student, status));
+        return database.getFilteredRegistrationRequests(student, status);
     }
 
     /**
      * 
      */
+    public List<RegistrationRequest> getRegistrationRequests(Student student) {
+        return database.getFilteredRegistrationRequests(student);
+    }
+    
+    /**
+     * 
+     */
     public List<EmployeeRequest> getEmployeeRequests(Manager manager, RequestStatus status) {
         checkPermission(manager);
-        return new ArrayList<>(database.getFilteredEmployeeRequests(status));
+        return database.getFilteredEmployeeRequests(status);
     }
 
     /**
@@ -108,7 +117,14 @@ public class RequestService {
      */
     public List<EmployeeRequest> getEmployeeRequests(Manager manager, Employee employee, RequestStatus status) {
         checkPermission(manager);
-        return new ArrayList<>(database.getFilteredEmployeeRequests(employee, status));
+        return database.getFilteredEmployeeRequests(employee, status);
+    }
+    
+    /**
+     * 
+     */
+    public List<EmployeeRequest> getEmployeeRequests(Employee employee, RequestStatus status) {
+        return database.getFilteredEmployeeRequests(employee, status);
     }
 
     /**
@@ -117,7 +133,7 @@ public class RequestService {
     public List<Request> getRequests(Manager manager, RequestStatus status)
             throws NoPermissionException {
         checkPermission(manager);
-        return new ArrayList<>(database.getFilteredRequests(status));
+        return database.getFilteredRequests(status);
     }
 
     /**
@@ -151,28 +167,6 @@ public class RequestService {
     }
 
     /**
-     * Sets the status of a request.
-     * Throws exception if request is not found or manager has no permission.
-     */
-    public void setStatus(Manager manager, Request request, RequestStatus status)
-            throws NoPermissionException, RequestNotFoundException {
-        if (request instanceof RegistrationRequest) {
-            checkPermission(manager);
-        } else {
-            checkPermission(manager);
-        }
-        Request r = database.getRequest(request.getId());
-        if (r == null) {
-            throw new RequestNotFoundException();
-        }
-        r.setStatus(status);
-        
-        log(manager.getFullName(), " updated status of request " + request.getId()+" to: "+status);
-        
-        database.saveToFile("data.ser");
-    }
-
-    /**
      * 
      */
     public void cancelRequest(Manager manager, Request request)
@@ -191,13 +185,33 @@ public class RequestService {
         
         database.saveToFile("data.ser");
     }
+    
+    /**
+     * 
+     */
+    public void approveRequest(Manager manager, Request request)
+            throws NoPermissionException, RequestNotFoundException, InvalidRequestStatusException {
+        checkPermission(manager);
+        Request r = database.getRequest(request.getId());
+        if (r == null) {
+            throw new RequestNotFoundException();
+        }
+        if (r.getStatus() != RequestStatus.PENDING) {
+            throw new InvalidRequestStatusException("Only pending requests can be approved");
+        }
+        r.setStatus(RequestStatus.APPROVED);
+        
+        log(manager.getFullName(), " approved request " + request.getId());
+        
+        database.saveToFile("data.ser");
+    }
 
     /**
      * 
      */
     public List<RegistrationRequest> getPendingRegistrationRequests(Manager manager) {
         checkPermission(manager);
-        return new ArrayList<>(database.getFilteredRegistrationRequests(RequestStatus.PENDING));
+        return database.getFilteredRegistrationRequests(RequestStatus.PENDING);
     }
 
     /**
@@ -206,6 +220,6 @@ public class RequestService {
     public List<EmployeeRequest> getPendingEmployeeRequests(Manager manager)
             throws NoPermissionException {
         checkPermission(manager);
-        return new ArrayList<>(database.getFilteredEmployeeRequests(RequestStatus.PENDING));
+        return database.getFilteredEmployeeRequests(RequestStatus.PENDING);
     }
 }

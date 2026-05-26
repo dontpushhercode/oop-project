@@ -91,10 +91,10 @@ public class Main {
         }
 
         UserService users = OfficeRegister.getUserService();
-        Admin admin = users.createAdmin("System", "Admin", "admin", "admin");
+        Admin admin = users.createAdmin("System", "Admin", "admin");
 
         System.out.println("Seeded users:");
-        System.out.println("admin/admin");
+        System.out.println(admin.getUsername()+"/admin");
         System.out.println("Use the admin account to create all other users and assign roles.");
 
         admin.logout();
